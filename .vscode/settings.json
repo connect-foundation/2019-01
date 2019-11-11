@@ -1,0 +1,14 @@
+{
+	"eslint.autoFixOnSave": true,
+	"eslint.validate": ["javascript"],
+	"eslint.workingDirectories": [
+		{
+			"directory": "client",
+			"changeProcessCWD": true
+		},
+		{
+			"directory": "server",
+			"changeProcessCWD": true
+		}
+	]
+}
