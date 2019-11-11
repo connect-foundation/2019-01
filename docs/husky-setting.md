@@ -1,4 +1,6 @@
--   node_modules/@commitlint/config-conventional > index 파일 수정을 수정해주세요.
+-   husky 설정 변경
+
+*   node_modules/@commitlint/config-conventional > index 파일 수정을 수정해주세요.
 
 ```
 module.exports = {
