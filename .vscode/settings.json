@@ -10,5 +10,10 @@
 			"directory": "server",
 			"changeProcessCWD": true
 		}
-	]
+	],
+	"eslint.provideLintTask": true,
+	"eslint.alwaysShowStatus": true,
+	"editor.formatOnSave": true,
+	"javascript.format.enable": false,
+	"prettier.eslintIntegration": true
 }
