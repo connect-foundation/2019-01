@@ -1,0 +1,129 @@
+{
+	"name": "client",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@commitlint/cli": "^8.2.0",
+		"@commitlint/config-conventional": "^8.2.0",
+		"react": "^16.11.0",
+		"react-dom": "^16.11.0",
+		"react-scripts": "3.2.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"airbnb"
+		],
+		"rules": {
+			"react/prefer-stateless-function": 0,
+			"react/jsx-filename-extension": 0,
+			"react/jsx-one-expression-per-line": 0,
+			"react/jsx-closing-bracket-location": [
+				1,
+				"after-props"
+			]
+		},
+		"env": {
+			"browser": true
+		}
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"husky": "^3.0.9"
+	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		],
+		"rules": {
+			"body-leading-blank": [
+				1,
+				"always"
+			],
+			"footer-leading-blank": [
+				1,
+				"always"
+			],
+			"header-max-length": [
+				2,
+				"always",
+				72
+			],
+			"scope-case": [
+				2,
+				"always",
+				"lower-case"
+			],
+			"subject-case": [
+				2,
+				"never",
+				[
+					"sentence-case",
+					"start-case",
+					"pascal-case",
+					"upper-case"
+				]
+			],
+			"subject-empty": [
+				2,
+				"never"
+			],
+			"subject-full-stop": [
+				2,
+				"never",
+				"."
+			],
+			"type-case": [
+				2,
+				"always",
+				"lower-case"
+			],
+			"type-empty": [
+				2,
+				"never"
+			],
+			"type-enum": [
+				2,
+				"always",
+				[
+					"build",
+					"ci",
+					"docs",
+					"style",
+					"feat",
+					"refactor",
+					"improve",
+					"modify",
+					"add",
+					"move",
+					"remove",
+					"fix",
+					"rename",
+					"chore"
+				]
+			]
+		}
+	}
+}
