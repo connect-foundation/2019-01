@@ -1,0 +1,18 @@
+{
+	"eslint.autoFixOnSave": true,
+	"eslint.validate": ["javascript"],
+	"eslint.workingDirectories": [
+		{
+			"directory": "client",
+			"changeProcessCWD": true
+		},
+		{
+			"directory": "server",
+			"changeProcessCWD": true
+		}
+	],
+	"eslint.lintTask.enable": true,
+	"eslint.alwaysShowStatus": true,
+	"editor.formatOnSave": true,
+	"javascript.format.enable": false
+}
