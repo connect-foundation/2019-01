@@ -7,8 +7,6 @@ services:
       dockerfile: ../docker/server.Dockerfile
     networks:
       - backend
-    ports:
-      - "3000:3000"
 
   nginx_client:
     restart: always
