@@ -1,5 +1,5 @@
-const nodeExternals = require('webpack-node-externals')
-const path = require('path')
+const nodeExternals = require('webpack-node-externals');
+const path = require('path');
 
 module.exports = {
   target: 'node',
@@ -9,6 +9,6 @@ module.exports = {
     path: path.resolve(__dirname, 'bin'),
     filename: 'app.js',
     library: 'app',
-    libraryTarget:'umd'
+    libraryTarget: 'umd',
   },
-}
+};
