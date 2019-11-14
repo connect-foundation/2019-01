@@ -4,7 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+// babel + webpack으로 번들링된 app.js
+// default 선언해야함
+// 참고: https://stackoverflow.com/questions/40294870/module-exports-vs-export-default-in-node-js-and-es6
+var app = require('./app').default; 
 var debug = require('debug')('server:server');
 var http = require('http');
 
