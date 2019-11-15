@@ -1,12 +1,14 @@
 import createError from 'http-errors';
 import express from 'express';
 import logger from 'morgan';
+import socketIo from 'socket.io';
 
 import indexRouter from './routes/index';
 
+
 const app = express();
 
-app.io = require('socket.io')();
+app.io = socketIo();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -28,12 +30,12 @@ app.use((err, req, res) => {
   }
 });
 
-app.io.on('connection', function(socket) {
-	console.log('a user connected');
-	socket.on('init', function(data) {
-		console.log(data.name);
-		socket.emit('welcome', `hello! ${data.name}`);
-	});
+app.io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('init', (data) => {
+    console.log(data.name);
+    socket.emit('welcome', `hello! ${data.name}`);
+  });
 });
 
 export default app;
