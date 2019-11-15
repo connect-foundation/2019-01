@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 /* eslint-disable */
 ReactDOM.render(<App />, document.getElementById('root'));
 
-const socket = socketio.connect('http://localhost:4000');
+const socket = socketio.connect('http://localhost:3000');
 (() => {
     socket.emit('init', { name: 'bella' });
   
