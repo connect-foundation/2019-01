@@ -13,4 +13,4 @@ echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr
 docker pull dev-2019-01.kr.ncr.ntruss.com/front-end
 docker pull dev-2019-01.kr.ncr.ntruss.com/back-end
 docker-compose down
-docker-compose up
+docker-compose up -d

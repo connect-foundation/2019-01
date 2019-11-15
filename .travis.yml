@@ -38,4 +38,4 @@ jobs:
       name: "Dev-server deploy"
       script:
         - sudo apt-get install sshpass
-        - sshpass -p "$DEV_SERVER_SSH_PW" ssh -p 2222 -o StrictHostKeyChecking=no root@"$DEV_SERVER_IP" "./deploy.sh"
+        - sshpass -p "$DEV_SERVER_SSH_PW" ssh -p 2222 -o StrictHostKeyChecking=no root@"$DEV_SERVER_IP" ./deploy.sh
