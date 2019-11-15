@@ -6,6 +6,8 @@ import indexRouter from './routes/index';
 
 const app = express();
 
+app.io = require('socket.io')();
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -24,6 +26,14 @@ app.use((err, req, res) => {
     res.status(err.status || 500);
     res.send({ message: err.message });
   }
+});
+
+app.io.on('connection', function(socket) {
+	console.log('a user connected');
+	socket.on('init', function(data) {
+		console.log(data.name);
+		socket.emit('welcome', `hello! ${data.name}`);
+	});
 });
 
 export default app;
