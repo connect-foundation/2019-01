@@ -1,0 +1,35 @@
+language: node_js
+
+node_js:
+  - 10
+
+sudo: required
+
+cache: npm
+
+services:
+  - docker
+
+jobs: 
+  include:
+    - stage: "TEST"
+      name: "Front-end test & build"
+      before_install:
+        - cd ./client
+        - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
+      install:
+        - npm install
+      script:
+        - npm test
+        - docker build -t dev-2019-01.kr.ncr.ntruss.com/front-end . -f ../docker/client.Dockerfile 
+        - docker push dev-2019-01.kr.ncr.ntruss.com/front-end
+
+    - name: "Back-end test & build"
+      before_install:
+        - cd ./server
+        - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
+      install:
+        - npm install
+      script:
+        - docker build -t dev-2019-01.kr.ncr.ntruss.com/back-end . -f ../docker/server.Dockerfile
+        - docker push dev-2019-01.kr.ncr.ntruss.com/back-end
