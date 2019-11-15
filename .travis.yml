@@ -33,3 +33,8 @@ jobs:
       script:
         - docker build -t dev-2019-01.kr.ncr.ntruss.com/back-end . -f ../docker/server.Dockerfile
         - docker push dev-2019-01.kr.ncr.ntruss.com/back-end
+
+    - name: "Dev-server deploy"
+      script:
+        - sudo apt-get install sshpass
+        - sshpass -p"$DEV_SERVER_SSH_PW" ssh -p 2222 -o StrictHostKeyChecking=no root@"$DEV_SERVER_IP" "./deploy.sh"
