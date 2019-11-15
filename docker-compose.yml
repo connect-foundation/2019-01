@@ -1,0 +1,25 @@
+version: "3"
+services:
+
+  server:
+    build:
+      context: ./server
+      dockerfile: ../docker/server.Dockerfile
+    networks:
+      - backend
+
+  nginx_client:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: ../docker/client.Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
