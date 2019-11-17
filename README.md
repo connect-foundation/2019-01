@@ -51,9 +51,9 @@ npm test
 ## Author
 
 👤 **BoostCamp 2019-01**
-> 👸 [김희선](https://github.com/bellaah)
-> 🌟 [함형규](https://github.com/gyustar)
-> 🤐 [서보현](https://github.com/ktseo41)👨‍⚕️
+> 👸 [김희선](https://github.com/bellaah)<br />
+> 🌟 [함형규](https://github.com/gyustar)<br />
+> 🤐 [서보현](https://github.com/ktseo41)👨‍⚕️<br />
 > 💑 [조영도](https://github.com/young-do)
 
 ## 🤝 Contributing
