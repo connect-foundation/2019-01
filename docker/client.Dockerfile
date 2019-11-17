@@ -16,7 +16,7 @@ FROM nginx:1.17.5-alpine
 WORKDIR /usr/src/nginx
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=0 /usr/src/client/build ./code-avengers
+COPY --from=build-react /usr/src/client/build ./code-avengers
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
