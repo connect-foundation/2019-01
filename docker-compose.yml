@@ -1,25 +1,40 @@
-version: "3"
+version: '3'
 services:
+    server:
+        build:
+            context: ./server
+            dockerfile: ../docker/server.Dockerfile
+        networks:
+            - backend
 
-  server:
-    build:
-      context: ./server
-      dockerfile: ../docker/server.Dockerfile
-    networks:
-      - backend
+    nginx_client:
+        restart: always
+        build:
+            context: ./client
+            dockerfile: ../docker/client.Dockerfile
+        ports:
+            - '80:80'
+        depends_on:
+            - server
+        networks:
+            - backend
 
-  nginx_client:
-    restart: always
-    build:
-      context: ./client
-      dockerfile: ../docker/client.Dockerfile
-    ports:
-      - "80:80"
-    depends_on:
-      - server
-    networks:
-      - backend
+    db:
+        # container 이름은 nginx 설정(.conf)에서 사용할수도 있지만
+        # mysql은 사용하지 않는 상태이고, 겹치는 이름이 있으면 실행이 안되므로
+        # 안써줘서 임시 컨테이너 이름 사용한다.
+        # container_name: mysql-b
+        build:
+            dockerfile: ../docker/mysql.Dockerfile
+        # environment:
+        #     - MYSQL_ROOT_PASSWORD=1111
+        #     - MYSQL_USER=drstrange
+        #     - MYSQL_PASSWORD=1111
+        ports:
+            - '3306:3306'
+        networks:
+            - backend
 
 networks:
-  backend:
-    driver: bridge
+    backend:
+        driver: bridge
