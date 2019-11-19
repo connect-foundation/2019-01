@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { CHARACTER, TILE } from '../constants/game-area';
+import { CHARACTER, TILE } from '../constants/room';
 
 class Character {
   constructor(ctx, imgUrl, indexX, indexY) {
