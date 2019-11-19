@@ -4,8 +4,7 @@ import logger from 'morgan';
 import socketIo from 'socket.io';
 
 import indexRouter from './routes/index';
-import quiz from './models/quiz';
-
+import gameController from './controller';
 
 const app = express();
 
@@ -17,18 +16,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 
-const quizModel = new quiz();
-quizModel.getTenQuiz();
 
-
-// catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
 app.use((err, req, res) => {
-  // only providing error in development
   if (req.app.get('env') === 'development') {
     res.status(err.status || 500);
     res.send({ message: err.message });
@@ -36,11 +29,8 @@ app.use((err, req, res) => {
 });
 
 app.io.on('connection', (socket) => {
+  gameController.enterPlayer(socket);
   console.log('a user connected');
-  socket.on('init', (data) => {
-    console.log(data.name);
-    socket.emit('welcome', `hello! ${data.name}`);
-  });
 });
 
 export default app;
