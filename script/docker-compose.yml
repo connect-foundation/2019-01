@@ -16,8 +16,7 @@ services:
             - backend
 
     db:
-        build:
-            image: dev-2019-01.kr.ncr.ntruss.com/mysql
+        image: dev-2019-01.kr.ncr.ntruss.com/mysql
         ports:
             - '3306:3306'
         networks:
