@@ -9,11 +9,6 @@ CREATE TABLE IF NOT EXISTS User (
     PRIMARY KEY (github_id)
 );
 
--- CREATE TABLE IF NOT EXISTS todo.BOARD (
---  BOARD_ID INT NOT NULL AUTO_INCREMENT,
---  USER_ID VARCHAR(30) NOT NULL,
---  PRIMARY KEY (BOARD_ID)
---  )
 CREATE TABLE IF NOT EXISTS Quiz (
     id int(11) NOT NULL auto_increment,
     category varchar(100) NOT NULL,
@@ -343,7 +338,7 @@ VALUES
     (
         'css',
         5,
-        'SS의 media query는 CSS3에서 도입되었다.',
+        'CSS의 media query는 CSS3에서 도입되었다.',
         '',
         true
     );
@@ -432,12 +427,3 @@ VALUES
         '데이터 프레임의 정확한 수신 여부를 매번 확인하면서 다음 프레임을 전송해 나가는 ARQ 방식은 Stop-and-Wait ARQ이다.',
         false
     );
-
-/**
- *'id' int(11) NOT NULL auto_increment,
- 'category' varchar(100) NOT NULL,
- 'level' int(5) NOT NULL,
- 'question' varchar(250) NOT NULL,
- 'comment' text,
- 'answer' boolean NOT NULL
- */
