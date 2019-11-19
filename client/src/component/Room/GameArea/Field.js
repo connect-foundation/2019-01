@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  CHARACTER, FIELD, TILE, KEYCODE,
+  CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
 
@@ -32,8 +32,8 @@ const Field = () => {
     <canvas
       ref={canvasRef}
       style={{ backgroundImage: `url('${FIELD.BACKGROUND}')` }}
-      width={TILE.WIDTH * FIELD.COLUMN}
-      height={TILE.HEIGHT * FIELD.ROW} />
+      width={FIELD.getWidth()}
+      height={FIELD.getHeight()} />
   );
 };
 
