@@ -1,4 +1,5 @@
 /* eslint-disable */
 export default {
-    getQuiz: `SELECT * FROM Quiz;`,
+    getAllQuiz: `SELECT * FROM Quiz;`,
+    getTenQuiz: `SELECT * FROM Quiz ORDER BY RAND() LIMIT 10;`
 };

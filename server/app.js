@@ -5,7 +5,6 @@ import socketIo from 'socket.io';
 
 import indexRouter from './routes/index';
 
-
 const app = express();
 
 app.io = socketIo();
