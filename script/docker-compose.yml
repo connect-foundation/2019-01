@@ -1,21 +1,27 @@
-version: "3"
+version: '3'
 services:
+    server:
+        image: dev-2019-01.kr.ncr.ntruss.com/back-end
+        networks:
+            - backend
 
-  server:
-    image: dev-2019-01.kr.ncr.ntruss.com/back-end
-    networks:
-      - backend
+    nginx_client:
+        restart: always
+        image: dev-2019-01.kr.ncr.ntruss.com/front-end
+        ports:
+            - '80:80'
+        depends_on:
+            - server
+        networks:
+            - backend
 
-  nginx_client:
-    restart: always
-    image: dev-2019-01.kr.ncr.ntruss.com/front-end
-    ports:
-      - "80:80"
-    depends_on:
-      - server
-    networks:
-      - backend
+    db:
+        image: dev-2019-01.kr.ncr.ntruss.com/mysql
+        ports:
+            - '3306:3306'
+        networks:
+            - backend
 
 networks:
-  backend:
-    driver: bridge
+    backend:
+        driver: bridge
