@@ -6,9 +6,8 @@ import ChatArea from './ChatArea';
 const BackGround = styled.div`
     position: relative;
     height: 100vh;
-    background-size: 100% 100%;
-    background-image: url("https://i.imgur.com/v20152u.jpg");
-    // background-color: #E7EAC1;
+    background-size: 1600px 1600px;
+    background-image: url("https://i.imgur.com/MeTTcCQ.png");
 `;
 
 const Wrapper = styled.div`
