@@ -59,16 +59,16 @@ class Character {
 
   _step() {
     const directionOption = {
-      [CHARACTER.DIRECTION.UP]: { i: 'indexY', sign: -1 },
-      [CHARACTER.DIRECTION.DOWN]: { i: 'indexY', sign: 1 },
-      [CHARACTER.DIRECTION.LEFT]: { i: 'indexX', sign: -1 },
-      [CHARACTER.DIRECTION.RIGHT]: { i: 'indexX', sign: 1 },
+      [CHARACTER.DIRECTION.UP]: { idx: 'indexY', sign: -1 },
+      [CHARACTER.DIRECTION.DOWN]: { idx: 'indexY', sign: 1 },
+      [CHARACTER.DIRECTION.LEFT]: { idx: 'indexX', sign: -1 },
+      [CHARACTER.DIRECTION.RIGHT]: { idx: 'indexX', sign: 1 },
     };
 
     const option = directionOption[this.direction];
 
     if (!option) return;
-    this[option.i] += (option.sign / CHARACTER.SHAPE.LOOP.length);
+    this[option.idx] += (option.sign / CHARACTER.SHAPE.LOOP.length);
 
     this.shape = CHARACTER.SHAPE.LOOP[this.curShapeLoopIdx];
     this.curShapeLoopIdx += 1;
