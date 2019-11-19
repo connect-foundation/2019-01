@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import socketio from 'socket.io-client';
+// import socketio from 'socket.io-client';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 /* eslint-disable */
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render( < App / > , document.getElementById('root'));
 
 // const socket = socketio.connect('http://localhost:3000');
 // (() => {
 //     socket.emit('init', { name: 'bella' });
-  
+
 //     socket.on('welcome', (msg) => {
 //       console.log(msg);
 //     });
