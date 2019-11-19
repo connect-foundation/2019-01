@@ -8,6 +8,11 @@ class GameController {
 
   enterPlayer(socket) {
     this.players.push(socket);
+    socket.on('start_game', () => {
+      this.players.forEach((player) => {
+        player.emit('get_quiz_list', getQuizList());
+      });
+    });
   }
 }
 
