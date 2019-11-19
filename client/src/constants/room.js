@@ -44,7 +44,7 @@ const DASH_BOARD = {
 };
 
 const CHAT_AREA = {
-  COLOR: 'rgba(255, 255, 255, 0.1)',
+  BG_COLOR: 'rgba(255, 255, 255, 0.1)',
   WIDTH: 280,
 };
 
