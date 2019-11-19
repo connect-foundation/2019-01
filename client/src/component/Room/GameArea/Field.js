@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {
   CHARACTER, FIELD, TILE, KEYCODE,
-} from '../../../constants/game-area';
+} from '../../../constants/room';
 import Character from '../../../class/character';
 
 const NICK = 'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nickfury.png';
