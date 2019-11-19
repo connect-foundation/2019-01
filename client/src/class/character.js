@@ -43,16 +43,18 @@ class Character {
       this.requestId = window.requestAnimationFrame(() => this._walk());
       return;
     }
+
     this.frameCount = 0;
     this._clear();
     this._step();
     this._draw();
+
     if (this.curShapeLoopIdx >= CHARACTER.SHAPE.LOOP.length) {
       this.curShapeLoopIdx = 0;
       this.requestId = undefined;
-    } else {
-      this.requestId = window.requestAnimationFrame(() => this._walk());
+      return;
     }
+    this.requestId = window.requestAnimationFrame(() => this._walk());
   }
 
   _step() {
