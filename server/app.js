@@ -4,6 +4,8 @@ import logger from 'morgan';
 import socketIo from 'socket.io';
 
 import indexRouter from './routes/index';
+import quiz from './models/quiz';
+
 
 const app = express();
 
@@ -14,6 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
+
+const quizModel = new quiz();
+quizModel.getTenQuiz();
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
