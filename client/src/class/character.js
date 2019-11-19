@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import CONSTANTS from './CONSTANTS';
+import CONSTANTS from '../constants/gamearea';
 
 const { CHARACTER, TILE } = CONSTANTS;
 

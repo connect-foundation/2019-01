@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import CONSTANTS from './CONSTANTS';
-import Character from './character';
+import CONSTANTS from '../../../constants/gamearea';
+import Character from '../../../class/character';
 
 const {
   CHARACTER, FIELD, TILE, KEYCODE,
