@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import CONSTANTS from '../constants/gamearea';
-
-const { CHARACTER, TILE } = CONSTANTS;
+import { CHARACTER, TILE } from '../constants/game-area';
 
 class Character {
   constructor(ctx, imgUrl, indexX, indexY) {

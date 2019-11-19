@@ -1,28 +1,19 @@
 import React, { useEffect } from 'react';
-import CONSTANTS from '../../../constants/gamearea';
+import {
+  CHARACTER, FIELD, TILE, KEYCODE,
+} from '../../../constants/game-area';
 import Character from '../../../class/character';
 
-const {
-  CHARACTER, FIELD, TILE, KEYCODE,
-} = CONSTANTS;
 const NICK = 'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nickfury.png';
 
 const keydownEventHandler = (event, character) => {
-  switch (event.keyCode) {
-    case KEYCODE.LEFT:
-      character.move(CHARACTER.DIRECTION.LEFT);
-      break;
-    case KEYCODE.UP:
-      character.move(CHARACTER.DIRECTION.UP);
-      break;
-    case KEYCODE.RIGHT:
-      character.move(CHARACTER.DIRECTION.RIGHT);
-      break;
-    case KEYCODE.DOWN:
-      character.move(CHARACTER.DIRECTION.DOWN);
-      break;
-    default:
-  }
+  const direction = {
+    [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
+    [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
+    [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
+    [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
+  };
+  character.move(direction[event.keyCode]);
 };
 
 const Field = () => {
