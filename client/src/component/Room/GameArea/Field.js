@@ -3,7 +3,6 @@ import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
-import socket from '../../../class/socket';
 
 const NICK = 'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nickfury.png';
 
@@ -21,7 +20,6 @@ const Field = () => {
   const canvasRef = React.useRef();
 
   useEffect(() => {
-    console.log(socket);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
