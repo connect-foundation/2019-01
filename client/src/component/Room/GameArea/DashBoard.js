@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DashBoardWrapper, QuizWrapper, CounterWrapper } from './style';
 
-const numToString = (num) => {
-  if (Number.isInteger(num)) return num > 9 ? num : `0${num}`;
-  return num;
-};
+const changeNumberToTwoDigitString = (num) => `${num}`.padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 
@@ -42,7 +39,7 @@ const DashBoard = () => {
         <div>{quiz}</div>
       </QuizWrapper>
       <CounterWrapper style={{ color: getCounterColor(counter) }}>
-        {numToString(counter)}
+        {changeNumberToTwoDigitString(counter)}
       </CounterWrapper>
     </DashBoardWrapper>
   );
