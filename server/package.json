@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack --mode production; node ./bin/www"
+    "start": "webpack --mode production; node ./bin/www",
+    "test": "echo skip-test"
   },
   "dependencies": {
     "debug": "~2.6.9",
