@@ -5,7 +5,7 @@ import EVENT from '../constants/socket-event';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    this.connect();
+    // this.connect();
   }
 
   connect() {
