@@ -31,6 +31,14 @@ CREATE TABLE IF NOT EXISTS Nickname_noun (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS Image (
+    id int(11) NOT NULL auto_increment,
+    category varchar(100),
+    name varchar(100),
+    url varchar(250),
+    PRIMARY KEY (id)
+);
+
 INSERT INTO
     User
 VALUES
@@ -426,4 +434,220 @@ VALUES
         '데이터 프레임의 정확한 수신 여부를 매번 확인하면서 다음 프레임을 전송해 나가는 ARQ 방식은 Go-back-N ARQ이다.',
         '데이터 프레임의 정확한 수신 여부를 매번 확인하면서 다음 프레임을 전송해 나가는 ARQ 방식은 Stop-and-Wait ARQ이다.',
         false
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'background',
+        'background-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/background-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'logo',
+        'github-logo',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/github_logo.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'game',
+        'field',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'game',
+        'dashboard',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'antman-big',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/antman-big.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'blackpanther-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/blackpanther-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'captainamerica-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/captainamerica-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'captainmarvel-shorthair',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/captainmarvel-shorthair.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'deadpool-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/deadpool-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'doctorstrange',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/doctorstrange.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'ghostrider',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/ghostrider.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'groot-adult',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/groot-adult.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'ironman-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/ironman-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'mysterio',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/mysterio.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'nebula',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nebula.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'nickfury',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nickfury.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'rocketraccoon',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/rocketraccoon.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'spiderman-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/spiderman-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'spiderman-nightmonkey',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/spiderman-nightmonkey.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'thanos-main',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/thanos-main.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'thor-longhair',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/thor-longhair.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'wintersoldier',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/wintersoldier.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'wolverine',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/wolverine.png'
+    );
+
+INSERT INTO
+    Image (category, name, url)
+VALUES
+    (
+        'character',
+        'yondu',
+        'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/yondu.png'
     );
