@@ -12,6 +12,10 @@ class SocketContainer {
     this.socket = socketio.connect('http://localhost:3000');
   }
 
+  disconnect() {
+    this.socket.disconnect();
+  }
+
   onEnterRoom(callback) {
     this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
   }
