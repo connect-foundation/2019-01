@@ -38,9 +38,30 @@ const KEYCODE = {
   DOWN: 40,
 };
 
-const DASH_BOARD = {
+const DASHBOARD = {
   WIDTH: FIELD.getWidth() - TILE.WIDTH,
   HEIGHT: TILE.HEIGHT * 2,
+  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+};
+
+const QUIZ = {
+  WIDTH: 550,
+  FONTSIZE: 24,
+  LEFT: 40,
+};
+
+const COUNTER = {
+  WIDTH: 80,
+  PADDING: '10px 0',
+  RIGHT: 40,
+  FONTSIZE: 28,
+};
+
+const GAME_START_BUTTON = {
+  PADDING: '15px 35px',
+  FONTSIZE: 28,
+  BACKGROUND_COLOR: 'gold',
+  BOX_SHADOW: '0px 4px 10px 0px',
 };
 
 const CHAT_AREA = {
@@ -51,9 +72,9 @@ const CHAT_AREA = {
 const ROOM = {
   MARGIN: 20,
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
-  getHeight() { return FIELD.getHeight() + DASH_BOARD.HEIGHT + this.MARGIN; },
+  getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
 };
 
 export {
-  TILE, FIELD, CHARACTER, KEYCODE, DASH_BOARD, CHAT_AREA, ROOM,
+  TILE, FIELD, CHARACTER, KEYCODE, DASHBOARD, CHAT_AREA, ROOM, QUIZ, COUNTER, GAME_START_BUTTON,
 };
