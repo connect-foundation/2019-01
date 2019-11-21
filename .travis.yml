@@ -10,40 +10,68 @@ cache: npm
 services:
     - docker
 
+branches:
+    only:
+        - master
+        - develop
+
 jobs:
     include:
         - stage: 'TEST'
-          name: 'Front-end test & build'
+          if: type = pull_request
+          name: 'Front-end test'
           before_install:
               - cd ./client
-              - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           install:
               - npm install
           script:
               - npm test
-              - docker build -t dev-2019-01.kr.ncr.ntruss.com/front-end . -f ../docker/client.Dockerfile
-              - docker push dev-2019-01.kr.ncr.ntruss.com/front-end
 
-        - name: 'Back-end test & build'
+        - name: 'Back-end test'
+          if: type = pull_request
           before_install:
               - cd ./server
-              - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           install:
               - npm install
           script:
+              - npm test
+        
+
+        - stage: 'BUILD'
+          name: 'Front-end build'
+          if: type = push
+          before_script:
+              - cd ./client
+              - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
+          script:
+              - docker build -t dev-2019-01.kr.ncr.ntruss.com/front-end . -f ../docker/client.Dockerfile
+          after_success:
+              - docker push dev-2019-01.kr.ncr.ntruss.com/front-end
+
+        - name: 'Back-end build'
+          if: type = push
+          before_script:
+              - cd ./server
+              - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
+          script:
               - docker build -t dev-2019-01.kr.ncr.ntruss.com/back-end . -f ../docker/server.Dockerfile
+          after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/back-end
 
-        - name: 'MySQL test & build'
-          before_install:
+        - name: 'Mysql build'
+          if: type = push
+          before_script:
               - cd ./mysql
               - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           script:
               - docker build -t dev-2019-01.kr.ncr.ntruss.com/mysql . -f ../docker/mysql.Dockerfile
+          after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/mysql
+
 
         - stage: 'DEPLOY'
           name: 'Dev-server deploy'
+          if: (type = push) AND (branch = develop)
           script:
               - sudo apt-get install sshpass
               - sshpass -p "$DEV_SERVER_SSH_PW" ssh -p 2222 -o StrictHostKeyChecking=no root@"$DEV_SERVER_IP" ./deploy.sh
