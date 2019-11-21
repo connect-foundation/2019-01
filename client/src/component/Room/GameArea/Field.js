@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
@@ -6,6 +6,8 @@ import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
 const keydownEventHandler = (event, character) => {
+  if (character === null) return;
+
   const direction = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
     [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
@@ -23,18 +25,16 @@ const Field = () => {
     const ctx = canvas.getContext('2d');
 
     const getMyCharacter = ({ character, otherCharacters }) => {
-      new Character(ctx, character.url, character.indexX, character.indexY);
-      otherCharacters.forEach((c) => {
-        new Character(ctx, c.url, c.indexX, c.indexY);
-      });
+      const newCharacter = new Character(ctx, character.url, character.indexX, character.indexY);
+      window.addEventListener('keydown', (event) => keydownEventHandler(event, newCharacter));
+      otherCharacters.forEach((c) => new Character(ctx, c.url, c.indexX, c.indexY));
     };
+
+
     socket.onEnterRoom(getMyCharacter);
 
     const getOtherCharacter = (character) => new Character(ctx, character.url, character.indexX, character.indexY);
     socket.onEnterPlayer(getOtherCharacter);
-
-
-    // window.addEventListener('keydown', (event) => keydownEventHandler(event, myCharacter));
   }, []);
 
   return (
