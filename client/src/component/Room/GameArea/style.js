@@ -15,6 +15,7 @@ const DashBoardWrapper = styled.div`
     margin: auto;
     width: ${DASH_BOARD.WIDTH}px;
     height: ${DASH_BOARD.HEIGHT}px;
+    border: 2px solid gray;
     border-radius: 0.8rem;
     box-sizing: border-box;
     background-size: 100% 100%;
