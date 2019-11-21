@@ -61,7 +61,6 @@ jobs:
         - name: "Mysql build"
           if: type = push
           before_script:
-              - echo "$MYSQL_PASSWORD" > secret
               - cd ./mysql
               - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           script:
