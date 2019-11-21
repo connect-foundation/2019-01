@@ -29,7 +29,7 @@ class GameController {
     }
     this.players.forEach(async (player) => {
       const roundValue = await this.rooms[roomIdx].startNewRound();
-      player.emit('start round', roundValue);
+      player.emit('start_round', roundValue);
     });
   }
 
