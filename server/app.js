@@ -4,7 +4,7 @@ import logger from 'morgan';
 import socketIo from 'socket.io';
 
 import indexRouter from './routes/index';
-
+import gameController from './controllers';
 
 const app = express();
 
@@ -32,10 +32,7 @@ app.use((err, req, res) => {
 
 app.io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('init', (data) => {
-    console.log(data.name);
-    socket.emit('welcome', `hello! ${data.name}`);
-  });
+  gameController.enterPlayer(socket);
 });
 
 export default app;
