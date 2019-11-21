@@ -133,6 +133,6 @@ export default {
   ROOM: {
     MARGIN: 20,
     getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
-    getHeight() { return FIELD.getHeight() + DASH_BOARD.HEIGHT + this.MARGIN; },
+    getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
   },
 };
