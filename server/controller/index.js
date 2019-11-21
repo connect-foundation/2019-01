@@ -12,7 +12,7 @@ class GameController {
     this.players.push(socket);
     this.bindPlayerEvents(socket);
 
-    const otherCharacters = this.rooms[0].getExistCharacters();
+    const otherCharacters = this.rooms[0].getExistCharacters(); //방은 하나라고 가정하고 rooms[0]번째 방을 이용합니다.
     const character = await this.rooms[0].enterNewPlayer();
     socket.emit('enter_room', { character, otherCharacters });
 
@@ -33,10 +33,9 @@ class GameController {
     });
   }
 
-  // 콜백들은 다른데서 불러와도 될듯
   bindPlayerEvents(socket) {
     socket.on('start_game', () => {
-      this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
+    //   this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
 
       this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
         player.emit('get_quiz_list', await quizFinder.getQuizList());
