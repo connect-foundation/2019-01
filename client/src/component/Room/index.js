@@ -1,15 +1,13 @@
 import React from 'react';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
-import { BackGround, Wrapper } from './style';
+import { Wrapper } from './style';
 
 const Room = () => (
-  <BackGround>
-    <Wrapper>
-      <GameArea />
-      <ChatArea />
-    </Wrapper>
-  </BackGround>
+  <Wrapper>
+    <GameArea />
+    <ChatArea />
+  </Wrapper>
 );
 
 export default Room;
