@@ -2,10 +2,35 @@ import Player from './player';
 
 class Room {
   constructor() {
+    this.quizs = [];
+    this.currentRound = 0;
+    this.currentQuiz = {};
     this.fieldRow = 8;
     this.fieldColumn = 16;
     this.playerList = [];
     this.indexOfPlayers = Array(this.fieldColumn).fill(null).map(() => Array(this.fieldRow));
+  }
+
+  /**
+   * @returns {Object{quiz, charactersLocation:Array.<indexX, indexY>, countTime}}
+   */
+  async startNewRound() {
+    this.setToCurrentQuiz();
+    this.currentRound += 1;
+
+    return { quiz: this.currentQuiz, charactersLocation: [], countTime: 60 };
+  }
+
+  addQuizList(quizs) {
+    this.quizs = [...this.quizs, ...quizs];
+  }
+
+  setToCurrentQuiz() {
+    this.currentQuiz = this.quizs[this.currentRound];
+  }
+
+  hasNoMoreQuiz() {
+    return this.quizs[this.currentRound] === undefined;
   }
 
   async enterNewPlayer() {

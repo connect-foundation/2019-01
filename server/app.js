@@ -2,7 +2,7 @@ import createError from 'http-errors';
 import express from 'express';
 import logger from 'morgan';
 import socketIo from 'socket.io';
-
+import {} from 'dotenv/config';
 import indexRouter from './routes/index';
 import gameController from './controller';
 

@@ -1,3 +1,7 @@
-body{
-    margin:0;
+body {
+  margin: 0;
+  background-image: url(https://i.imgur.com/MeTTcCQ.png);
+  font-family: 'Nanum Gothic', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
