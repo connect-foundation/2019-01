@@ -2,8 +2,9 @@ import createError from 'http-errors';
 import express from 'express';
 import logger from 'morgan';
 import socketIo from 'socket.io';
-
+import {} from 'dotenv/config';
 import indexRouter from './routes/index';
+import gameController from './controllers';
 
 
 const app = express();
@@ -32,10 +33,7 @@ app.use((err, req, res) => {
 
 app.io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('init', (data) => {
-    console.log(data.name);
-    socket.emit('welcome', `hello! ${data.name}`);
-  });
+  gameController.enterPlayer(socket);
 });
 
 export default app;
