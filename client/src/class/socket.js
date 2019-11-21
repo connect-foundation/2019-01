@@ -5,7 +5,7 @@ import EVENT from '../constants/socket-event';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    // this.connect();
+    this.connect();
   }
 
   connect() {
@@ -22,6 +22,14 @@ class SocketContainer {
 
   onEnterPlayer(callback) {
     this.socket.on(EVENT.ENTER_PLAYER, (data) => callback(data));
+  }
+
+  emitStartGame() {
+    this.socket.emit('start_game');
+  }
+
+  onQuizList(callback) {
+    this.socket.on('get_quiz_list', (data) => callback(data));
   }
 }
 

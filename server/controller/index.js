@@ -1,25 +1,30 @@
-import quizManager from '../models/quiz';
+import quizFinder from '../database/quiz';
 import Room from '../models/room';
 
 class GameController {
   constructor() {
     this.players = [];
     this.rooms = [];
-    // map 예제
-    this.mapRooms = new Map();
-
-    // 임시
     this.rooms.push(new Room());
   }
 
-  enterPlayer(socket) {
+  async enterPlayer(socket) {
     this.players.push(socket);
     this.bindPlayerEvents(socket);
+
+    const otherCharacters = this.rooms[0].getExistCharacters();
+    const character = await this.rooms[0].enterNewPlayer();
+    socket.emit('enter_room', { character, otherCharacters });
+
+    this.players.forEach(async (player) => {
+      if (player === socket) return;
+      player.emit('enter_new_player', character);
+    });
   }
 
   async startRoomRound(roomIdx) {
     if (this.rooms[roomIdx].hasNoMoreQuiz()) {
-      const quizList = await quizManager.getQuizList();
+      const quizList = await quizFinder.getQuizList();
       this.rooms[roomIdx].addQuizList(quizList);
     }
     this.players.forEach(async (player) => {
@@ -31,19 +36,11 @@ class GameController {
   // 콜백들은 다른데서 불러와도 될듯
   bindPlayerEvents(socket) {
     socket.on('start_game', () => {
-      console.log('game started');
+      this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
 
-      this.startRoomRound(0);
-    });
-
-    socket.on('enter_room', () => {
-      // ...
-    });
-    socket.on('leave_room', () => {
-      // ...
-    });
-    socket.on('init', () => {
-
+      this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
+        player.emit('get_quiz_list', await quizFinder.getQuizList());
+      });
     });
   }
 }

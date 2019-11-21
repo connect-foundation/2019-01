@@ -3,8 +3,7 @@ import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
-
-const NICK = 'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/nickfury.png';
+import socket from '../../../class/socket';
 
 const keydownEventHandler = (event, character) => {
   const direction = {
@@ -23,9 +22,19 @@ const Field = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    const myCharacter = new Character(ctx, NICK, 0, 0);
+    const getMyCharacter = ({ character, otherCharacters }) => {
+      new Character(ctx, character.url, character.indexX, character.indexY);
+      otherCharacters.forEach((c) => {
+        new Character(ctx, c.url, c.indexX, c.indexY);
+      });
+    };
+    socket.onEnterRoom(getMyCharacter);
 
-    window.addEventListener('keydown', (event) => keydownEventHandler(event, myCharacter));
+    const getOtherCharacter = (character) => new Character(ctx, character.url, character.indexX, character.indexY);
+    socket.onEnterPlayer(getOtherCharacter);
+
+
+    // window.addEventListener('keydown', (event) => keydownEventHandler(event, myCharacter));
   }, []);
 
   return (
