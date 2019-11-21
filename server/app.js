@@ -1,28 +1,36 @@
-//app.js에서 socket.io를 사용한 일부분만 가져왔습니다.
-
-/**
-* bin/www
-* ```
-* app.io.attach(server);
-* ```
-*/
-
+import createError from 'http-errors';
+import express from 'express';
+import logger from 'morgan';
 import socketIo from 'socket.io';
+import {} from 'dotenv/config';
+import indexRouter from './routes/index';
+import gameController from './controller';
+
+const app = express();
+
 app.io = socketIo();
 
-app.io.on('connection', (socket) => {
-    console.log('a user connected');
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-    socket.on('init', (data) => {
-      console.log(data.name);
-      socket.emit('welcome', `hello! ${data.name}`);
-    });
+app.use('/', indexRouter);
+
+
+app.use((req, res, next) => {
+  next(createError(404));
 });
 
+app.use((err, req, res) => {
+  if (req.app.get('env') === 'development') {
+    res.status(err.status || 500);
+    res.send({ message: err.message });
+  }
+});
 
-/**
-* 질문1 :
-* 위와 같이 socket client가 연결되면 ‘connection’ event가 발생하고 callback함수가 실행될 것입니다.
-* parameter로 socket이 들어와서 그 socket을 on할 수 있게 ‘connection’ 안 callback함수에 정의를 했는데요.
-* 이것을 다른 폴더에서 socket.on 혹은 app.io.on 이런식으로 socket.io와 관련한 부분만 분리할 수 있을까요?
-*/
+app.io.on('connection', async (socket) => {
+  console.log('a user connected');
+  await gameController.enterPlayer(socket);
+});
+
+export default app;
