@@ -1,14 +1,15 @@
-import QuizModel from '../models/quiz';
-import RoomModel from '../models/room';
+import quizManager from '../models/quiz';
+import Room from '../models/room';
 
 class GameController {
-  constructor(quizModel, roomModel) {
-    this.QuizModel = quizModel;
-    this.RoomModel = roomModel;
+  constructor() {
     this.players = [];
     this.rooms = [];
     // map 예제
     this.mapRooms = new Map();
+
+    // 임시
+    this.rooms.push(new Room());
   }
 
   enterPlayer(socket) {
@@ -16,26 +17,23 @@ class GameController {
     this.bindPlayerEvents(socket);
   }
 
-  async roomStartRound(roomIdx) {
-    const newRoom = new RoomModel();
-    this.rooms.push(newRoom);
-
+  async startRoomRound(roomIdx) {
     if (this.rooms[roomIdx].hasNoMoreQuiz()) {
-      const tenQuizs = await QuizModel.getQuizList();
-      this.rooms[roomIdx].setTenQuizs(tenQuizs);
+      const quizList = await quizManager.getQuizList();
+      this.rooms[roomIdx].addQuizList(quizList);
     }
     this.players.forEach(async (player) => {
-      const roundValue = await this.rooms[roomIdx].startRound();
+      const roundValue = await this.rooms[roomIdx].startNewRound();
       player.emit('start round', roundValue);
     });
   }
 
   // 콜백들은 다른데서 불러와도 될듯
   bindPlayerEvents(socket) {
-    socket.on('start_game', async () => {
+    socket.on('start_game', () => {
       console.log('game started');
 
-      this.roomStartRound(0);
+      this.startRoomRound(0);
     });
 
     socket.on('enter_room', () => {
@@ -50,6 +48,6 @@ class GameController {
   }
 }
 
-const gameController = new GameController(QuizModel, RoomModel);
+const gameController = new GameController();
 
 export default gameController;
