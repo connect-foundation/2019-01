@@ -10,12 +10,7 @@ class GameController {
 
   async enterPlayer(socket) {
     this.players.push(socket);
-
-    socket.on('start_game', () => {
-      this.players.forEach(async (player) => {
-        player.emit('get_quiz_list', await quizFinder.getQuizList());
-      });
-    });
+    this.bindPlayerEvents(socket);
 
     const otherCharacters = this.rooms[0].getExistCharacters();
     const character = await this.rooms[0].enterNewPlayer();
@@ -24,6 +19,28 @@ class GameController {
     this.players.forEach(async (player) => {
       if (player === socket) return;
       player.emit('enter_new_player', character);
+    });
+  }
+
+  async startRoomRound(roomIdx) {
+    if (this.rooms[roomIdx].hasNoMoreQuiz()) {
+      const quizList = await quizFinder.getQuizList();
+      this.rooms[roomIdx].addQuizList(quizList);
+    }
+    this.players.forEach(async (player) => {
+      const roundValue = await this.rooms[roomIdx].startNewRound();
+      player.emit('start round', roundValue);
+    });
+  }
+
+  // 콜백들은 다른데서 불러와도 될듯
+  bindPlayerEvents(socket) {
+    socket.on('start_game', () => {
+      this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
+
+      this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
+        player.emit('get_quiz_list', await quizFinder.getQuizList());
+      });
     });
   }
 }
