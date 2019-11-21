@@ -12,14 +12,15 @@ services:
 
 branches:
     only:
+        - feature/travis
         - master
         - develop
 
 jobs:
     include:
-        - stage: 'TEST'
+        - stage: "TEST"
           if: type = pull_request
-          name: 'Front-end test'
+          name: "Front-end test"
           before_install:
               - cd ./client
           install:
@@ -27,7 +28,7 @@ jobs:
           script:
               - npm test
 
-        - name: 'Back-end test'
+        - name: "Back-end test"
           if: type = pull_request
           before_install:
               - cd ./server
@@ -35,10 +36,9 @@ jobs:
               - npm install
           script:
               - npm test
-        
 
-        - stage: 'BUILD'
-          name: 'Front-end build'
+        - stage: "BUILD"
+          name: "Front-end build"
           if: type = push
           before_script:
               - cd ./client
@@ -48,7 +48,7 @@ jobs:
           after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/front-end
 
-        - name: 'Back-end build'
+        - name: "Back-end build"
           if: type = push
           before_script:
               - cd ./server
@@ -58,9 +58,10 @@ jobs:
           after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/back-end
 
-        - name: 'Mysql build'
+        - name: "Mysql build"
           if: type = push
           before_script:
+              - echo "$MYSQL_PASSWORD" > secret
               - cd ./mysql
               - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           script:
@@ -68,9 +69,8 @@ jobs:
           after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/mysql
 
-
-        - stage: 'DEPLOY'
-          name: 'Dev-server deploy'
+        - stage: "DEPLOY"
+          name: "Dev-server deploy"
           if: (type = push) AND (branch = develop)
           script:
               - sudo apt-get install sshpass
