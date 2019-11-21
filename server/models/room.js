@@ -1,18 +1,14 @@
-class RoomModel {
+import Player from './player';
+
+class Room {
   constructor() {
-    this.isGameStarted = false;
-    this.playerList = []; // socket
-    this.chatLog = [];
     this.quizs = [];
     this.currentRound = 0;
-    this.currentQuiz;
-  }
-
-
-  async startGame() {
-    // 1. 전광판 상태 변경
-    // 2. 상태를 게임중으로 변경
-    this.isGameStarted = true;
+    this.currentQuiz = {};
+    this.fieldRow = 8;
+    this.fieldColumn = 16;
+    this.playerList = [];
+    this.indexOfPlayers = Array(this.fieldColumn).fill(null).map(() => Array(this.fieldRow));
   }
 
   /**
@@ -36,6 +32,34 @@ class RoomModel {
   hasNoMoreQuiz() {
     return this.quizs[this.currentRound] === undefined;
   }
+
+  async enterNewPlayer() {
+    const player = new Player();
+    const character = await this.assignCharacterToPlayer(player);
+    return character;
+  }
+
+  async assignCharacterToPlayer(player) {
+    const [indexX, indexY] = this.getRandomIndex();
+    const character = await player.makeCharacter(indexX, indexY);
+    this.indexOfPlayers[indexX][indexY] = player;
+    this.playerList.push(player);
+    return character;
+  }
+
+  getExistCharacters() {
+    return this.playerList.map((p) => p.character);
+  }
+
+  getRandomIndex() {
+    let indexX;
+    let indexY;
+    do {
+      indexX = Math.floor(Math.random() * (this.fieldColumn));
+      indexY = Math.floor(Math.random() * (this.fieldRow));
+    } while (this.indexOfPlayers[indexX][indexY]);
+    return [indexX, indexY];
+  }
 }
 
-export default RoomModel;
+export default Room;

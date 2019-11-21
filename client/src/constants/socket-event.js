@@ -1,6 +1,6 @@
 const EVENT = {
-  ENTER_ROOM: 'ENTER_ROOM',
-  ENTER_PLAYER: 'ENTER_PLAYER',
+  ENTER_ROOM: 'enter_room',
+  ENTER_PLAYER: 'enter_new_player',
 };
 
 export default EVENT;
