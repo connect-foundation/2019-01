@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { DASH_BOARD } from '../../../constants/room';
+import {
+  DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON,
+} from '../../../constants/room';
 
 const GameAreaWrapper = styled.div`
     display: flex;
@@ -13,40 +15,59 @@ const GameAreaWrapper = styled.div`
 const DashBoardWrapper = styled.div`
     position: relative;
     margin: auto;
-    width: ${DASH_BOARD.WIDTH}px;
-    height: ${DASH_BOARD.HEIGHT}px;
+    width: ${DASHBOARD.WIDTH}px;
+    height: ${DASHBOARD.HEIGHT}px;
+    border: 2px solid gray;
     border-radius: 0.8rem;
     box-sizing: border-box;
     background-size: 100% 100%;
-    background-image: url("https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png");
 `;
 
 const QuizWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    padding: 20px 0px 20px 40px;
-    margin-right: 147px;
-    box-sizing: border-box;
-    font-size: 24px;
-    font-family: 'Nanum Gothic', sans-serif;
+    position: absolute;
+    width: ${QUIZ.WIDTH}px;
+    top: 50%;
+    left: ${QUIZ.LEFT}px;
+    transform: translateY(-50%);
+    font-size: ${QUIZ.FONTSIZE}px;
 `;
 
 const CounterWrapper = styled.div`
     position: absolute;
-    width: 80px;
-    padding: 10px 0px;
+    width: ${COUNTER.WIDTH}px;
+    padding: ${COUNTER.PADDING};
     top: 50%;
-    right: 40px;
+    right: ${COUNTER.RIGHT}px;
     transform: translateY(-50%);
     text-align: center;
     border: 1px solid black;
-    border-radius: 8px;
+    border-radius: 0.8rem;
     background-color: white;
-    font-size: 28px;
+    font-size: ${COUNTER.FONTSIZE}px;
+`;
+
+const GameStartButton = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: ${GAME_START_BUTTON.PADDING};
+    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
+    border-radius: 0.8rem;
+    background-color: ${GAME_START_BUTTON.BACKGROUND_COLOR};
+    border: 0;
+    box-shadow: ${GAME_START_BUTTON.BOX_SHADOW};
+    cursor: pointer;
+`;
+
+const WaitingText = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
 `;
 
 export {
-  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper,
+  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText,
 };
