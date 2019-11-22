@@ -6,13 +6,14 @@ import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
 const keydownEventHandler = (event, character) => {
-  const direction = {
+  const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
     [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
     [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
     [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
   };
-  character.move(direction[event.keyCode]);
+  const direction = directionMap[event.keyCode];
+  if (direction !== undefined) character.move(direction);
 };
 
 const Field = () => {
