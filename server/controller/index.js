@@ -3,7 +3,6 @@ import User from '../models/user';
 
 class GameController {
   constructor() {
-    this.players = [];
     this.rooms = [];
     this.rooms.push(new Room());
     this.userRoomMap = new Map();

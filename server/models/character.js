@@ -2,9 +2,9 @@ import imageFinder from '../database/image';
 
 class Character {
   constructor() {
-    this.characterUrl = undefined;
-    this.indexX = undefined;
-    this.indexY = undefined;
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
   }
 
   async setCharacterUrl() {
@@ -16,12 +16,12 @@ class Character {
     return this.characterUrl;
   }
 
-  setIndexies(indexX, indexY) {
+  setIndexes(indexX, indexY) {
     this.indexX = indexX;
     this.indexY = indexY;
   }
 
-  getIndexies() {
+  getIndexes() {
     return [this.indexX, this.indexY];
   }
 
