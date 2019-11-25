@@ -1,8 +1,8 @@
 import pool from './connection';
 
-const getDataFromDB = async (query) => {
-  const [rows] = await pool.query(query);
+const query = async (sql) => {
+  const [rows] = await pool.query(sql);
   return rows;
 };
 
-export default getDataFromDB;
+export default query;
