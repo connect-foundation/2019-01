@@ -651,3 +651,408 @@ VALUES
         'yondu',
         'https://kr.object.ncloudstorage.com/connect-2019-01/image/character/yondu.png'
     );
+
+
+-- CREATE TABLE IF NOT EXISTS Nickname_adj (
+--     id int(11) NOT NULL auto_increment,
+--     adj varchar(50) NOT NULL,
+--     PRIMARY KEY (id)
+-- );
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '멋진'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '맛있는'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '시원한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '초록색'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '예쁜'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '못생긴'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '고장난'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '빠른'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '똑똑한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '잘생긴'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '고집쎈'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '외로운'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '악랄한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '배고픈'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '따가운'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '빨간색'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '무거운'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '요망한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '도도한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '까칠한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '차가운'
+    ); 
+    
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '거친'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '귀여운'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '상남자'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '목마른'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '음흉한'
+    ); 
+
+INSERT INTO
+    Nickname_adj (adj)
+VALUES
+    (
+       '순수한'
+    ); 
+
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '엘사'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '베이비'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '올빼미'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '오리'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '치킨'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '고양이'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '강아지'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '고래'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '상어'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '늑대'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '여우'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '돼지'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '팬더'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '사과'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '망고'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '립밤'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '볼펜'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '책상'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '의자'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '맥북'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '패딩'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '양말'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '사자'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '얼룩말'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '악어'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '뱁새'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '형규'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '희선'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '영도'
+    );
+     
+INSERT INTO
+    Nickname_noun (noun)
+VALUES
+    (
+       '보현'
+    );
