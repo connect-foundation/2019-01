@@ -28,9 +28,9 @@ app.use((err, req, res) => {
   }
 });
 
-app.io.on('connection', async (socket) => {
+app.io.on('connection', (socket) => {
   console.log('a user connected');
-  await gameController.enterPlayer(socket);
+  gameController.bindEvent(socket);
 });
 
 export default app;
