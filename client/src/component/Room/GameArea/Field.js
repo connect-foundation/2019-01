@@ -6,16 +6,17 @@ import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
 const keydownEventHandler = (event, character) => {
-  if (character === null) return;
+  if ((character instanceof Character) === false) return;
 
-  const direction = {
+  const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
     [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
     [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
     [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
   };
 
-  character.move(direction[event.keyCode]);
+  const direction = directionMap[event.keyCode];
+  if (direction !== undefined) character.move(direction);
 };
 
 const Field = () => {
@@ -31,7 +32,7 @@ const Field = () => {
       otherCharacters.forEach((c) => new Character(ctx, c.url, c.indexX, c.indexY));
     };
 
-    const getOtherCharacter = (character) => new Character(ctx, character.url, character.indexX, character.indexY);
+    const getOtherCharacter = ({ url, indexX, indexY }) => new Character(ctx, url, indexX, indexY);
 
     socket.onEnterRoom(getMyCharacter);
     socket.onEnterPlayer(getOtherCharacter);
