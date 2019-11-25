@@ -15,7 +15,7 @@ class Player {
    * @returns {Character}
    */
   async makeCharacter(indexX, indexY) {
-    [this.character] = await imageFinder.getRandomCharacter();
+    [this.character] = await imageFinder.fetchRandomCharacter();
     [this.character.indexX, this.character.indexY] = [indexX, indexY];
     return this.character;
   }
