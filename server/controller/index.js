@@ -38,7 +38,7 @@ class GameController {
       this.startRoomRound(0);
 
       this.players.forEach(async (player) => {
-        player.emit('fetch_quiz_list', await quizFinder.getQuizList());
+        player.emit('get_quiz_list', await quizFinder.fetchQuizList());
       });
     });
   }
