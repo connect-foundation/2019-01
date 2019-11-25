@@ -29,17 +29,16 @@ class GameController {
     }
     this.players.forEach(async (player) => {
       const roundValue = await this.rooms[roomIdx].startNewRound();
-      player.emit('start round', roundValue);
+      player.emit('start_round', roundValue);
     });
   }
 
-  // 콜백들은 다른데서 불러와도 될듯
   bindPlayerEvents(socket) {
     socket.on('start_game', () => {
-      this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
+      this.startRoomRound(0);
 
-      this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
-        player.emit('get_quiz_list', await quizFinder.getQuizList());
+      this.players.forEach(async (player) => {
+        player.emit('get_quiz_list', await quizFinder.fetchQuizList());
       });
     });
   }
