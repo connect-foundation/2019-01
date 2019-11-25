@@ -2,6 +2,8 @@
 import socketio from 'socket.io-client';
 import EVENT from '../constants/socket-event';
 
+const isFunction = (callback) => typeof callback === 'function';
+
 class SocketContainer {
   constructor() {
     this.socket = undefined;
@@ -17,19 +19,25 @@ class SocketContainer {
   }
 
   onEnterRoom(callback) {
-    this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
+    }
   }
 
   onEnterPlayer(callback) {
-    this.socket.on(EVENT.ENTER_PLAYER, (data) => callback(data));
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ENTER_PLAYER, (data) => callback(data));
+    }
   }
 
   emitStartGame() {
-    this.socket.emit('start_game');
+    this.socket.emit(EVENT.START_GAME);
   }
 
   onQuizList(callback) {
-    this.socket.on('get_quiz_list', (data) => callback(data));
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
+    }
   }
 }
 

@@ -7,6 +7,19 @@ const FILED_COLUMN = 16;
 const SECOND = 1000; // 1s
 const TIME_LIMIT = 60 * SECOND; // 60s
 
+/**
+ * Room Class
+ * @property {string} id
+ * @property {string} name
+ * @property {boolean} isGameStarted
+ * @property {object[]} quizList
+ * @property {object} currentQuiz
+ * @property {number} currentRound
+ * @property {number} currentTime
+ * @property {User[]} userList
+ * @property {Player[]} userCharacterMap
+ * @property {Array.<Array.<number, number>>} indexOfCharacters
+ */
 class Room {
   constructor(id, name) {
     this.id = id;
@@ -164,6 +177,9 @@ class Room {
     this.isGameStarted = false;
   }
 
+  /**
+   * 유저에게 랜덤한 캐릭터를 생성해 배정해주는 메서드
+   */
   async _giveCharacter(userId) {
     const character = new Character();
     await character.setCharacterUrl();
@@ -171,17 +187,26 @@ class Room {
     this._placeCharacter(character);
   }
 
+  /**
+   * 캐릭터를 랜덤한 위치에 이동시키는 메서드
+   */
   _placeCharacter(character) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
     character.setIndexies(indexX, indexY);
     this.indexOfCharacters[indexX][indexY] = character;
   }
 
+  /**
+   * @returns {Boolean}
+   */
   _isOwner(userId) {
     const ownerId = this.userCharacterMap.keys().next().value;
     return ownerId === userId;
   }
 
+  /**
+   * 제한 시간까지 시간을 측정하는 메서드
+   */
   _countTime() {
     setTimeout(() => {
       this.currentTime += 1;
@@ -193,6 +218,9 @@ class Room {
     }, SECOND);
   }
 
+  /**
+   * @returns {Array.<Array.<number, number>>}
+   */
   _getRandomEmptyIndex() {
     let indexX;
     let indexY;
@@ -203,10 +231,16 @@ class Room {
     return [indexX, indexY];
   }
 
+  /**
+   * @returns {Array.<number, number>}
+   */
   _getEmptyIndexMatrix() {
     return Array(FILED_COLUMN).fill().map(() => Array(FILED_ROW));
   }
 
+  /**
+   * @returns {Boolean}
+   */
   _canBeMoved(newIndexX, newIndexY) {
     if (newIndexX < 0 || newIndexX >= FILED_ROW) return false;
     if (newIndexY < 0 || newIndexY >= FILED_COLUMN) return false;
