@@ -24,6 +24,10 @@ class Character {
   }
 
   _draw() {
+    /*
+     * HTML canvas drawImage() Method :
+     * context.drawImage(img,startX,startY,startWidth,startheight,x,y,width,height)
+     */
     this.ctx.drawImage(
       this.img,
       CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
