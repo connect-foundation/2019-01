@@ -1,20 +1,20 @@
 import createError from 'http-errors';
 import express from 'express';
 import logger from 'morgan';
-import socketIo from 'socket.io';
+import socketio from 'socket.io';
 import {} from 'dotenv/config';
 import indexRouter from './routes/index';
 import gameController from './controller';
 
 const app = express();
 
-app.io = socketIo();
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
+
+const socketIo = socketio();
 
 
 app.use((req, res, next) => {
@@ -28,9 +28,9 @@ app.use((err, req, res) => {
   }
 });
 
-app.io.on('connection', async (socket) => {
+socketIo.on('connection', async (socket) => {
   console.log('a user connected');
   await gameController.enterPlayer(socket);
 });
 
-export default app;
+export default { app, socketIo };
