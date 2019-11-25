@@ -1,46 +1,48 @@
-import quizFinder from '../database/quiz';
 import Room from '../models/room';
+import User from '../models/user';
 
 class GameController {
   constructor() {
-    this.players = [];
     this.rooms = [];
     this.rooms.push(new Room());
+    this.userRoomMap = new Map();
   }
 
-  async enterPlayer(socket) {
-    this.players.push(socket);
-    this.bindPlayerEvents(socket);
-
-    const otherCharacters = this.rooms[0].getExistCharacters();
-    const character = await this.rooms[0].enterNewPlayer();
-    socket.emit('enter_room', { character, otherCharacters });
-
-    this.players.forEach(async (player) => {
-      if (player === socket) return;
-      player.emit('enter_new_player', character);
-    });
+  async letUserEnterRoom(user, roomId) {
+    console.log(roomId); // 추후 roomId로 방 찾기
+    const room = this.rooms[0];
+    await room.enterUser(user);
   }
 
-  async startRoomRound(roomIdx) {
-    if (this.rooms[roomIdx].hasNoMoreQuiz()) {
-      const quizList = await quizFinder.getQuizList();
-      this.rooms[roomIdx].addQuizList(quizList);
-    }
-    this.players.forEach(async (player) => {
-      const roundValue = await this.rooms[roomIdx].startNewRound();
-      player.emit('start_round', roundValue);
-    });
+  letUserLeaveRoom(user) {
+    const room = this.rooms[0];
+    room.leaveUser(user);
   }
 
-  bindPlayerEvents(socket) {
-    socket.on('start_game', () => {
-      this.startRoomRound(0);
+  async letUserStartGame(user) {
+    const room = this.rooms[0];
+    await room.startGame(user);
+  }
 
-      this.players.forEach(async (player) => {
-        player.emit('get_quiz_list', await quizFinder.fetchQuizList());
-      });
-    });
+  letUserMove(user, direction) {
+    const room = this.rooms[0];
+    room.moveCharacter(user, direction);
+  }
+
+  letUserChat(user, message) {
+    const room = this.rooms[0];
+    room.chat(user, message);
+  }
+
+  bindEvent(socket) {
+    const user = new User(socket);
+
+    user.onEnterRoom((roomId) => this.letUserEnterRoom(user, roomId));
+    user.onStartGame(() => this.letUserStartGame(user));
+    user.onMove((direction) => this.letUserMove(user, direction));
+    user.onChatMessage((message) => this.letUserChat(user, message));
+    user.onLeaveRoom(() => this.letUserLeaveRoom(user));
+    user.onDisconnecting(() => this.letUserLeaveRoom(user));
   }
 }
 
