@@ -4,7 +4,9 @@ class User {
   constructor(socket) {
     this.id = socket.id;
     this.socket = socket;
-    this.nickname = undefined;
+    this.nickname = null;
+    this.character = null;
+    this.currentLocation = null;
   }
 
   getNickname() {
@@ -17,6 +19,14 @@ class User {
 
   getId() {
     return this.id;
+  }
+
+  getCharacter() {
+    return this.character;
+  }
+
+  setCharacter(character) {
+    this.character = character;
   }
 
   onEnterRoom(callback) {

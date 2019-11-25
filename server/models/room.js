@@ -1,11 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import Character from './character';
 import quizFinder from '../database/quiz';
-
-const FILED_ROW = 8;
-const FILED_COLUMN = 16;
-const SECOND = 1000; // 1s
-const TIME_LIMIT = 60 * SECOND; // 60s
+import { ROOM, DIRECTION } from '../constants/room';
 
 /**
  * Room Class
@@ -17,7 +13,6 @@ const TIME_LIMIT = 60 * SECOND; // 60s
  * @property {number} currentRound
  * @property {number} currentTime
  * @property {User[]} userList
- * @property {Player[]} userCharacterMap
  * @property {Array.<Array.<number, number>>} indexOfCharacters
  */
 class Room {
@@ -30,7 +25,6 @@ class Room {
     this.currentRound = 0;
     this.currentTime = 0;
     this.userList = [];
-    this.userCharacterMap = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
   }
 
@@ -41,32 +35,32 @@ class Room {
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
   // emit: enter_new_player / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
   async enterUser(user) {
-    const userId = user.getId();
-
     if (this.isGameStarted === false) {
-      await this._giveCharacter(userId);
+      await this._assignCharacter(user);
     }
 
     const characterList = [];
-    const myCharacter = this.userCharacterMap.get(userId);
-    this.userCharacterMap.forEach((_character, _userId) => {
+    const myCharacter = user.getCharacter();
+    this.userList.forEach((_user) => {
+      const character = _user.getCharacter();
+      if (character === null) return;
       characterList.push({
-        userId: _userId,
-        isMine: _character === myCharacter,
-        ..._character.getInfo(),
+        userId: _user.getId(),
+        isMine: character === myCharacter,
+        ...character.getInfo(),
       });
     });
 
     this.userList.forEach((_user) => {
-      _user.emitEnterNewUser({ ...myCharacter.getInfo() });
+      _user.emitEnterNewUser(myCharacter.getInfo());
     });
 
     user.emitEnterRoom({
       characterList,
       isGameStarted: this.isGameStarted,
       question: this.currentQuiz.question,
-      timeLimit: TIME_LIMIT - this.currentTime,
-      isOwner: this._isOwner(userId),
+      timeLimit: ROOM.TIME_LIMIT - this.currentTime,
+      isOwner: this._isOwner(user),
     });
 
     this.userList.push(user);
@@ -74,18 +68,17 @@ class Room {
 
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
   leaveUser(user) {
-    const userId = user.getId();
-    if (this.userCharacterMap.has(userId)) {
-      const character = this.userCharacterMap.get(userId);
-      const [indexX, indexY] = character.getIndexies();
+    const character = user.getCharacter();
+    if (character !== null) {
+      const [indexX, indexY] = character.getIndexes();
       this.indexOfCharacters[indexX][indexY] = undefined;
-      this.userCharacterMap.delete(userId);
+      user.setCharacter(null);
     }
 
     const userIndex = this.userList.findIndex((_user) => user === _user);
     this.userList.splice(userIndex, 1);
 
-    this.userList.forEach((_user) => _user.emitLeaveUser({ userId }));
+    this.userList.forEach((_user) => _user.emitLeaveUser({ userId: user.getId() }));
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -101,31 +94,29 @@ class Room {
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
   moveCharacter(user, direction) {
-    const character = this.userCharacterMap.get(user.getId());
-    if (character === undefined) return;
+    const character = user.getCharacter();
+    if (character === null) return;
 
-    const [oldIndexX, oldIndexY] = character.getIndexies();
+    const [oldIndexX, oldIndexY] = character.getIndexes();
     let newIndexX = oldIndexX;
     let newIndexY = oldIndexY;
 
     switch (direction) {
-      case 'left': newIndexX -= 1; break;
-      case 'right': newIndexX += 1; break;
-      case 'up': newIndexY -= 1; break;
-      case 'down': newIndexY += 1; break;
-      default:
+      case DIRECTION.LEFT: newIndexX -= 1; break;
+      case DIRECTION.RIGHT: newIndexX += 1; break;
+      case DIRECTION.UP: newIndexY -= 1; break;
+      case DIRECTION.DOWN: newIndexY += 1; break;
+      default: return;
     }
+
+    if (this._canBeMoved(newIndexX, newIndexY) === false) return;
+
+    this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
+    this.indexOfCharacters[newIndexX][newIndexY] = character;
+    character.setIndexes(newIndexX, newIndexY);
 
     const userId = user.getId();
-    if (this._canBeMoved(newIndexX, newIndexY)) {
-      this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-      this.indexOfCharacters[newIndexX][newIndexY] = character;
-      character.setIndexies(newIndexX, newIndexY);
-
-      user.emitMove({ userId, indexX: newIndexX, indexY: newIndexY });
-    } else {
-      user.emitMove({ userId, indexX: oldIndexX, indexY: oldIndexY });
-    }
+    user.emitMove({ userId, indexX: newIndexX, indexY: newIndexY });
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -137,18 +128,26 @@ class Room {
   // 아래는 자체 emit
   // emit: start_round / 모든 유저 / 문제, 각 캐릭터 위치, 제한 시간
   async _startRound() {
-    if (this.quizList.length === 0) {
-      this.quizList = await quizFinder.fetchQuizList();
+    if (this.quizList[this.currentRound] === undefined) {
+      const newQuizList = await quizFinder.fetchQuizList();
+      newQuizList.forEach((newQuiz) => { // 문제 추가할 때, 전에 냈던 문제이면 추가하지 않는 걸로
+        if (this.quizList.find((oldQuiz) => oldQuiz.id === newQuiz.id)) return;
+        this.quizList.push(newQuiz);
+      });
     }
-    this.currentQuiz = this.quizList.shift();
+    this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
 
     const characterLocations = [];
     this.indexOfCharacters = this._getEmptyIndexMatrix();
-    this.userCharacterMap.forEach((character, userId) => {
+
+    this.userList.forEach((user) => {
+      const character = user.getCharacter();
+      if (character === null) return;
+
       this._placeCharacter(character);
-      const [indexX, indexY] = character.getIndexies();
-      characterLocations.push({ userId, indexX, indexY });
+      const [indexX, indexY] = character.getIndexes();
+      characterLocations.push({ userId: user.getId(), indexX, indexY });
     });
 
     this.userList.forEach((user) => {
@@ -156,7 +155,7 @@ class Room {
         round: this.currentRound,
         question: this.currentQuiz.question,
         characterLocations,
-        timeLimit: TIME_LIMIT,
+        timeLimit: ROOM.TIME_LIMIT,
       });
     });
 
@@ -180,10 +179,10 @@ class Room {
   /**
    * 유저에게 랜덤한 캐릭터를 생성해 배정해주는 메서드
    */
-  async _giveCharacter(userId) {
+  async _assignCharacter(user) {
     const character = new Character();
     await character.setCharacterUrl();
-    this.userCharacterMap.set(userId, character);
+    user.setCharacter(character);
     this._placeCharacter(character);
   }
 
@@ -192,16 +191,16 @@ class Room {
    */
   _placeCharacter(character) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
-    character.setIndexies(indexX, indexY);
+    character.setIndexes(indexX, indexY);
     this.indexOfCharacters[indexX][indexY] = character;
   }
 
   /**
    * @returns {Boolean}
    */
-  _isOwner(userId) {
-    const ownerId = this.userCharacterMap.keys().next().value;
-    return ownerId === userId;
+  _isOwner(user) {
+    const owner = this.userList[0];
+    return owner === user;
   }
 
   /**
@@ -210,12 +209,12 @@ class Room {
   _countTime() {
     setTimeout(() => {
       this.currentTime += 1;
-      if (this.currentTime < TIME_LIMIT) {
+      if (this.currentTime < ROOM.TIME_LIMIT) {
         this._countTime();
       } else {
         this.endRound();
       }
-    }, SECOND);
+    }, ROOM.SECOND);
   }
 
   /**
@@ -225,8 +224,8 @@ class Room {
     let indexX;
     let indexY;
     do {
-      indexX = Math.floor(Math.random() * (FILED_COLUMN));
-      indexY = Math.floor(Math.random() * (FILED_ROW));
+      indexX = Math.floor(Math.random() * (ROOM.FILED_COLUMN));
+      indexY = Math.floor(Math.random() * (ROOM.FILED_ROW));
     } while (this.indexOfCharacters[indexX][indexY]);
     return [indexX, indexY];
   }
@@ -235,15 +234,15 @@ class Room {
    * @returns {Array.<number, number>}
    */
   _getEmptyIndexMatrix() {
-    return Array(FILED_COLUMN).fill().map(() => Array(FILED_ROW));
+    return Array(ROOM.FILED_COLUMN).fill().map(() => Array(ROOM.FILED_ROW));
   }
 
   /**
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= FILED_ROW) return false;
-    if (newIndexY < 0 || newIndexY >= FILED_COLUMN) return false;
+    if (newIndexX < 0 || newIndexX >= ROOM.FILED_ROW) return false;
+    if (newIndexY < 0 || newIndexY >= ROOM.FILED_COLUMN) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }
