@@ -7,15 +7,13 @@ import indexRouter from './routes/index';
 import gameController from './controller';
 
 const app = express();
+const socketIo = socketio();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
-
-const socketIo = socketio();
-
 
 app.use((req, res, next) => {
   next(createError(404));
