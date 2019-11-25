@@ -8,7 +8,7 @@ class Character {
   }
 
   async setCharacterUrl() {
-    const [image] = await imageFinder.getRandomCharacter();
+    const [image] = await imageFinder.fetchRandomCharacter();
     this.characterUrl = image.url;
   }
 
