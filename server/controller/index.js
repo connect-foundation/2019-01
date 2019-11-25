@@ -35,9 +35,9 @@ class GameController {
 
   bindPlayerEvents(socket) {
     socket.on('start_game', () => {
-      this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
+      this.startRoomRound(0);
 
-      this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
+      this.players.forEach(async (player) => {
         player.emit('fetch_quiz_list', await quizFinder.getQuizList());
       });
     });
