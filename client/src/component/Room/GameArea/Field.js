@@ -15,6 +15,7 @@ const keydownEventHandler = (event, character) => {
     [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
     [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
   };
+
   character.move(direction[event.keyCode]);
 };
 
@@ -25,7 +26,6 @@ const getMyCharacter = ({ character, otherCharacters }) => {
 };
 
 const getOtherCharacter = (character) => new Character(ctx, character.url, character.indexX, character.indexY);
-
 
 const Field = () => {
   const canvasRef = React.useRef();

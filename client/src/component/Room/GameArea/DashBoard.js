@@ -16,6 +16,7 @@ const DashBoard = () => {
   const [time, setTime] = useState();
   const [GameStarted, setGameStarted] = useState(false);
   const [owner, setOwner] = useState(true);
+
   const quizListHandler = (data) => {
     const getNextQuiz = () => data.shift().question;
     const showNextQuiz = () => {
@@ -34,7 +35,6 @@ const DashBoard = () => {
 
   const counterHandler = () => {
     setCounter((_counter) => {
-      console.log(_counter);
       if (_counter > 1) {
         setTimeout(counterHandler, 1000);
         return _counter - 1;

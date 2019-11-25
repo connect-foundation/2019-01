@@ -33,13 +33,12 @@ class GameController {
     });
   }
 
-  // 콜백들은 다른데서 불러와도 될듯
   bindPlayerEvents(socket) {
     socket.on('start_game', () => {
       this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
 
       this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
-        player.emit('get_quiz_list', await quizFinder.getQuizList());
+        player.emit('fetch_quiz_list', await quizFinder.getQuizList());
       });
     });
   }

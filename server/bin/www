@@ -9,7 +9,7 @@
 const debug = require('debug')('server:server');
 const http = require('http');
 
-const app = require('./app').default;
+const { app, socketIo } = require('./app').default;
 const { normalizePort, onError, onListening } = require('./util');
 
 
@@ -21,7 +21,7 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
-app.io.attach(server);
+socketIo.attach(server);
 
 
 /**
