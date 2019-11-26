@@ -207,8 +207,7 @@ class Room {
    * @returns {Boolean}
    */
   _isOwner(user) {
-    const userIds = this.users.keys();
-    const ownerId = userIds.next().value;
+    const ownerId = this.users.keys().next().value;
     return ownerId === user.getId();
   }
 
