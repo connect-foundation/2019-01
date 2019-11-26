@@ -21,7 +21,7 @@ class Lobby {
         id: roomId,
         name: room.getName(),
         numOfUsers: room.getNumOfUsers(),
-        isEnterable: room.getIsEnterable(),
+        isEnterable: room.isEnterable(),
       };
       roomInfos.push(roomInfo);
     });

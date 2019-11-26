@@ -40,7 +40,7 @@ class Room {
     return this.userList.length;
   }
 
-  getIsEnterable() {
+  isEnterable() {
     if (this.isGameStarted) return false;
     if (this.userList.length >= ROOM.MAX_USER) return false;
     return true;
