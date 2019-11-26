@@ -6,7 +6,6 @@ class User {
     this.socket = socket;
     this.nickname = null;
     this.character = null;
-    this.isInLobby = true;
     this.roomId = null;
   }
 
@@ -30,8 +29,8 @@ class User {
     this.character = character;
   }
 
-  getIsInLobby() {
-    return this.isInLobby;
+  isInLobby() {
+    return this.roomId === null;
   }
 
   getRoomId() {
@@ -39,14 +38,13 @@ class User {
   }
 
   onEnterLobby() {
-    this.isInLobby = true;
+    this.roomId = null;
   }
 
   onEnterRoom(callback) {
     this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
       callback(roomId);
       this.roomId = roomId;
-      this.isInLobby = false;
     });
   }
 
@@ -54,7 +52,6 @@ class User {
     this.socket.on(EVENT.LEAVE_ROOM, () => {
       callback();
       this.roomId = null;
-      this.isInLobby = true;
     });
   }
 
