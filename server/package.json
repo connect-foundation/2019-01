@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "webpack --mode production; node ./bin/www",
-    "test": "webpack --mode production; jest --forceExit"
+    "test": "webpack --mode production; jest --runInBand --verbose  --forceExit"
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
