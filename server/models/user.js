@@ -6,7 +6,8 @@ class User {
     this.socket = socket;
     this.nickname = null;
     this.character = null;
-    this.currentLocation = null;
+    this.isInLobby = true;
+    this.roomId = null;
   }
 
   getNickname() {
@@ -29,12 +30,32 @@ class User {
     this.character = character;
   }
 
+  getIsInLobby() {
+    return this.isInLobby;
+  }
+
+  getRoomId() {
+    return this.roomId;
+  }
+
+  onEnterLobby() {
+    this.isInLobby = true;
+  }
+
   onEnterRoom(callback) {
-    this.socket.on(EVENT.ENTER_ROOM, (roomId) => callback(roomId));
+    this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
+      callback(roomId);
+      this.roomId = roomId;
+      this.isInLobby = false;
+    });
   }
 
   onLeaveRoom(callback) {
-    this.socket.on(EVENT.LEAVE_ROOM, () => callback());
+    this.socket.on(EVENT.LEAVE_ROOM, () => {
+      callback();
+      this.roomId = null;
+      this.isInLobby = true;
+    });
   }
 
   onStartGame(callback) {
@@ -51,6 +72,10 @@ class User {
 
   onDisconnecting(callback) {
     this.socket.on(EVENT.DISCONNECT, () => callback());
+  }
+
+  emitRoomInfos(data) {
+    this.socket.emit(EVENT.ROOM_INFOS, data);
   }
 
   emitEnterRoom(data) {
