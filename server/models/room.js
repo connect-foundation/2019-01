@@ -1,7 +1,6 @@
 
 import nicknameFinder from '../database/nickname';
 /* eslint-disable no-underscore-dangle */
-import Character from './character';
 import quizFinder from '../database/quiz';
 import { ROOM, DIRECTION } from '../constants/room';
 
@@ -14,7 +13,7 @@ import { ROOM, DIRECTION } from '../constants/room';
  * @property {object} currentQuiz
  * @property {number} currentRound
  * @property {number} currentTime
- * @property {User[]} userList
+ * @property {Map<string, user>} users
  * @property {Array.<Array.<number, number>>} indexOfCharacters
  */
 class Room {
@@ -26,7 +25,7 @@ class Room {
     this.currentQuiz = {};
     this.currentRound = 0;
     this.currentTime = 0;
-    this.userList = [];
+    this.users = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
   }
@@ -40,17 +39,36 @@ class Room {
     console.log(this.nicknameList);
   }
 
+  getId() {
+    return this.id;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getNumOfUsers() {
+    return this.users.size;
+  }
+
+  isEnterable() {
+    if (this.isGameStarted) return false;
+    if (this.users.size >= ROOM.MAX_USER) return false;
+    return true;
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
   //                          게임 중이 아니라면, 게임 중인 여부, 방장 여부
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
-  // emit: enter_new_player / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
-  async enterUser(user) {
-    this.userList.push(user);
+  // emit: enter_new_user / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
+  enterUser(user) {
+    this.users.set(user.getId(), user);
 
+    const myCharacter = user.getCharacter();
     if (this.isGameStarted === false) {
-      await this._assignCharacter(user);
+      this._placeCharacter(myCharacter);
     }
 
     if (!this.nicknameList.length) {
@@ -59,18 +77,17 @@ class Room {
     user.setNickname(this.nicknameList.shift());
 
     const characterList = [];
-    const myCharacter = user.getCharacter();
-
-    this.userList.forEach((_user) => {
+    this.users.forEach((_user) => {
       const character = _user.getCharacter();
-      if (character === null) return;
+      if (character.isPlaced() === false) return;
       characterList.push({
         userId: _user.getId(),
         isMine: character === myCharacter,
         ...character.getInfo(),
       });
     });
-    this.userList.forEach((_user) => {
+
+    this.users.forEach((_user) => {
       if (user === _user) return;
       _user.emitEnterNewUser(myCharacter.getInfo());
     });
@@ -87,16 +104,16 @@ class Room {
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
   leaveUser(user) {
     const character = user.getCharacter();
-    if (character !== null) {
+    if (character !== null && character.isPlaced()) {
       const [indexX, indexY] = character.getIndexes();
       this.indexOfCharacters[indexX][indexY] = undefined;
-      user.setCharacter(null);
+      user.deleteCharacter();
     }
 
-    const userIndex = this.userList.findIndex((_user) => user === _user);
-    this.userList.splice(userIndex, 1);
-
-    this.userList.forEach((_user) => _user.emitLeaveUser({ userId: user.getId() }));
+    this.users.delete(user.getId());
+    this.users.forEach((_user) => _user.emitLeaveUser(
+      { userId: user.getId(), isOwner: this._isOwner(user) },
+    ));
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -113,7 +130,7 @@ class Room {
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
   moveCharacter(user, direction) {
     const character = user.getCharacter();
-    if (character === null) return;
+    if (character.isPlaced() === false) return;
 
     const [oldIndexX, oldIndexY] = character.getIndexes();
     let newIndexX = oldIndexX;
@@ -159,16 +176,16 @@ class Room {
     const characterLocations = [];
     this.indexOfCharacters = this._getEmptyIndexMatrix();
 
-    this.userList.forEach((user) => {
+    this.users.forEach((user) => {
       const character = user.getCharacter();
-      if (character === null) return;
+      if (character.isPlaced() === false) return;
 
       this._placeCharacter(character);
       const [indexX, indexY] = character.getIndexes();
       characterLocations.push({ userId: user.getId(), indexX, indexY });
     });
 
-    this.userList.forEach((user) => {
+    this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
@@ -195,17 +212,7 @@ class Room {
   }
 
   /**
-   * 유저에게 랜덤한 캐릭터를 생성해 배정해주는 메서드
-   */
-  async _assignCharacter(user) {
-    const character = new Character();
-    await character.setCharacterUrl();
-    user.setCharacter(character);
-    this._placeCharacter(character);
-  }
-
-  /**
-   * 캐릭터를 랜덤한 위치에 이동시키는 메서드
+   * 유저의 캐릭터를 랜덤한 위치에 이동시키는 메서드
    */
   _placeCharacter(character) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
@@ -217,8 +224,8 @@ class Room {
    * @returns {Boolean}
    */
   _isOwner(user) {
-    const owner = this.userList[0];
-    return owner === user;
+    const ownerId = this.users.keys().next().value;
+    return ownerId === user.getId();
   }
 
   /**
@@ -236,7 +243,7 @@ class Room {
   }
 
   /**
-   * @returns {Array.<Array.<number, number>>}
+   * @returns {Array.<number, number>}
    */
   _getRandomEmptyIndex() {
     let indexX;
@@ -249,7 +256,7 @@ class Room {
   }
 
   /**
-   * @returns {Array.<number, number>}
+   * @returns {Array.<Array.<number, number>>}
    */
   _getEmptyIndexMatrix() {
     return Array(ROOM.FILED_COLUMN).fill().map(() => Array(ROOM.FILED_ROW));
