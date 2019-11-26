@@ -37,7 +37,7 @@ class Room {
     for (let idx = 0; idx < adjList.length; idx += 1) {
       this.nicknameList[idx] = `${adjList[idx].adj} ${nounList[idx].noun}`;
     }
-    // console.log(this.nicknameList);
+    console.log(this.nicknameList);
   }
 
   // 아래는 on에 대응한 emit
