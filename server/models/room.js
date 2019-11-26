@@ -33,7 +33,7 @@ class Room {
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
   //                          게임 중이 아니라면, 게임 중인 여부, 방장 여부
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
-  // emit: enter_new_player / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
+  // emit: enter_new_user / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
   async enterUser(user) {
     if (this.isGameStarted === false) {
       await this._assignCharacter(user);
@@ -218,7 +218,7 @@ class Room {
   }
 
   /**
-   * @returns {Array.<Array.<number, number>>}
+   * @returns {Array.<number, number>}
    */
   _getRandomEmptyIndex() {
     let indexX;
@@ -231,7 +231,7 @@ class Room {
   }
 
   /**
-   * @returns {Array.<number, number>}
+   * @returns {Array.<Array.<number, number>>}
    */
   _getEmptyIndexMatrix() {
     return Array(ROOM.FILED_COLUMN).fill().map(() => Array(ROOM.FILED_ROW));
