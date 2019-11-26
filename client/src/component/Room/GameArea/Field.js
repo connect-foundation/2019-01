@@ -26,16 +26,22 @@ const Field = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    const getMyCharacter = ({ character, otherCharacters }) => {
-      const newCharacter = new Character(ctx, character.url, character.indexX, character.indexY);
-      window.addEventListener('keydown', (event) => keydownEventHandler(event, newCharacter));
-      otherCharacters.forEach((c) => new Character(ctx, c.url, c.indexX, c.indexY));
+    const getCharacters = (data) => {
+      data.characterList.forEach(({
+        url, indexX, indexY, isMine,
+      }) => {
+        console.log(url, indexX, indexY, isMine);
+        const character = new Character(ctx, url, indexX, indexY);
+        if (isMine) {
+          window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
+        }
+      });
     };
 
     const getOtherCharacter = ({ url, indexX, indexY }) => new Character(ctx, url, indexX, indexY);
 
-    socket.onEnterRoom(getMyCharacter);
-    socket.onEnterPlayer(getOtherCharacter);
+    socket.onEnterRoom(getCharacters);
+    socket.onEnterNewUser(getOtherCharacter);
   }, []);
 
   return (
