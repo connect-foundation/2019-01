@@ -48,10 +48,12 @@ describe('socket.io test', () => {
   test(`'move' event test`, (done) => {
     socket.once('move', (message) => {
       console.log(message);
+      if(!message){
+        done();
+      }
       expect(["userId", "indexX", "indexY"]).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
     socket.emit('move','left');
   });
 });
-
