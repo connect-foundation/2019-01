@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import Room from '../models/room';
 import User from '../models/user';
+import Character from '../models/character';
 
 class GameController {
   constructor() {
@@ -8,41 +10,48 @@ class GameController {
     this.userRoomMap = new Map();
   }
 
-  async letUserEnterRoom(user, roomId) {
+  async _letUserEnterRoom(user, roomId) {
     console.log(roomId); // 추후 roomId로 방 찾기
     const room = this.rooms[0];
+    await this._assignCharacter(user);
     await room.enterUser(user);
   }
 
-  letUserLeaveRoom(user) {
+  _letUserLeaveRoom(user) {
     const room = this.rooms[0];
     room.leaveUser(user);
   }
 
-  async letUserStartGame(user) {
+  async _letUserStartGame(user) {
     const room = this.rooms[0];
     await room.startGame(user);
   }
 
-  letUserMove(user, direction) {
+  _letUserMove(user, direction) {
     const room = this.rooms[0];
     room.moveCharacter(user, direction);
   }
 
-  letUserChat(user, message) {
+  _letUserChat(user, message) {
     const room = this.rooms[0];
     room.chat(user, message);
+  }
+
+  async _assignCharacter(user) {
+    const character = new Character();
+    await character.setCharacterUrl();
+    user.setCharacter(character);
   }
 
   bindEvent(socket) {
     const user = new User(socket);
 
-    user.onEnterRoom((roomId) => this.letUserEnterRoom(user, roomId));
-    user.onStartGame(() => this.letUserStartGame(user));
-    user.onMove((direction) => this.letUserMove(user, direction));
-    user.onChatMessage((message) => this.letUserChat(user, message));
-    user.onLeaveRoom(() => this.letUserLeaveRoom(user));
-    user.onDisconnecting(() => this.letUserLeaveRoom(user));
+    user.onEnterRoom((roomId) => this._letUserEnterRoom(user, roomId));
+    user.onStartGame(() => this._letUserStartGame(user));
+    user.onMove((direction) => this._letUserMove(user, direction));
+    user.onChatMessage((message) => this._letUserChat(user, message));
+    user.onLeaveRoom(() => this._letUserLeaveRoom(user));
+    user.onDisconnecting(() => this._letUserLeaveRoom(user));
   }
 }
 
