@@ -19,6 +19,12 @@ class SocketContainer {
     this.socket.disconnect();
   }
 
+  onRoomInfos(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
+    }
+  }
+
   onEnterRoom(callback) {
     if (isFunction(callback)) {
       // this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
@@ -28,9 +34,13 @@ class SocketContainer {
     }
   }
 
-  onEnterPlayer(callback) {
+  emitEnterRoom(data) {
+    this.socket.emit(EVENT.ENTER_ROOM, data);
+  }
+
+  onEnterNewUser(callback) {
     if (isFunction(callback)) {
-      this.socket.on(EVENT.ENTER_PLAYER, (data) => callback(data));
+      this.socket.on(EVENT.ENTER_NEW_USER, (data) => callback(data));
     }
   }
 
