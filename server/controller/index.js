@@ -12,6 +12,7 @@ class GameController {
     this.players.push(socket);
     this.bindPlayerEvents(socket);
 
+    this.rooms[0].fetchRandomNickname();
     const otherCharacters = this.rooms[0].getExistCharacters();
     const character = await this.rooms[0].enterNewPlayer();
     socket.emit('enter_room', { character, otherCharacters });

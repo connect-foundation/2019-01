@@ -1,4 +1,5 @@
 import Player from './player';
+import nicknameFinder from '../database/nickname';
 
 class Room {
   constructor() {
@@ -9,6 +10,8 @@ class Room {
     this.fieldColumn = 16;
     this.playerList = [];
     this.indexOfPlayers = Array(this.fieldColumn).fill(null).map(() => Array(this.fieldRow));
+    this.nickname = {};
+    this.fetchRandomNickname();
   }
 
   /**
@@ -59,6 +62,15 @@ class Room {
       indexY = Math.floor(Math.random() * (this.fieldRow));
     } while (this.indexOfPlayers[indexX][indexY]);
     return [indexX, indexY];
+  }
+
+  async fetchRandomNickname() {
+    const adjList = await nicknameFinder.fetchAdjList();
+    const nounList = await nicknameFinder.fetchNounList();
+    this.nickname.adjList = adjList.map((nickname) => nickname.adj);
+    this.nickname.nounList = nounList.map((nickname) => nickname.noun);
+    console.log(this.nickname.adjList);
+    console.log(this.nickname.nounList);
   }
 }
 
