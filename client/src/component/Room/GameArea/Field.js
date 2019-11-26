@@ -30,6 +30,7 @@ const Field = () => {
       data.characterList.forEach(({
         url, indexX, indexY, isMine,
       }) => {
+        console.log(url, indexX, indexY, isMine);
         const character = new Character(ctx, url, indexX, indexY);
         if (isMine) {
           window.addEventListener('keydown', (event) => keydownEventHandler(event, character));

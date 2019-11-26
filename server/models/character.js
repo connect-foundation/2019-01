@@ -2,7 +2,7 @@ import imageFinder from '../database/image';
 
 class Character {
   constructor() {
-    this.characterUrl = null;
+    this.url = null;
     this.indexX = null;
     this.indexY = null;
   }
@@ -11,13 +11,13 @@ class Character {
     return this.indexX !== null && this.indexY !== null;
   }
 
-  async setCharacterUrl() {
+  async setUrl() {
     const [image] = await imageFinder.fetchRandomCharacter();
-    this.characterUrl = image.url;
+    this.url = image.url;
   }
 
-  getCharacterUrl() {
-    return this.characterUrl;
+  getUrl() {
+    return this.url;
   }
 
   setIndexes(indexX, indexY) {
@@ -31,7 +31,7 @@ class Character {
 
   getInfo() {
     return {
-      url: this.characterUrl,
+      url: this.url,
       indexX: this.indexX,
       indexY: this.indexY,
     };

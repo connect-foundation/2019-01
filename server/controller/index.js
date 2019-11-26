@@ -37,7 +37,7 @@ class Controller {
 
   async _assignCharacter(user) {
     const character = new Character();
-    await character.setCharacterUrl();
+    await character.setUrl();
     user.setCharacter(character);
   }
 
