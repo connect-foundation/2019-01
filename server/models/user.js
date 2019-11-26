@@ -29,6 +29,10 @@ class User {
     this.character = character;
   }
 
+  deleteCharacter() {
+    this.character = null;
+  }
+
   isInLobby() {
     return this.roomId === null;
   }
