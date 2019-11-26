@@ -2,8 +2,8 @@
 
 import Room from '../models/room';
 import User from '../models/user';
-import lobby from '../models/lobby';
 import Character from '../models/character';
+import lobby from '../models/lobby';
 
 class Controller {
   constructor() {
