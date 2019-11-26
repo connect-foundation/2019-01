@@ -19,6 +19,7 @@ beforeAll((done) => {
     'force new connection': true,
     transports: ['websocket'],
   });
+  
   socket.on('connect', () => {
     done();
   });
@@ -26,11 +27,11 @@ beforeAll((done) => {
 
 // 모든 test가 끝난 후 
 afterAll((done) => {
-  socketIo.close();
-  httpServer.close();
   if (socket.connected) {
     socket.disconnect();
   }
+  socketIo.close();
+  httpServer.close();
   done();
 });
 
@@ -48,9 +49,8 @@ describe('socket.io test', () => {
   test(`'move' event test`, (done) => {
     socket.once('move', (message) => {
       console.log(message);
-      if(!message){
-        done();
-      }
+      if(!message) done();
+      
       expect(["userId", "indexX", "indexY"]).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
