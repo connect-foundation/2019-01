@@ -87,7 +87,7 @@ class Room {
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
   leaveUser(user) {
     const character = user.getCharacter();
-    if (character.isPlaced()) {
+    if (character !== null && character.isPlaced()) {
       const [indexX, indexY] = character.getIndexes();
       this.indexOfCharacters[indexX][indexY] = undefined;
       user.deleteCharacter();
