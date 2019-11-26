@@ -12,7 +12,7 @@ class Controller {
 
     // 임시 코드
     this.testRoom = new Room(1, 'test room');
-    lobby.roomList.set(this.testRoom.getId(), this.testRoom);
+    lobby.rooms.set(this.testRoom.getId(), this.testRoom);
   }
 
   connectUser(socket) {
