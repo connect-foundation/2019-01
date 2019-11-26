@@ -29,6 +29,18 @@ class User {
     this.character = character;
   }
 
+  deleteCharacter() {
+    this.character = null;
+  }
+
+  getCurrentLocation() {
+    return this.currentLocation;
+  }
+
+  setCurrentLocation(location) {
+    this.currentLocation = location;
+  }
+
   onEnterRoom(callback) {
     this.socket.on(EVENT.ENTER_ROOM, (roomId) => callback(roomId));
   }
