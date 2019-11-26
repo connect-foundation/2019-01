@@ -21,10 +21,10 @@ class Controller {
     lobby.enterUser(user);
   }
 
-  async _letUserCreateRoom(user, roomId, roomName) {
+  _letUserCreateRoom(user, roomId, roomName) {
     if (user.isInLobby() === false) return;
     const testRoom = new Room(roomId, roomName);
-    await lobby.createRoom(user, testRoom);
+    lobby.createRoom(user, testRoom);
   }
 
   async _letUserEnterRoom(user, roomId) {
@@ -32,7 +32,7 @@ class Controller {
     const room = lobby.getRoom(roomId);
     lobby.leaveUser(user.getId);
     await this._assignCharacter(user);
-    await room.enterUser(user);
+    room.enterUser(user);
   }
 
   async _assignCharacter(user) {
