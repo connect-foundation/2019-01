@@ -22,13 +22,13 @@ class Controller {
   }
 
   async _letUserCreateRoom(user, roomId, roomName) {
-    if (user.getIsInLobby() === false) return;
+    if (user.isInLobby() === false) return;
     const testRoom = new Room(roomId, roomName);
     await lobby.createRoom(user, testRoom);
   }
 
   async _letUserEnterRoom(user, roomId) {
-    if (user.getIsInLobby() === false) return;
+    if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
     lobby.leaveUser(user.getId);
     await this._assignCharacter(user);
@@ -42,25 +42,25 @@ class Controller {
   }
 
   _letUserLeaveRoom(user) {
-    if (user.getIsInLobby()) return;
+    if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
     room.leaveUser(user);
   }
 
   async _letUserStartGame(user) {
-    if (user.getIsInLobby()) return;
+    if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
     await room.startGame(user);
   }
 
   _letUserMove(user, direction) {
-    if (user.getIsInLobby()) return;
+    if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
     room.moveCharacter(user, direction);
   }
 
   _letUserChat(user, message) {
-    if (user.getIsInLobby()) return;
+    if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
     room.chat(user, message);
   }
