@@ -111,7 +111,10 @@ class Room {
       default: return;
     }
 
-    if (this._canBeMoved(newIndexX, newIndexY) === false) return;
+    if (this._canBeMoved(newIndexX, newIndexY) === false) {
+      user.emitMove(false);
+      return;
+    }
 
     this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
     this.indexOfCharacters[newIndexX][newIndexY] = character;
