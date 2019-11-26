@@ -27,10 +27,12 @@ const Field = () => {
     const ctx = canvas.getContext('2d');
 
     const getCharacters = (data) => {
-      data.characterList.forEach((character) => {
-        const newCharacter = new Character(ctx, character.url, character.indexX, character.indexY);
-        if (character.isMine) {
-          window.addEventListener('keydown', (event) => keydownEventHandler(event, newCharacter));
+      data.characterList.forEach(({
+        url, indexX, indexY, isMine,
+      }) => {
+        const character = new Character(ctx, url, indexX, indexY);
+        if (isMine) {
+          window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
         }
       });
     };
