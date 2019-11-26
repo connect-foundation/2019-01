@@ -1,51 +1,82 @@
+/* eslint-disable no-underscore-dangle */
+
 import Room from '../models/room';
 import User from '../models/user';
+import lobby from '../models/lobby';
+import Character from '../models/character';
 
-class GameController {
+class Controller {
   constructor() {
     this.rooms = [];
     this.rooms.push(new Room());
-    this.userRoomMap = new Map();
+
+    // 임시 코드
+    this.testRoom = new Room(1, 'test room');
+    lobby.roomList.set(this.testRoom.getId(), this.testRoom);
   }
 
-  async letUserEnterRoom(user, roomId) {
-    console.log(roomId); // 추후 roomId로 방 찾기
-    const room = this.rooms[0];
+  connectUser(socket) {
+    const user = new User(socket);
+    this._bindEvent(user);
+    lobby.enterUser(user);
+  }
+
+  async _letUserCreateRoom(user, roomId, roomName) {
+    if (user.getIsInLobby() === false) return;
+    const testRoom = new Room(roomId, roomName);
+    await lobby.createRoom(user, testRoom);
+  }
+
+  async _letUserEnterRoom(user, roomId) {
+    if (user.getIsInLobby() === false) return;
+    const room = lobby.getRoom(roomId);
+    lobby.leaveUser(user.getId);
+    await this._assignCharacter(user);
     await room.enterUser(user);
   }
 
-  letUserLeaveRoom(user) {
-    const room = this.rooms[0];
+  async _assignCharacter(user) {
+    const character = new Character();
+    await character.setCharacterUrl();
+    user.setCharacter(character);
+  }
+
+  _letUserLeaveRoom(user) {
+    if (user.getIsInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
     room.leaveUser(user);
   }
 
-  async letUserStartGame(user) {
-    const room = this.rooms[0];
+  async _letUserStartGame(user) {
+    if (user.getIsInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
     await room.startGame(user);
   }
 
-  letUserMove(user, direction) {
-    const room = this.rooms[0];
+  _letUserMove(user, direction) {
+    if (user.getIsInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
     room.moveCharacter(user, direction);
   }
 
-  letUserChat(user, message) {
-    const room = this.rooms[0];
+  _letUserChat(user, message) {
+    if (user.getIsInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
     room.chat(user, message);
   }
 
-  bindEvent(socket) {
-    const user = new User(socket);
-
-    user.onEnterRoom((roomId) => this.letUserEnterRoom(user, roomId));
-    user.onStartGame(() => this.letUserStartGame(user));
-    user.onMove((direction) => this.letUserMove(user, direction));
-    user.onChatMessage((message) => this.letUserChat(user, message));
-    user.onLeaveRoom(() => this.letUserLeaveRoom(user));
-    user.onDisconnecting(() => this.letUserLeaveRoom(user));
+  _bindEvent(user) {
+    user.onEnterRoom(async (roomId) => {
+      await this._letUserEnterRoom(user, roomId);
+    });
+    user.onStartGame(() => this._letUserStartGame(user));
+    user.onMove((direction) => this._letUserMove(user, direction));
+    user.onChatMessage((message) => this._letUserChat(user, message));
+    user.onLeaveRoom(() => this._letUserLeaveRoom(user));
+    user.onDisconnecting(() => this._letUserLeaveRoom(user));
   }
 }
 
-const gameController = new GameController();
+const controller = new Controller();
 
-export default gameController;
+export default controller;

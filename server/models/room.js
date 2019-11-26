@@ -28,6 +28,24 @@ class Room {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
   }
 
+  getId() {
+    return this.id;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getNumOfUsers() {
+    return this.userList.length;
+  }
+
+  getIsEnterable() {
+    if (this.isGameStarted) return false;
+    if (this.userList.length >= ROOM.MAX_USER) return false;
+    return true;
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
@@ -35,15 +53,17 @@ class Room {
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
   // emit: enter_new_player / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
   async enterUser(user) {
+    this.userList.push(user);
+
+    const myCharacter = user.getCharacter();
     if (this.isGameStarted === false) {
-      await this._assignCharacter(user);
+      this._placeCharacter(myCharacter);
     }
 
     const characterList = [];
-    const myCharacter = user.getCharacter();
     this.userList.forEach((_user) => {
       const character = _user.getCharacter();
-      if (character === null) return;
+      if (character.isPlaced() === false) return;
       characterList.push({
         userId: _user.getId(),
         isMine: character === myCharacter,
@@ -52,6 +72,7 @@ class Room {
     });
 
     this.userList.forEach((_user) => {
+      if (user === _user) return;
       _user.emitEnterNewUser(myCharacter.getInfo());
     });
 
@@ -62,8 +83,6 @@ class Room {
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
     });
-
-    this.userList.push(user);
   }
 
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
