@@ -38,9 +38,9 @@ class Lobby {
     this.users.delete(userId);
   }
 
-  async createRoom(user, room) {
+  createRoom(user, room) {
     this.rooms.set(room.getId(), room);
-    await room.enterUser(user);
+    room.enterUser(user);
     this.leaveUser(user.getId());
   }
 }
