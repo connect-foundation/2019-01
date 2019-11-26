@@ -7,6 +7,10 @@ class Character {
     this.indexY = null;
   }
 
+  isPlaced() {
+    return this.indexX !== null && this.indexY !== null;
+  }
+
   async setCharacterUrl() {
     const [image] = await imageFinder.fetchRandomCharacter();
     this.characterUrl = image.url;
