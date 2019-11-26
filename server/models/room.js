@@ -78,7 +78,9 @@ class Room {
     const userIndex = this.userList.findIndex((_user) => user === _user);
     this.userList.splice(userIndex, 1);
 
-    this.userList.forEach((_user) => _user.emitLeaveUser({ userId: user.getId() }));
+    this.userList.forEach((_user) => {
+      _user.emitLeaveUser({ userId: user.getId(), isOwner: this._isOwner(user) });
+    });
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
