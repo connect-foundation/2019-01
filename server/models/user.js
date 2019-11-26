@@ -47,8 +47,8 @@ class User {
 
   onEnterRoom(callback) {
     this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
-      callback(roomId);
       this.roomId = roomId;
+      callback(roomId);
     });
   }
 
