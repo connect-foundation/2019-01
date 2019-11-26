@@ -6,11 +6,15 @@ import socket from '../../class/socket';
 
 const Room = () => {
   useEffect(() => {
-    const printRoomInfos = (roomInfos) => {
-      roomInfos.forEach((roomInfo) => console.log(roomInfo));
+    const enterTestRoom = (roomInfos) => {
+      roomInfos.forEach((roomInfo, index) => {
+        console.log(roomInfo);
+        if (index === 0) {
+          socket.emitEnterRoom(roomInfo.id);
+        }
+      });
     };
-    socket.onRoomInfos(printRoomInfos);
-    socket.emitEnterRoom(1);
+    socket.onRoomInfos(enterTestRoom);
   }, []);
   return (
     <Wrapper>
