@@ -12,7 +12,7 @@ class SocketContainer {
   }
 
   connect() {
-    this.socket = socketio.connect(this.url, { transports: ['websocket'] });
+    this.socket = socketio.connect('http://localhost:3000', { transports: ['websocket'] });
   }
 
   disconnect() {
