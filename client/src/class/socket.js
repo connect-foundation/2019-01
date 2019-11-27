@@ -26,7 +26,7 @@ class SocketContainer {
 
   onEnterRoom(callback) {
     if (isFunction(callback)) {
-      this.socket.on(EVENT.ENTER_ROOM, (data) => { console.log(data); callback(data); });
+      this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
     }
   }
 
