@@ -29,8 +29,6 @@ const Field = () => {
   const [characters, setCharacters] = useState([]);
 
   const moveCharacter = (data) => {
-    console.log(data);
-    console.log(characters);
     const matchedCharacter = characters.find((character) => character.nickname === data.nickname);
     matchedCharacter.move(data.direction);
   };
@@ -51,15 +49,8 @@ const Field = () => {
       });
     };
 
-    const getOtherCharacter = ({
-      url, indexX, indexY, isMine, nickname,
-    }) => {
-      const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
-      setCharacters(characters.push(character));
-    };
-
     socket.onEnterRoom(getCharacters);
-    socket.onEnterNewUser(getOtherCharacter);
+    socket.onEnterNewUser(getCharacters);
     socket.onMove(moveCharacter);
   }, []);
 

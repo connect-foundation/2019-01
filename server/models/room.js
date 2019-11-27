@@ -100,6 +100,7 @@ class Room {
     user.setNickname(this.nicknameList.shift());
 
     const characterList = [];
+
     this.users.forEach((_user) => {
       const character = _user.getCharacter();
       if (character.isPlaced() === false) return;
@@ -111,9 +112,11 @@ class Room {
       });
     });
 
+    const newUser = { ...characterList[characterList.length - 1], isMine: false };
+
     this.users.forEach((_user) => {
       if (user === _user) return;
-      _user.emitEnterNewUser({ ...characterList[characterList.length - 1], isMine: false });
+      _user.emitEnterNewUser({ characterList: [newUser] });
     });
 
     user.emitEnterRoom({
@@ -154,7 +157,6 @@ class Room {
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
   moveCharacter(user, direction) {
-    console.log(user, direction);
     const character = user.getCharacter();
     if (character.isPlaced() === false) return;
 
@@ -295,8 +297,8 @@ class Room {
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FILED_ROW) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FILED_COLUMN) return false;
+    if (newIndexX < 0 || newIndexX >= ROOM.FILED_COLUMN) return false;
+    if (newIndexY < 0 || newIndexY >= ROOM.FILED_ROW) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }
