@@ -5,12 +5,9 @@ import {
 import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
-
-const isMoving = (character) => character.requestId !== null;
-
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
-  if (isMoving(character)) return;
+  if (character.isMoving()) return;
 
   const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
@@ -20,7 +17,6 @@ const keydownEventHandler = (event, character) => {
   };
 
   const direction = directionMap[event.keyCode];
-  // if (direction !== undefined) character.move(direction);
   if (direction !== undefined) socket.emitMove(direction);
 };
 
@@ -29,7 +25,7 @@ const Field = () => {
   const [characters, setCharacters] = useState([]);
 
   const moveCharacter = (data) => {
-    const matchedCharacter = characters.find((character) => character.nickname === data.nickname);
+    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
     matchedCharacter.move(data.direction);
   };
 
