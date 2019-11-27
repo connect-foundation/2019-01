@@ -2,10 +2,10 @@
 import { CHARACTER, TILE } from '../constants/room';
 
 class Character {
-  constructor(ctx, imgUrl, indexX, indexY) {
-    this.ctx = ctx;
-    this.img = new Image();
-    this.img.src = imgUrl;
+  constructor(imgUrl, indexX, indexY, isMine) {
+    this.ctx = null;
+    this.img = null;
+    this.imgUrl = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
     this.shape = CHARACTER.SHAPE.STAND;
@@ -13,11 +13,22 @@ class Character {
     this.curShapeLoopIdx = 0;
     this.frameCount = 0;
     this.requestId = undefined;
+    this.isMine = isMine;
+  }
 
+  getNickname() {
+    return this.nickname;
+  }
+
+  drawImage(ctx) {
+    this.ctx = ctx;
+    this.img = new Image();
+    this.img.src = this.imgUrl;
     this.img.onload = () => this._draw();
   }
 
   move(direction) {
+    if (this.ctx === null) return;
     if (this.requestId) return;
     this.direction = direction;
     this.requestId = window.requestAnimationFrame(() => this._walk());
