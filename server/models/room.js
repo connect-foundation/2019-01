@@ -99,18 +99,7 @@ class Room {
     }
     user.setNickname(this.nicknameList.shift());
 
-    const characterList = [];
-
-    this.users.forEach((_user) => {
-      const character = _user.getCharacter();
-      if (character.isPlaced() === false) return;
-      characterList.push({
-        userId: _user.getId(),
-        isMine: character === myCharacter,
-        nickname: _user.getNickname(),
-        ...character.getInfo(),
-      });
-    });
+    const characterList = this.makeCharacterList(myCharacter);
 
     const newUser = { ...characterList[characterList.length - 1], isMine: false };
 
@@ -126,6 +115,23 @@ class Room {
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
     });
+  }
+
+  makeCharacterList(myCharacter) {
+    const characterList = [];
+
+    this.users.forEach((_user) => {
+      const character = _user.getCharacter();
+      if (character.isPlaced() === false) return;
+      characterList.push({
+        userId: _user.getId(),
+        isMine: character === myCharacter,
+        nickname: _user.getNickname(),
+        ...character.getInfo(),
+      });
+    });
+
+    return characterList;
   }
 
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
