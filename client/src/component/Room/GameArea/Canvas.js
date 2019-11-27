@@ -21,7 +21,9 @@ const Canvas = ({ character }) => {
 };
 
 Canvas.propTypes = {
-  character: PropTypes.object.isRequired,
+  character: PropTypes.shape({
+    drawImage: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default Canvas;

@@ -21,7 +21,7 @@ const keydownEventHandler = (event, character) => {
 };
 
 const Field = () => {
-  const [characterInfos, setCharacterInfos] = useState([]);
+  const [characterList, setCharacterList] = useState([]);
   const getCharacters = (data) => {
     data.characterList.forEach(({
       url, indexX, indexY, isMine,
@@ -30,27 +30,35 @@ const Field = () => {
       if (isMine) {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
-      setCharacterInfos((prev) => [...prev, character]);
+      setCharacterList((prevCharacterList) => [...prevCharacterList, character]);
     });
   };
 
-  const getOtherCharacter = ({
+  const getNewCharacter = ({
     url, indexX, indexY, isMine,
   }) => {
     const character = new Character(url, indexX, indexY, isMine);
-    setCharacterInfos((prev) => [...prev, character]);
+    setCharacterList((prevCharacterList) => [...prevCharacterList, character]);
   };
 
   useEffect(() => {
     socket.onEnterRoom(getCharacters);
-    socket.onEnterNewUser(getOtherCharacter);
+    socket.onEnterNewUser(getNewCharacter);
   }, []);
 
-  const getCanvasList = (characters) => characters.map((character, i) => <Canvas key={i} character={character} />);
+  const getCanvasList = (characters) => characters.map(
+    // Canvas 컴포넌트의 key를 추후에 character nickname으로 변경해야 함
+    (character, i) => <Canvas key={i} character={character} />,
+  );
 
   return (
-    <div style={{ backgroundImage: `url('${FIELD.BACKGROUND}')`, width: FIELD.getWidth(), height: FIELD.getHeight() }}>
-      {getCanvasList(characterInfos)}
+    <div
+      style={{
+        backgroundImage: `url('${FIELD.BACKGROUND}')`,
+        width: FIELD.getWidth(),
+        height: FIELD.getHeight(),
+      }}>
+      {getCanvasList(characterList)}
     </div>
   );
 };
