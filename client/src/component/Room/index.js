@@ -17,6 +17,7 @@ const Room = () => {
     };
     socket.onRoomInfos(enterTestRoom);
   }, []);
+
   return (
     <Wrapper>
       <GameArea />
