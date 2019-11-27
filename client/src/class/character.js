@@ -12,7 +12,7 @@ class Character {
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
     this.frameCount = 0;
-    this.requestId = undefined;
+    this.requestId = null;
     this.isMine = isMine;
   }
 
@@ -66,7 +66,7 @@ class Character {
 
     if (this.curShapeLoopIdx >= CHARACTER.SHAPE.LOOP.length) {
       this.curShapeLoopIdx = 0;
-      this.requestId = undefined;
+      this.requestId = null;
       return;
     }
     this.requestId = window.requestAnimationFrame(() => this._walk());
