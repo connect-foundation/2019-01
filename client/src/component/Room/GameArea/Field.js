@@ -24,9 +24,9 @@ const Field = () => {
   const [characterList, setCharacterList] = useState([]);
   const getCharacters = (data) => {
     data.characterList.forEach(({
-      url, indexX, indexY, isMine,
+      url, indexX, indexY, isMine, nickname,
     }) => {
-      const character = new Character(url, indexX, indexY, isMine);
+      const character = new Character(url, indexX, indexY, nickname, isMine);
       if (isMine) {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
@@ -35,9 +35,9 @@ const Field = () => {
   };
 
   const getNewCharacter = ({
-    url, indexX, indexY, isMine,
+    url, indexX, indexY, isMine, nickname,
   }) => {
-    const character = new Character(url, indexX, indexY, isMine);
+    const character = new Character(url, indexX, indexY, nickname, isMine);
     setCharacterList((prevCharacterList) => [...prevCharacterList, character]);
   };
 
@@ -47,8 +47,7 @@ const Field = () => {
   }, []);
 
   const getCanvasList = (characters) => characters.map(
-    // Canvas 컴포넌트의 key를 추후에 character nickname으로 변경해야 함
-    (character, i) => <Canvas key={i} character={character} />,
+    (character) => <Canvas key={character.getNickname()} character={character} />,
   );
 
   return (
