@@ -5,12 +5,9 @@ import {
 import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
-
-const isMoving = (character) => character.isMoving();
-
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
-  if (isMoving(character)) return;
+  if (character.isMoving()) return;
 
   const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
