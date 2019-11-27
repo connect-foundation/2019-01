@@ -53,7 +53,7 @@ class Controller {
     const room = lobby.getRoom(roomId);
     lobby.leaveUser(user.getId);
     await this._assignCharacter(user);
-    room.enterUser(user);
+    await room.enterUser(user);
   }
 
   /**

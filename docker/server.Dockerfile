@@ -7,6 +7,6 @@ COPY ./package.json ./
 RUN npm install --production
 COPY . .
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
 
 # https://github.com/bear2u/docker-exam-react
