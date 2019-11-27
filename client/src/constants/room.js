@@ -53,6 +53,7 @@ const DASHBOARD = {
   WIDTH: FIELD.getWidth() - TILE.WIDTH,
   HEIGHT: TILE.HEIGHT * 2,
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  A_SECOND: 1,
 };
 
 const QUIZ = {

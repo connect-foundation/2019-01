@@ -56,6 +56,13 @@ class SocketContainer {
     });
   }
 
+  onStartRound(callback) {
+    this.socket.on(EVENT.START_ROUND, (data) => {
+      if (data === false) return;
+      callback(data);
+    });
+  }
+
   onQuizList(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
