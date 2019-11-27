@@ -21,14 +21,6 @@ const keydownEventHandler = (event, character) => {
   if (direction !== undefined) socket.emitMove(direction);
 };
 
-const copyMap = (source) => {
-  const target = new Map();
-  source.forEach((value, key) => {
-    target.set(key, value);
-  });
-  return target;
-};
-
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const updateCharacters = (data) => {
@@ -41,7 +33,7 @@ const Field = () => {
       }
       characters.set(nickname, character);
     });
-    setCharacters(() => copyMap(characters));
+    setCharacters(() => new Map(characters));
   };
 
   const moveCharacter = ({ canMove, nickname, direction }) => {
@@ -59,7 +51,7 @@ const Field = () => {
     characterList.forEach(({ nickname }) => {
       characters.delete(nickname);
     });
-    setCharacters(() => copyMap(characters));
+    setCharacters(() => new Map(characters));
   };
 
   useEffect(() => {
