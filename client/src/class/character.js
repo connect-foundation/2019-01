@@ -41,6 +41,14 @@ class Character {
     this.requestId = window.requestAnimationFrame(() => this._walk());
   }
 
+  turn(direction) {
+    if (this.ctx === null) return;
+    if (this.requestId) return;
+    this.direction = direction;
+    this._clear();
+    this._draw();
+  }
+
   _draw() {
     /*
      * HTML canvas drawImage() Method :

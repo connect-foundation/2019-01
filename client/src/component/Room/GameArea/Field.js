@@ -44,9 +44,15 @@ const Field = () => {
     setCharacters(() => copyMap(characters));
   };
 
-  const moveCharacter = (data) => {
-    const matchedCharacter = characters.get(data.nickname);
-    if (matchedCharacter) matchedCharacter.move(data.direction);
+  const moveCharacter = ({ canMove, nickname, direction }) => {
+    const matchedCharacter = characters.get(nickname);
+    if (matchedCharacter === undefined) return;
+
+    if (canMove === false) {
+      matchedCharacter.turn(direction);
+      return;
+    }
+    matchedCharacter.move(direction);
   };
 
   const deleteCharacter = (nicknameList) => {

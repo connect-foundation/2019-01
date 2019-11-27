@@ -50,10 +50,7 @@ class SocketContainer {
   }
 
   onMove(callback) {
-    this.socket.on(EVENT.MOVE, (data) => {
-      if (data === false) return;
-      callback(data);
-    });
+    this.socket.on(EVENT.MOVE, (data) => callback(data));
   }
 
   onQuizList(callback) {

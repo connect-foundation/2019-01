@@ -178,17 +178,18 @@ class Room {
       default: return;
     }
 
-    if (this._canBeMoved(newIndexX, newIndexY) === false) return;
+    const nickname = user.getNickname();
+    const canMove = this._canBeMoved(newIndexX, newIndexY);
+
+    this.users.forEach((_user) => {
+      _user.emitMove({ canMove, nickname, direction });
+    });
+
+    if (canMove === false) return;
 
     this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
     this.indexOfCharacters[newIndexX][newIndexY] = character;
     character.setIndexes(newIndexX, newIndexY);
-
-    const nickname = user.getNickname();
-
-    this.users.forEach((_user) => {
-      _user.emitMove({ nickname, direction });
-    });
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
