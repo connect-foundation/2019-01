@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
+=======
+import React, { useEffect, useState } from 'react';
+>>>>>>> e08b99446bd8ed73f081602c15260b32213668d9
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
@@ -8,6 +12,7 @@ import Canvas from './Canvas';
 
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
+  if (character.isMoving()) return;
 
   const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
@@ -17,11 +22,11 @@ const keydownEventHandler = (event, character) => {
   };
 
   const direction = directionMap[event.keyCode];
-  if (direction !== undefined) character.move(direction);
+  if (direction !== undefined) socket.emitMove(direction);
 };
 
 const Field = () => {
-  const [characterList, setCharacterList] = useState([]);
+  const [characters, setCharacters] = useState([]);
   const getCharacters = (data) => {
     data.characterList.forEach(({
       url, indexX, indexY, isMine, nickname,
@@ -30,7 +35,7 @@ const Field = () => {
       if (isMine) {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
-      setCharacterList((prevCharacterList) => [...prevCharacterList, character]);
+      setCharacters((prevCharacters) => [...prevCharacters, character]);
     });
   };
 
@@ -38,15 +43,21 @@ const Field = () => {
     url, indexX, indexY, isMine, nickname,
   }) => {
     const character = new Character(url, indexX, indexY, nickname, isMine);
-    setCharacterList((prevCharacterList) => [...prevCharacterList, character]);
+    setCharacters((prevCharacters) => [...prevCharacters, character]);
+  };
+
+  const moveCharacter = (data) => {
+    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
+    matchedCharacter.move(data.direction);
   };
 
   useEffect(() => {
     socket.onEnterRoom(getCharacters);
     socket.onEnterNewUser(getNewCharacter);
+    socket.onMove(moveCharacter);
   }, []);
 
-  const getCanvasList = (characters) => characters.map(
+  const getCanvasList = (characterList) => characterList.map(
     (character) => <Canvas key={character.getNickname()} character={character} />,
   );
 
@@ -57,7 +68,7 @@ const Field = () => {
         width: FIELD.getWidth(),
         height: FIELD.getHeight(),
       }}>
-      {getCanvasList(characterList)}
+      {getCanvasList(characters)}
     </div>
   );
 };

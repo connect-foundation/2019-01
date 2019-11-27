@@ -61,6 +61,31 @@ class Room {
   //                          게임 중이 아니라면, 게임 중인 여부, 방장 여부
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
   // emit: enter_new_user / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
+  /**
+   * enter_room event.
+   *
+   * @event server#enter_room
+   *
+   * @type {object}
+   * @property {Array} characterList
+   * @property {Boolean} isGameStarted
+   * @property {string} question
+   * @property {number} timeLimit
+   * @property {Boolean} isOwner
+   *
+   * @example
+   * user.emitEnterRoom({
+   *   characterList,
+   *   isGameStarted: this.isGameStarted,
+   *   question: this.currentQuiz.question,
+   *   timeLimit: ROOM.TIME_LIMIT - this.currentTime,
+   *   isOwner: this._isOwner(user),
+   * });
+   */
+  /**
+   *
+   * @param {User} user
+   */
   async enterUser(user) {
     this.users.set(user.getId(), user);
 
@@ -74,7 +99,27 @@ class Room {
     }
     user.setNickname(this.nicknameList.shift());
 
+    const characterList = this.makeCharacterList(myCharacter);
+
+    const newUser = { ...characterList[characterList.length - 1], isMine: false };
+
+    this.users.forEach((_user) => {
+      if (user === _user) return;
+      _user.emitEnterNewUser({ characterList: [newUser] });
+    });
+
+    user.emitEnterRoom({
+      characterList,
+      isGameStarted: this.isGameStarted,
+      question: this.currentQuiz.question,
+      timeLimit: ROOM.TIME_LIMIT - this.currentTime,
+      isOwner: this._isOwner(user),
+    });
+  }
+
+  makeCharacterList(myCharacter) {
     const characterList = [];
+
     this.users.forEach((_user) => {
       const character = _user.getCharacter();
       if (character.isPlaced() === false) return;
@@ -86,18 +131,7 @@ class Room {
       });
     });
 
-    this.users.forEach((_user) => {
-      if (user === _user) return;
-      _user.emitEnterNewUser(myCharacter.getInfo());
-    });
-
-    user.emitEnterRoom({
-      characterList,
-      isGameStarted: this.isGameStarted,
-      question: this.currentQuiz.question,
-      timeLimit: ROOM.TIME_LIMIT - this.currentTime,
-      isOwner: this._isOwner(user),
-    });
+    return characterList;
   }
 
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
@@ -150,8 +184,11 @@ class Room {
     this.indexOfCharacters[newIndexX][newIndexY] = character;
     character.setIndexes(newIndexX, newIndexY);
 
-    const userId = user.getId();
-    user.emitMove({ userId, indexX: newIndexX, indexY: newIndexY });
+    const nickname = user.getNickname();
+
+    this.users.forEach((_user) => {
+      _user.emitMove({ nickname, direction });
+    });
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -266,8 +303,8 @@ class Room {
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FILED_ROW) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FILED_COLUMN) return false;
+    if (newIndexX < 0 || newIndexX >= ROOM.FILED_COLUMN) return false;
+    if (newIndexY < 0 || newIndexY >= ROOM.FILED_ROW) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }
