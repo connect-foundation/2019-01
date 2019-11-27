@@ -55,8 +55,8 @@ const Field = () => {
     matchedCharacter.move(direction);
   };
 
-  const deleteCharacter = (nicknameList) => {
-    nicknameList.forEach((nickname) => {
+  const deleteCharacter = ({ characterList }) => {
+    characterList.forEach(({ nickname }) => {
       characters.delete(nickname);
     });
     setCharacters(() => copyMap(characters));
