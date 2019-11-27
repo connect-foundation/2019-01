@@ -175,8 +175,8 @@ class Room {
     this.indexOfCharacters[newIndexX][newIndexY] = character;
     character.setIndexes(newIndexX, newIndexY);
 
-    const userId = user.getId();
-    user.emitMove({ userId, indexX: newIndexX, indexY: newIndexY });
+    const nickname = user.getNickname();
+    user.emitMove({ nickname, direction });
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
