@@ -9,7 +9,7 @@ const Canvas = ({ character }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     character.drawImage(ctx);
-  }, []);
+  }, [character]);
 
   return (
     <canvas
