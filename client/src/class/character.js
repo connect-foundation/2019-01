@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-import { CHARACTER, TILE } from '../constants/room';
+import { CHARACTER, TILE, NICKNAME } from '../constants/room';
 
 class Character {
-  constructor(ctx, imgUrl, indexX, indexY) {
+  constructor(ctx, imgUrl, indexX, indexY, nickname, isMine) {
     this.ctx = ctx;
     this.img = new Image();
     this.img.src = imgUrl;
@@ -13,6 +13,8 @@ class Character {
     this.curShapeLoopIdx = 0;
     this.frameCount = 0;
     this.requestId = undefined;
+    this.nickname = nickname;
+    this.isMine = isMine;
 
     this.img.onload = () => this._draw();
   }
@@ -38,6 +40,26 @@ class Character {
       TILE.HEIGHT * this.indexY,
       TILE.WIDTH,
       TILE.HEIGHT,
+    );
+
+    this.ctx.fillStyle = NICKNAME.BG_COLOR;
+    const nameTagX = TILE.WIDTH * this.indexX - TILE.WIDTH * 0.2;
+    const nameTagY = TILE.HEIGHT * (this.indexY + 1);
+
+    this.ctx.fillRect(
+      nameTagX,
+      nameTagY,
+      NICKNAME.WIDTH,
+      NICKNAME.HEIGHT,
+    );
+
+    this._changeStyleToDrawNickname();
+
+    this.ctx.fillText(
+      this.nickname,
+      nameTagX + NICKNAME.WIDTH / 2,
+      nameTagY + NICKNAME.HEIGHT / 2 + 2,
+      NICKNAME.WIDTH,
     );
   }
 
@@ -85,6 +107,20 @@ class Character {
       TILE.WIDTH,
       TILE.HEIGHT,
     );
+
+    this.ctx.clearRect(
+      TILE.WIDTH * this.indexX - TILE.WIDTH * 0.2,
+      TILE.HEIGHT * (this.indexY + 1),
+      NICKNAME.WIDTH + 1,
+      NICKNAME.HEIGHT,
+    );
+  }
+
+  _changeStyleToDrawNickname() {
+    this.ctx.font = NICKNAME.FONT;
+    this.ctx.textAlign = NICKNAME.ALIGN;
+    this.ctx.textBaseline = NICKNAME.BASELINE;
+    this.ctx.fillStyle = this.isMine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
   }
 }
 
