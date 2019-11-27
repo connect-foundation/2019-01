@@ -21,6 +21,14 @@ class Character {
     this.img.onload = () => this._draw();
   }
 
+  getNickname() {
+    return this.nickname;
+  }
+
+  isMoving() {
+    return this.requestId !== null;
+  }
+
   move(direction) {
     if (this.requestId) return;
     this.direction = direction;
