@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
+
+const isMoving = (character) => character.requestId !== null;
+
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
+  if (isMoving(character)) return;
 
   const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
@@ -16,11 +20,18 @@ const keydownEventHandler = (event, character) => {
   };
 
   const direction = directionMap[event.keyCode];
-  if (direction !== undefined) character.move(direction);
+  // if (direction !== undefined) character.move(direction);
+  if (direction !== undefined) socket.emitMove(direction);
 };
 
 const Field = () => {
   const canvasRef = React.useRef();
+  const [characters, setCharacters] = useState([]);
+
+  const moveCharacter = (data) => {
+    const matchedCharacter = characters.find((character) => character.nickname === data.nickname);
+    matchedCharacter.move(data.direction);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,6 +42,7 @@ const Field = () => {
         url, indexX, indexY, isMine, nickname,
       }) => {
         const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
+        setCharacters([...characters, character]);
         if (isMine) {
           window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
         }
@@ -39,10 +51,14 @@ const Field = () => {
 
     const getOtherCharacter = ({
       url, indexX, indexY, isMine, nickname,
-    }) => new Character(ctx, url, indexX, indexY, nickname, isMine);
+    }) => {
+      const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
+      setCharacters([...characters, character]);
+    };
 
     socket.onEnterRoom(getCharacters);
     socket.onEnterNewUser(getOtherCharacter);
+    socket.onMove(moveCharacter);
   }, []);
 
   return (
