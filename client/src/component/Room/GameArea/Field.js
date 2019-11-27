@@ -28,17 +28,18 @@ const Field = () => {
 
     const getCharacters = (data) => {
       data.characterList.forEach(({
-        url, indexX, indexY, isMine,
+        url, indexX, indexY, isMine, nickname,
       }) => {
-        console.log(url, indexX, indexY, isMine);
-        const character = new Character(ctx, url, indexX, indexY);
+        const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
         if (isMine) {
           window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
         }
       });
     };
 
-    const getOtherCharacter = ({ url, indexX, indexY }) => new Character(ctx, url, indexX, indexY);
+    const getOtherCharacter = ({
+      url, indexX, indexY, isMine, nickname,
+    }) => new Character(ctx, url, indexX, indexY, nickname, isMine);
 
     socket.onEnterRoom(getCharacters);
     socket.onEnterNewUser(getOtherCharacter);
