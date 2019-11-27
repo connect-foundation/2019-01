@@ -61,6 +61,12 @@ class SocketContainer {
       this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
     }
   }
+
+  onLeaveUser(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.LEAVE_USER, (data) => callback(data));
+    }
+  }
 }
 
 const socket = new SocketContainer();

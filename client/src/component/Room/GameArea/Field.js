@@ -49,10 +49,16 @@ const Field = () => {
     if (matchedCharacter) matchedCharacter.move(data.direction);
   };
 
+  const deleteCharacter = ({ nickname }) => {
+    characters.delete(nickname);
+    setCharacters(() => copyMap(characters));
+  };
+
   useEffect(() => {
     socket.onEnterRoom(updateCharacters);
     socket.onEnterNewUser(updateCharacters);
     socket.onMove(moveCharacter);
+    socket.onLeaveUser(deleteCharacter);
   }, []);
 
   const getCanvasList = (characterMap) => {
