@@ -234,8 +234,11 @@ class Room {
     this._countTime();
   }
 
-  // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트
+  // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
+    this.users.forEach((user) => {
+      user.emitEndRound();
+    });
     this.currentRound += 1;
   }
 
@@ -274,7 +277,7 @@ class Room {
       if (this.currentTime < ROOM.TIME_LIMIT) {
         this._countTime();
       } else {
-        this.endRound();
+        this._endRound();
       }
     }, ROOM.SECOND);
   }
