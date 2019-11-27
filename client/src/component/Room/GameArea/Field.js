@@ -6,7 +6,7 @@ import Character from '../../../class/character';
 import socket from '../../../class/socket';
 
 
-const isMoving = (character) => character.requestId !== null;
+const isMoving = (character) => character.isMoving();
 
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
@@ -28,7 +28,7 @@ const Field = () => {
   const [characters, setCharacters] = useState([]);
 
   const moveCharacter = (data) => {
-    const matchedCharacter = characters.find((character) => character.nickname === data.nickname);
+    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
     matchedCharacter.move(data.direction);
   };
 
