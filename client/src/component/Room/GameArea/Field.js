@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
@@ -7,6 +7,7 @@ import socket from '../../../class/socket';
 
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
+  if (character.isMoving()) return;
 
   const directionMap = {
     [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
@@ -16,11 +17,17 @@ const keydownEventHandler = (event, character) => {
   };
 
   const direction = directionMap[event.keyCode];
-  if (direction !== undefined) character.move(direction);
+  if (direction !== undefined) socket.emitMove(direction);
 };
 
 const Field = () => {
   const canvasRef = React.useRef();
+  const [characters, setCharacters] = useState([]);
+
+  const moveCharacter = (data) => {
+    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
+    matchedCharacter.move(data.direction);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,18 +38,16 @@ const Field = () => {
         url, indexX, indexY, isMine, nickname,
       }) => {
         const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
+        setCharacters(characters.push(character));
         if (isMine) {
           window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
         }
       });
     };
 
-    const getOtherCharacter = ({
-      url, indexX, indexY, isMine, nickname,
-    }) => new Character(ctx, url, indexX, indexY, nickname, isMine);
-
     socket.onEnterRoom(getCharacters);
-    socket.onEnterNewUser(getOtherCharacter);
+    socket.onEnterNewUser(getCharacters);
+    socket.onMove(moveCharacter);
   }, []);
 
   return (

@@ -5,6 +5,7 @@ import { Wrapper } from './style';
 import socket from '../../class/socket';
 
 const Room = () => {
+  // lobby에서 할 수도 있는 일을 임시로 Room에게 할당
   useEffect(() => {
     const enterTestRoom = (roomInfos) => {
       roomInfos.forEach((roomInfo, index) => {
@@ -16,6 +17,7 @@ const Room = () => {
     };
     socket.onRoomInfos(enterTestRoom);
   }, []);
+
   return (
     <Wrapper>
       <GameArea />
