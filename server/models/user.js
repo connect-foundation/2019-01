@@ -1,5 +1,14 @@
 import EVENT from '../constants/socket-event';
 
+/**
+ * User Class
+ * socket을 받아서 감싸줘서 user로 내보낸다.
+ * @property {string} id
+ * @property {object} socket
+ * @property {string} nickname
+ * @property {Character} character
+ * @property {number} roomId
+ */
 class User {
   constructor(socket) {
     this.id = socket.id;

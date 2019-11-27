@@ -1,5 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 
+/**
+ * Lobby Class
+ * @property {Map} users
+ */
 class Lobby {
   constructor() {
     this.users = new Map();
