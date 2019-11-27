@@ -20,7 +20,6 @@ const keydownEventHandler = (event, character) => {
   };
 
   const direction = directionMap[event.keyCode];
-  // if (direction !== undefined) character.move(direction);
   if (direction !== undefined) socket.emitMove(direction);
 };
 
