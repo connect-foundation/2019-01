@@ -11,9 +11,6 @@ import lobby from '../models/lobby';
  */
 class Controller {
   constructor() {
-    this.rooms = [];
-    this.rooms.push(new Room());
-
     // 임시 코드
     this.testRoom = new Room(1, 'test room');
     lobby.rooms.set(this.testRoom.getId(), this.testRoom);
