@@ -1,5 +1,7 @@
 import mock from './mock';
 
+const { ENTER_RESPONSE_KEYS, MOVE_RESPONSE_KEYS } = mock;
+
 const ioClient = require('socket.io-client');
 const http = require('http');
 const { app, socketIo } = require('../bin/app').default;
@@ -47,7 +49,7 @@ describe('socket.io test', () => {
 
   test('[EMIT] \'enter_room\' event test', (done) => {
     socket.once('enter_room', (message) => {
-      expect(mock.ENTER_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
+      expect(ENTER_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
     socket.emit('enter_room');
@@ -57,7 +59,7 @@ describe('socket.io test', () => {
     socket.once('move', (message) => {
       if (!message) done();
 
-      expect(mock.MOVE_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
+      expect(MOVE_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
     socket.emit('move', 'left');
