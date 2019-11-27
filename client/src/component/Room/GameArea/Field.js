@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
 import socket from '../../../class/socket';
+import Canvas from './Canvas';
 
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
@@ -20,36 +21,37 @@ const keydownEventHandler = (event, character) => {
 };
 
 const Field = () => {
-  const canvasRef = React.useRef();
+  const [characterInfos, setCharacterInfos] = useState([]);
+  const getCharacters = (data) => {
+    data.characterList.forEach(({
+      url, indexX, indexY, isMine,
+    }) => {
+      const character = new Character(url, indexX, indexY, isMine);
+      if (isMine) {
+        window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
+      }
+      setCharacterInfos((prev) => [...prev, character]);
+    });
+  };
+
+  const getOtherCharacter = ({
+    url, indexX, indexY, isMine,
+  }) => {
+    const character = new Character(url, indexX, indexY, isMine);
+    setCharacterInfos((prev) => [...prev, character]);
+  };
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    const getCharacters = (data) => {
-      data.characterList.forEach(({
-        url, indexX, indexY, isMine,
-      }) => {
-        console.log(url, indexX, indexY, isMine);
-        const character = new Character(ctx, url, indexX, indexY);
-        if (isMine) {
-          window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
-        }
-      });
-    };
-
-    const getOtherCharacter = ({ url, indexX, indexY }) => new Character(ctx, url, indexX, indexY);
-
     socket.onEnterRoom(getCharacters);
     socket.onEnterNewUser(getOtherCharacter);
   }, []);
 
+  const getCanvasList = (characters) => characters.map((character, i) => <Canvas key={i} character={character} />);
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ backgroundImage: `url('${FIELD.BACKGROUND}')` }}
-      width={FIELD.getWidth()}
-      height={FIELD.getHeight()} />
+    <div style={{ backgroundImage: `url('${FIELD.BACKGROUND}')`, width: FIELD.getWidth(), height: FIELD.getHeight() }}>
+      {getCanvasList(characterInfos)}
+    </div>
   );
 };
 
