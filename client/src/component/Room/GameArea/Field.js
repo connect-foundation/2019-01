@@ -21,8 +21,16 @@ const keydownEventHandler = (event, character) => {
   if (direction !== undefined) socket.emitMove(direction);
 };
 
+const copyMap = (source) => {
+  const target = new Map();
+  source.forEach((value, key) => {
+    target.set(key, value);
+  });
+  return target;
+};
+
 const Field = () => {
-  const [characters, setCharacters] = useState([]);
+  const [characters, setCharacters] = useState(new Map());
   const updateCharacters = (data) => {
     data.characterList.forEach(({
       url, indexX, indexY, isMine, nickname,
@@ -31,16 +39,14 @@ const Field = () => {
       if (isMine) {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
-      characters.push(character);
-      setCharacters(() => [...characters]);
+      characters.set(nickname, character);
+      setCharacters(() => copyMap(characters));
     });
   };
 
   const moveCharacter = (data) => {
-    const matchedCharacter = characters.find(
-      (character) => character.getNickname() === data.nickname,
-    );
-    matchedCharacter.move(data.direction);
+    const matchedCharacter = characters.get(data.nickname);
+    if (matchedCharacter) matchedCharacter.move(data.direction);
   };
 
   useEffect(() => {
@@ -49,9 +55,13 @@ const Field = () => {
     socket.onMove(moveCharacter);
   }, []);
 
-  const getCanvasList = (characterList) => characterList.map(
-    (character) => <Canvas key={character.getNickname()} character={character} />,
-  );
+  const getCanvasList = (characterMap) => {
+    const canvasList = [];
+    characterMap.forEach((character) => {
+      canvasList.push(<Canvas key={character.getNickname()} character={character} />);
+    });
+    return canvasList;
+  };
 
   return (
     <div

@@ -146,7 +146,7 @@ class Room {
 
     this.users.delete(user.getId());
     this.users.forEach((_user) => _user.emitLeaveUser(
-      { userId: user.getId(), isOwner: this._isOwner(user) },
+      { nickname: user.getNickname(), isOwner: this._isOwner(user) },
     ));
   }
 
