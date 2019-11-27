@@ -19,6 +19,18 @@ class SocketContainer {
     this.socket.disconnect();
   }
 
+  emitStartGame() {
+    this.socket.emit(EVENT.START_GAME);
+  }
+
+  emitMove(direction) {
+    this.socket.emit(EVENT.MOVE, direction);
+  }
+
+  emitEnterRoom(data) {
+    this.socket.emit(EVENT.ENTER_ROOM, data);
+  }
+
   onRoomInfos(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
@@ -31,18 +43,17 @@ class SocketContainer {
     }
   }
 
-  emitEnterRoom(data) {
-    this.socket.emit(EVENT.ENTER_ROOM, data);
-  }
-
   onEnterNewUser(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ENTER_NEW_USER, (data) => callback(data));
     }
   }
 
-  emitStartGame() {
-    this.socket.emit(EVENT.START_GAME);
+  onMove(callback) {
+    this.socket.on(EVENT.MOVE, (data) => {
+      if (data === false) return;
+      callback(data);
+    });
   }
 
   onQuizList(callback) {
