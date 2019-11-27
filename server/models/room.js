@@ -144,10 +144,10 @@ class Room {
     }
     this.nicknameList.push(user.getNickname());
 
+    const userInfo = { nickname: user.getNickname(), isOwner: this._isOwner(user) };
+
     this.users.delete(user.getId());
-    this.users.forEach((_user) => _user.emitLeaveUser(
-      { nickname: user.getNickname(), isOwner: this._isOwner(user) },
-    ));
+    this.users.forEach((_user) => _user.emitLeaveUser([userInfo]));
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
