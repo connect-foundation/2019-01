@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { FIELD } from '../../../constants/room';
 
 const Canvas = ({ character }) => {
-  console.log('canvas load');
   const canvasRef = React.useRef();
 
   useEffect(() => {
