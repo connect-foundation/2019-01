@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import nicknameFinder from '../database/nickname';
 import quizFinder from '../database/quiz';
 import { ROOM, DIRECTION } from '../constants/room';
 
@@ -25,6 +26,15 @@ class Room {
     this.currentTime = 0;
     this.users = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
+    this.nicknameList = [];
+  }
+
+  async _fetchRandomNickname() {
+    const adjList = await nicknameFinder.fetchAdjList();
+    const nounList = await nicknameFinder.fetchNounList();
+    for (let idx = 0; idx < adjList.length; idx += 1) {
+      this.nicknameList[idx] = `${adjList[idx].adj} ${nounList[idx].noun}`;
+    }
   }
 
   getId() {
@@ -51,13 +61,18 @@ class Room {
   //                          게임 중이 아니라면, 게임 중인 여부, 방장 여부
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
   // emit: enter_new_user / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
-  enterUser(user) {
+  async enterUser(user) {
     this.users.set(user.getId(), user);
 
     const myCharacter = user.getCharacter();
     if (this.isGameStarted === false) {
       this._placeCharacter(myCharacter);
     }
+
+    if (!this.nicknameList.length) {
+      await this._fetchRandomNickname();
+    }
+    user.setNickname(this.nicknameList.shift());
 
     const characterList = [];
     this.users.forEach((_user) => {
@@ -66,6 +81,7 @@ class Room {
       characterList.push({
         userId: _user.getId(),
         isMine: character === myCharacter,
+        nickname: _user.getNickname(),
         ...character.getInfo(),
       });
     });
@@ -92,6 +108,7 @@ class Room {
       this.indexOfCharacters[indexX][indexY] = undefined;
       user.deleteCharacter();
     }
+    this.nicknameList.push(user.getNickname());
 
     this.users.delete(user.getId());
     this.users.forEach((_user) => _user.emitLeaveUser(
