@@ -1,6 +1,5 @@
-
-import nicknameFinder from '../database/nickname';
 /* eslint-disable no-underscore-dangle */
+import nicknameFinder from '../database/nickname';
 import quizFinder from '../database/quiz';
 import { ROOM, DIRECTION } from '../constants/room';
 
@@ -30,7 +29,7 @@ class Room {
     this.nicknameList = [];
   }
 
-  async fetchRandomNickname() {
+  async _fetchRandomNickname() {
     const adjList = await nicknameFinder.fetchAdjList();
     const nounList = await nicknameFinder.fetchNounList();
     for (let idx = 0; idx < adjList.length; idx += 1) {
@@ -71,7 +70,7 @@ class Room {
     }
 
     if (!this.nicknameList.length) {
-      await this.fetchRandomNickname();
+      await this._fetchRandomNickname();
     }
     user.setNickname(this.nicknameList.shift());
 
