@@ -8,6 +8,8 @@ class Character {
     this.img.src = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
+    this.nameTagX = null;
+    this.nameTagY = null;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -42,25 +44,7 @@ class Character {
       TILE.HEIGHT,
     );
 
-    this.ctx.fillStyle = NICKNAME.BG_COLOR;
-    const nameTagX = TILE.WIDTH * this.indexX - TILE.WIDTH * 0.2;
-    const nameTagY = TILE.HEIGHT * (this.indexY + 1);
-
-    this.ctx.fillRect(
-      nameTagX,
-      nameTagY,
-      NICKNAME.WIDTH,
-      NICKNAME.HEIGHT,
-    );
-
-    this._changeStyleToDrawNickname();
-
-    this.ctx.fillText(
-      this.nickname,
-      nameTagX + NICKNAME.WIDTH / 2,
-      nameTagY + NICKNAME.HEIGHT / 2 + 2,
-      NICKNAME.WIDTH,
-    );
+    this._drawNickname();
   }
 
   _walk() {
@@ -109,18 +93,37 @@ class Character {
     );
 
     this.ctx.clearRect(
-      TILE.WIDTH * this.indexX - TILE.WIDTH * 0.2,
-      TILE.HEIGHT * (this.indexY + 1),
+      this.nameTagX,
+      this.nameTagY,
       NICKNAME.WIDTH + 1,
       NICKNAME.HEIGHT,
     );
   }
 
-  _changeStyleToDrawNickname() {
+  _drawNickname() {
+    this.ctx.fillStyle = NICKNAME.BG_COLOR;
+
+    this.nameTagX = this.indexX - (NICKNAME.WIDTH - TILE.WIDTH) / 2;
+    this.nameTagY = TILE.HEIGHT * (this.indexY + 1);
+
+    this.ctx.fillRect(
+      this.nameTagX,
+      this.nameTagY,
+      NICKNAME.WIDTH,
+      NICKNAME.HEIGHT,
+    );
+
     this.ctx.font = NICKNAME.FONT;
     this.ctx.textAlign = NICKNAME.ALIGN;
     this.ctx.textBaseline = NICKNAME.BASELINE;
     this.ctx.fillStyle = this.isMine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
+
+    this.ctx.fillText(
+      this.nickname,
+      this.nameTagX + NICKNAME.WIDTH / 2,
+      this.nameTagY + NICKNAME.HEIGHT / 2 + 2,
+      NICKNAME.WIDTH,
+    );
   }
 }
 
