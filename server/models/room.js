@@ -113,7 +113,7 @@ class Room {
 
     this.users.forEach((_user) => {
       if (user === _user) return;
-      _user.emitEnterNewUser(myCharacter.getInfo());
+      _user.emitEnterNewUser({ ...characterList[characterList.length - 1], isMine: false });
     });
 
     user.emitEnterRoom({
@@ -154,6 +154,7 @@ class Room {
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
   moveCharacter(user, direction) {
+    console.log(user, direction);
     const character = user.getCharacter();
     if (character.isPlaced() === false) return;
 
@@ -176,7 +177,10 @@ class Room {
     character.setIndexes(newIndexX, newIndexY);
 
     const nickname = user.getNickname();
-    user.emitMove({ nickname, direction });
+
+    this.users.forEach((_user) => {
+      _user.emitMove({ nickname, direction });
+    });
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)

@@ -7,10 +7,10 @@ const ROOM = {
 };
 
 const DIRECTION = {
-  LEFT: 'left',
-  RIGHT: 'right',
-  UP: 'up',
-  DOWN: 'down',
+  DOWN: 0,
+  LEFT: 1,
+  RIGHT: 2,
+  UP: 3,
 };
 
 export { ROOM, DIRECTION };
