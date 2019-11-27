@@ -36,7 +36,6 @@ class Room {
     for (let idx = 0; idx < adjList.length; idx += 1) {
       this.nicknameList[idx] = `${adjList[idx].adj} ${nounList[idx].noun}`;
     }
-    console.log(this.nicknameList);
   }
 
   getId() {
@@ -63,7 +62,7 @@ class Room {
   //                          게임 중이 아니라면, 게임 중인 여부, 방장 여부
   //                          게임 중이라면, 게임 중인 여부, 문제 + 남은 시간까지
   // emit: enter_new_user / 자신을 제외한 모든 유저 / 새로 추가된 유저의 캐릭터 + 닉네임 + 위치
-  enterUser(user) {
+  async enterUser(user) {
     this.users.set(user.getId(), user);
 
     const myCharacter = user.getCharacter();
@@ -83,6 +82,7 @@ class Room {
       characterList.push({
         userId: _user.getId(),
         isMine: character === myCharacter,
+        nickname: _user.getNickname(),
         ...character.getInfo(),
       });
     });

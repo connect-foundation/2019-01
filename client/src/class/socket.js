@@ -8,7 +8,6 @@ class SocketContainer {
   constructor() {
     this.socket = undefined;
     this.connect();
-    this.emitEnterRoom();
   }
 
   connect() {
@@ -27,10 +26,7 @@ class SocketContainer {
 
   onEnterRoom(callback) {
     if (isFunction(callback)) {
-      // this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
-      this.socket.on(EVENT.ENTER_ROOM, (data) => {
-        console.log(data);
-      });
+      this.socket.on(EVENT.ENTER_ROOM, (data) => { console.log(data); callback(data); });
     }
   }
 
@@ -42,10 +38,6 @@ class SocketContainer {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ENTER_NEW_USER, (data) => callback(data));
     }
-  }
-
-  emitEnterRoom() {
-    this.socket.emit(EVENT.ENTER_ROOM);
   }
 
   emitStartGame() {
