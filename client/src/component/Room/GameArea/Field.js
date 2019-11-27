@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
-=======
-import React, { useEffect, useState } from 'react';
->>>>>>> e08b99446bd8ed73f081602c15260b32213668d9
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
@@ -27,7 +23,7 @@ const keydownEventHandler = (event, character) => {
 
 const Field = () => {
   const [characters, setCharacters] = useState([]);
-  const getCharacters = (data) => {
+  const updateCharacters = (data) => {
     data.characterList.forEach(({
       url, indexX, indexY, isMine, nickname,
     }) => {
@@ -35,25 +31,21 @@ const Field = () => {
       if (isMine) {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
-      setCharacters((prevCharacters) => [...prevCharacters, character]);
+      characters.push(character);
+      setCharacters(() => [...characters]);
     });
   };
 
-  const getNewCharacter = ({
-    url, indexX, indexY, isMine, nickname,
-  }) => {
-    const character = new Character(url, indexX, indexY, nickname, isMine);
-    setCharacters((prevCharacters) => [...prevCharacters, character]);
-  };
-
   const moveCharacter = (data) => {
-    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
+    const matchedCharacter = characters.find(
+      (character) => character.getNickname() === data.nickname,
+    );
     matchedCharacter.move(data.direction);
   };
 
   useEffect(() => {
-    socket.onEnterRoom(getCharacters);
-    socket.onEnterNewUser(getNewCharacter);
+    socket.onEnterRoom(updateCharacters);
+    socket.onEnterNewUser(updateCharacters);
     socket.onMove(moveCharacter);
   }, []);
 
