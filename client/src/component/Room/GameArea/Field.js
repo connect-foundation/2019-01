@@ -40,8 +40,8 @@ const Field = () => {
         window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
       }
       characters.set(nickname, character);
-      setCharacters(() => copyMap(characters));
     });
+    setCharacters(() => copyMap(characters));
   };
 
   const moveCharacter = (data) => {
@@ -49,8 +49,10 @@ const Field = () => {
     if (matchedCharacter) matchedCharacter.move(data.direction);
   };
 
-  const deleteCharacter = ({ nickname }) => {
-    characters.delete(nickname);
+  const deleteCharacter = (nicknameList) => {
+    nicknameList.forEach((nickname) => {
+      characters.delete(nickname);
+    });
     setCharacters(() => copyMap(characters));
   };
 
