@@ -103,7 +103,7 @@ class Character {
   _drawNickname() {
     this.ctx.fillStyle = NICKNAME.BG_COLOR;
 
-    this.nameTagX = this.indexX - (NICKNAME.WIDTH - TILE.WIDTH) / 2;
+    this.nameTagX = (TILE.WIDTH * this.indexX) - ((NICKNAME.WIDTH - TILE.WIDTH) / 2);
     this.nameTagY = TILE.HEIGHT * (this.indexY + 1);
 
     this.ctx.fillRect(
