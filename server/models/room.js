@@ -109,6 +109,7 @@ class Room {
       this.indexOfCharacters[indexX][indexY] = undefined;
       user.deleteCharacter();
     }
+    this.nicknameList.push(user.getNickname());
 
     this.users.delete(user.getId());
     this.users.forEach((_user) => _user.emitLeaveUser(
