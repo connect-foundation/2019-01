@@ -57,7 +57,7 @@ describe('socket.io test', () => {
 
   test('\'move\' event test', (done) => {
     socket.once('move', (message) => {
-      if (!message) done();
+      if (!message.canMove) done();
 
       expect(MOVE_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       done();

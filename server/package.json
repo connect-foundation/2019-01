@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack --mode develop; node ./bin/www",
     "build": "webpack --mode production; node ./bin/www",
-    "test": "webpack --mode production; jest --runInBand --verbose  --forceExit"
+    "test": "webpack --mode develop; jest --runInBand --verbose  --forceExit"
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
