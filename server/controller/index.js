@@ -1,49 +1,80 @@
-import quizFinder from '../database/quiz';
+/* eslint-disable no-underscore-dangle */
+
 import Room from '../models/room';
+import User from '../models/user';
+import Character from '../models/character';
+import lobby from '../models/lobby';
 
-class GameController {
+class Controller {
   constructor() {
-    this.players = [];
-    this.rooms = [];
-    this.rooms.push(new Room());
+    // 임시 코드
+    this.testRoom = new Room(1, 'test room');
+    lobby.rooms.set(this.testRoom.getId(), this.testRoom);
   }
 
-  async enterPlayer(socket) {
-    this.players.push(socket);
-    this.bindPlayerEvents(socket);
 
-    const otherCharacters = this.rooms[0].getExistCharacters(); //방은 하나라고 가정하고 rooms[0]번째 방을 이용합니다.
-    const character = await this.rooms[0].enterNewPlayer();
-    socket.emit('enter_room', { character, otherCharacters });
-
-    this.players.forEach(async (player) => {
-      if (player === socket) return;
-      player.emit('enter_new_player', character);
-    });
+  connectUser(socket) {
+    const user = new User(socket);
+    this._bindEvent(user);
+    lobby.enterUser(user);
   }
 
-  async startRoomRound(roomIdx) {
-    if (this.rooms[roomIdx].hasNoMoreQuiz()) {
-      const quizList = await quizFinder.getQuizList();
-      this.rooms[roomIdx].addQuizList(quizList);
-    }
-    this.players.forEach(async (player) => {
-      const roundValue = await this.rooms[roomIdx].startNewRound();
-      player.emit('start_round', roundValue);
-    });
+  _letUserCreateRoom(user, roomId, roomName) {
+    if (user.isInLobby() === false) return;
+    const testRoom = new Room(roomId, roomName);
+    lobby.createRoom(user, testRoom);
   }
 
-  bindPlayerEvents(socket) {
-    socket.on('start_game', () => {
-    //   this.startRoomRound(0); // 문제 하나만 넘겨주는 logic
+  async _letUserEnterRoom(user, roomId) {
+    if (user.isInLobby() === false) return;
+    const room = lobby.getRoom(roomId);
+    lobby.leaveUser(user.getId);
+    await this._assignCharacter(user);
+    await room.enterUser(user);
+  }
 
-      this.players.forEach(async (player) => { // 문제 10개를 배열로 넘겨주는 logic
-        player.emit('get_quiz_list', await quizFinder.getQuizList());
-      });
+  async _assignCharacter(user) {
+    const character = new Character();
+    await character.setUrl();
+    user.setCharacter(character);
+  }
+
+  _letUserLeaveRoom(user) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    room.leaveUser(user);
+  }
+
+  async _letUserStartGame(user) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    await room.startGame(user);
+  }
+
+  _letUserMove(user, direction) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    room.moveCharacter(user, direction);
+  }
+
+  _letUserChat(user, message) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    room.chat(user, message);
+  }
+
+  _bindEvent(user) {
+    user.onEnterRoom(async (roomId) => {
+      await this._letUserEnterRoom(user, roomId);
     });
+    user.onStartGame(() => this._letUserStartGame(user));
+    user.onMove((direction) => this._letUserMove(user, direction));
+    user.onChatMessage((message) => this._letUserChat(user, message));
+    user.onLeaveRoom(() => this._letUserLeaveRoom(user));
+    user.onDisconnecting(() => this._letUserLeaveRoom(user));
   }
 }
 
-const gameController = new GameController();
+const controller = new Controller();
 
-export default gameController;
+export default controller;
