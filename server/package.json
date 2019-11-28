@@ -6,7 +6,6 @@
     "start": "webpack --mode development; node ./bin/www",
     "build": "webpack --mode production; node ./bin/www",
     "test": "echo skip-test"
-    // "test": "webpack --mode development; jest --runInBand --verbose"
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
