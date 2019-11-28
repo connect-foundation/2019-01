@@ -6,10 +6,7 @@ import {
 import { DASHBOARD } from '../../../constants/room';
 import socket from '../../../class/socket';
 
-const changeNumberToTwoDigitString = (num) => {
-  if (num === undefined) return;
-  return num.toString().padStart(2, '0');
-};
+const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 
