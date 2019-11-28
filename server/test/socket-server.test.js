@@ -15,6 +15,7 @@ describe('socket.io test', () => {
     httpServer = http.createServer(app).listen('5001');
     socketIo.attach(httpServer);
     httpServerAddr = httpServer.address();
+    console.log(httpServerAddr);
 
     socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
       'reconnection delay': 0,
