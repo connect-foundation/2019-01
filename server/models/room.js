@@ -143,7 +143,6 @@ class Room {
       user.deleteCharacter();
     }
     this.nicknameList.push(user.getNickname());
-
     const userInfo = { nickname: user.getNickname(), isOwner: this._isOwner(user) };
 
     this.users.delete(user.getId());
@@ -178,32 +177,17 @@ class Room {
       default: return;
     }
 
-<<<<<<< HEAD
-    if (this._canBeMoved(newIndexX, newIndexY) === false) return;
-
-    user.character.setIndexes(newIndexX, newIndexY);
-    this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-    this.indexOfCharacters[newIndexX][newIndexY] = user;
-
-    setTimeout(() => {
-      this._startRound();
-      this._endRound();
-    }, 5000);
-
-=======
->>>>>>> a918fd3b0bae6ee460d88d47e6a8861e7ce08f7e
     const nickname = user.getNickname();
     const canMove = this._canBeMoved(newIndexX, newIndexY);
-
     this.users.forEach((_user) => {
       _user.emitMove({ canMove, nickname, direction });
     });
 
-    if (canMove === false) return;
-
-    this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-    this.indexOfCharacters[newIndexX][newIndexY] = character;
-    character.setIndexes(newIndexX, newIndexY);
+    if (canMove) {
+      user.character.setIndexes(newIndexX, newIndexY);
+      this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
+      this.indexOfCharacters[newIndexX][newIndexY] = user;
+    }
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -242,7 +226,6 @@ class Room {
     this.currentRound += 1;
     const dropUsers = this.currentQuiz.answer ? this._checkCaracterLocation(false) : this._checkCaracterLocation(true);
 
-    console.log(dropUsers);
     this.users.forEach((_user) => {
       _user.emitEndRound({ characterList: dropUsers });
     });

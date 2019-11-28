@@ -59,7 +59,7 @@ const Field = () => {
     socket.onEnterRoom(updateCharacters);
     socket.onEnterNewUser(updateCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound((data) => console.log(data));
+    socket.onEndRound(deleteCharacter);
     socket.onLeaveUser(deleteCharacter);
   }, []);
 
