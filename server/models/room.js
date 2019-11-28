@@ -243,7 +243,6 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    // WAITING_TIME_MS 는 현재 3200이고 임시
     if (this.aliveUserNumber === 1 || this.currentRound === ROOM.MAX_ROUND) {
       this._endGame();
       return;
@@ -309,9 +308,10 @@ class Room {
     setTimeout(() => {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
-        return this._countTime();
+        this._countTime();
+      } else {
+        this._endRound();
       }
-      this._endRound();
     }, ROOM.SECOND);
   }
 
