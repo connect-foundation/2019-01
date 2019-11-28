@@ -281,7 +281,7 @@ class Room {
   }
 
   _checkCharactersLocation(isTrueSide) {
-    const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.X_END];
+    const [start, end] = isTrueSide ? [FIELD.X_START, FIELD.X_END] : [FIELD.O_START, FIELD.O_END];
 
     const dropUsers = [];
 

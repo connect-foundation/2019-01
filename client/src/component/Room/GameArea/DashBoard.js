@@ -60,7 +60,7 @@ const DashBoard = () => {
   };
 
   const endRound = ({ round, comment, answer }) => {
-    const answerText = `[정답 : ${answer ? 'O' : 'X'}]`;
+    const answerText = `[정답 : ${answer ? 'TRUE' : 'FALSE'}]`;
     const noticeText = `${answerText} ${comment}`;
     setNotice(noticeText);
   };
