@@ -224,7 +224,7 @@ class Room {
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트
   _endRound() {
     this.currentRound += 1;
-    const dropUsers = this.currentQuiz.answer ? this._checkCaracterLocation(false) : this._checkCaracterLocation(true);
+    const dropUsers = this._checkCaracterLocation(this.currentQuiz.answer);
 
     this.users.forEach((_user) => {
       _user.emitEndRound({ characterList: dropUsers });

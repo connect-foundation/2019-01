@@ -15,9 +15,9 @@ const DIRECTION = {
 
 const FIELD = {
   O_START: 0,
-  O_END: 8,
-  X_START: 8,
-  X_END: 16,
+  O_END: ROOM.FIELD.COLUMN / 2,
+  X_START: ROOM.FIELD.COLUMN / 2,
+  X_END: ROOM.FIELD.COLUMN,
 };
 
 export { ROOM, DIRECTION, FIELD };
