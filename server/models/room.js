@@ -237,8 +237,8 @@ class Room {
     const dropUsers = [];
     let nickname;
     let isOwner;
-    for (let i = 0; i < 8; i += 1) {
-      for (let j = start; j < end; j += 1) {
+    for (let i = start; i < end; i += 1) {
+      for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
         if (this.indexOfCharacters[i][j] !== undefined) {
           nickname = this.indexOfCharacters[i][j].getNickname();
           isOwner = this._isOwner(this.indexOfCharacters[i][j]);
