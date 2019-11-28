@@ -157,10 +157,12 @@ class Room {
   //  ㄴ 다음으로 변경: 시작 값으로 셋팅하고, emit: start_round 호출
   async startGame(user) {
     if (this._isOwner(user) && this.isGameStarted === false) {
+      this.aliveUserNumber = this.users.size;
+      if (this.aliveUserNumber === 1) return;
+
       this.isGameStarted = true;
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
-      this.aliveUserNumber = this.users.size;
 
       await this._startRound();
     }
