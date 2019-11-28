@@ -155,6 +155,7 @@ class Room {
     if (this._isOwner(user) && this.isGameStarted === false) {
       this.isGameStarted = true;
       this.currentRound = 0;
+      this.quizList = await quizFinder.fetchQuizList();
 
       await this._startRound();
     }
@@ -208,7 +209,8 @@ class Room {
    *
    */
   async _startRound() {
-    await this._changeToNewQuiz();
+    if (this.quizList.length === 0) throw new Error('No More Quiz');
+    this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
     this.users.forEach((user) => {
       user.emitStartRound({
@@ -219,34 +221,6 @@ class Room {
     });
 
     this._countTime();
-  }
-
-  /**
-   *
-   */
-  async _changeToNewQuiz() {
-    if (this.quizList[this.currentRound] === undefined) {
-      const newQuizList = await quizFinder.fetchQuizList();
-      this._getOnlyNewQuizsFrom(newQuizList);
-    }
-    this.currentQuiz = this.quizList[this.currentRound];
-  }
-
-  /**
-   * 문제 추가할 때, 전에 냈던 문제이면 추가하지 않는 걸로
-   * @param {Array.<{
-   * id:number,
-   * category:string,
-   * level:number,
-   * question:string,
-   * comment:string,
-   * answer:Boolean}>} quizList
-   */
-  _getOnlyNewQuizsFrom(quizList) {
-    quizList.forEach((newQuiz) => {
-      if (this.quizList.find((oldQuiz) => oldQuiz.id === newQuiz.id)) return;
-      this.quizList.push(newQuiz);
-    });
   }
 
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
@@ -264,20 +238,17 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
+    // WAITING_TIME_MS 는 현재 3200이고 임시
     if (this.currentRound === ROOM.MAX_ROUND) {
       this.users.forEach((user) => {
-        setTimeout(() => {
-          user.emitEndGame();
-        }, 3000);
+        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
       });
       return;
     }
 
     this.currentRound += 1;
 
-    setTimeout(() => {
-      this._startRound();
-    }, 3000);
+    setTimeout(() => this._startRound(), ROOM.WAITING_TIME_MS);
   }
 
   _checkCharactersLocation(isTrueSide) {
@@ -331,10 +302,9 @@ class Room {
     setTimeout(() => {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
-        this._countTime();
-      } else {
-        this._endRound();
+        return this._countTime();
       }
+      this._endRound();
     }, ROOM.SECOND);
   }
 

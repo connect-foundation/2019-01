@@ -4,7 +4,8 @@ const ROOM = {
   SECOND: 1000, // 1s
   TIME_LIMIT: 60, // 60s
   MAX_USER: 20,
-  MAX_ROUND: 10,
+  MAX_ROUND: 9,
+  WAITING_TIME_MS: 3000,
 };
 
 const DIRECTION = {
