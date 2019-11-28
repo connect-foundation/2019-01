@@ -59,6 +59,12 @@ class SocketContainer {
     }
   }
 
+  onEndRound(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.END_ROUND, (data) => callback(data));
+    }
+  }
+
   onLeaveUser(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.LEAVE_USER, (data) => callback(data));
