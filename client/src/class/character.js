@@ -2,10 +2,10 @@
 import { CHARACTER, TILE, NICKNAME } from '../constants/room';
 
 class Character {
-  constructor(ctx, imgUrl, indexX, indexY, nickname, isMine) {
-    this.ctx = ctx;
-    this.img = new Image();
-    this.img.src = imgUrl;
+  constructor(imgUrl, indexX, indexY, nickname, isMine) {
+    this.ctx = null;
+    this.img = null;
+    this.imgUrl = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
     this.nameTagX = null;
@@ -17,12 +17,17 @@ class Character {
     this.requestId = null;
     this.nickname = nickname;
     this.isMine = isMine;
-
-    this.img.onload = () => this._draw();
   }
 
   getNickname() {
     return this.nickname;
+  }
+
+  drawImage(ctx) {
+    this.ctx = ctx;
+    this.img = new Image();
+    this.img.src = this.imgUrl;
+    this.img.onload = () => this._draw();
   }
 
   isMoving() {
@@ -30,9 +35,18 @@ class Character {
   }
 
   move(direction) {
+    if (this.ctx === null) return;
     if (this.requestId) return;
     this.direction = direction;
     this.requestId = window.requestAnimationFrame(() => this._walk());
+  }
+
+  turn(direction) {
+    if (this.ctx === null) return;
+    if (this.requestId) return;
+    this.direction = direction;
+    this._clear();
+    this._draw();
   }
 
   _draw() {

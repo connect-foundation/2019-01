@@ -7,12 +7,12 @@ const isFunction = (callback) => typeof callback === 'function';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    this.url = process.env.NODE_ENV === 'production' ? 'http://localhost/socket.io' : 'http://localhost:3000';
+    this.url = process.env.NODE_ENV === 'production' ? 'http://45.119.146.251/socket.io' : 'http://localhost:3000';
     this.connect();
   }
 
   connect() {
-    this.socket = socketio.connect(this.url);
+    this.socket = socketio.connect(this.url, { transports: ['websocket'] });
   }
 
   disconnect() {
@@ -50,10 +50,7 @@ class SocketContainer {
   }
 
   onMove(callback) {
-    this.socket.on(EVENT.MOVE, (data) => {
-      if (data === false) return;
-      callback(data);
-    });
+    this.socket.on(EVENT.MOVE, (data) => callback(data));
   }
 
   onQuizList(callback) {
@@ -65,6 +62,12 @@ class SocketContainer {
   onEndRound(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.END_ROUND, (data) => callback(data));
+    }
+  }
+
+  onLeaveUser(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.LEAVE_USER, (data) => callback(data));
     }
   }
 }
