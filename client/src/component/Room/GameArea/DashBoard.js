@@ -68,6 +68,8 @@ const DashBoard = () => {
     setNotice('↓↓↓↓   우승   ↓↓↓↓');
     setTimeout(() => {
       setGameEnded(false);
+      setGameStarted(false);
+      setCounter('--');
     }, 3000);
   };
 
