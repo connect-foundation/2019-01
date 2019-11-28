@@ -4,7 +4,7 @@ import logger from 'morgan';
 import socketio from 'socket.io';
 import {} from 'dotenv/config';
 import indexRouter from './routes/index';
-import gameController from './controller';
+import controller from './controller';
 
 const app = express();
 const socketIo = socketio();
@@ -28,7 +28,7 @@ app.use((err, req, res) => {
 
 socketIo.on('connection', (socket) => {
   console.log('a user connected');
-  gameController.bindEvent(socket);
+  controller.connectUser(socket);
 });
 
 export default { app, socketIo };

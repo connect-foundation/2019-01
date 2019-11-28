@@ -1,12 +1,21 @@
 import EVENT from '../constants/socket-event';
 
+/**
+ * User Class
+ * socket을 받아서 감싸줘서 user로 내보낸다.
+ * @property {string} id
+ * @property {object} socket
+ * @property {string} nickname
+ * @property {Character} character
+ * @property {number} roomId
+ */
 class User {
   constructor(socket) {
     this.id = socket.id;
     this.socket = socket;
     this.nickname = null;
     this.character = null;
-    this.currentLocation = null;
+    this.roomId = null;
   }
 
   getNickname() {
@@ -33,20 +42,30 @@ class User {
     this.character = null;
   }
 
-  getCurrentLocation() {
-    return this.currentLocation;
+  isInLobby() {
+    return this.roomId === null;
   }
 
-  setCurrentLocation(location) {
-    this.currentLocation = location;
+  getRoomId() {
+    return this.roomId;
+  }
+
+  onEnterLobby() {
+    this.roomId = null;
   }
 
   onEnterRoom(callback) {
-    this.socket.on(EVENT.ENTER_ROOM, (roomId) => callback(roomId));
+    this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
+      callback(roomId);
+      this.roomId = roomId;
+    });
   }
 
   onLeaveRoom(callback) {
-    this.socket.on(EVENT.LEAVE_ROOM, () => callback());
+    this.socket.on(EVENT.LEAVE_ROOM, () => {
+      callback();
+      this.roomId = null;
+    });
   }
 
   onStartGame(callback) {
@@ -63,6 +82,10 @@ class User {
 
   onDisconnecting(callback) {
     this.socket.on(EVENT.DISCONNECT, () => callback());
+  }
+
+  emitRoomInfos(data) {
+    this.socket.emit(EVENT.ROOM_INFOS, data);
   }
 
   emitEnterRoom(data) {
