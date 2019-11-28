@@ -235,6 +235,7 @@ class Room {
     const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.X_END];
 
     const dropUsers = [];
+
     for (let i = start; i < end; i += 1) {
       for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
         const character = this.indexOfCharacters[i][j];
@@ -261,7 +262,8 @@ class Room {
    */
   _placeCharacter(user) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
-    user.character.setIndexes(indexX, indexY);
+    const character = user.getCharacter();
+    character.setIndexes(indexX, indexY);
     this.indexOfCharacters[indexX][indexY] = user;
   }
 
