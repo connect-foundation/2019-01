@@ -163,7 +163,7 @@ class Room {
       this.aliveUserNumber = this.users.size;
       this.users.forEach((_user) => _user.emitStartGame());
 
-      setTimeout(() => this._startRound(), 3000);
+      setTimeout(() => this._startRound(), ROOM.WAITING_TIME_MS);
     }
   }
 
