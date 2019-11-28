@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import nicknameFinder from '../database/nickname';
 import quizFinder from '../database/quiz';
-import { ROOM, DIRECTION } from '../constants/room';
+import { ROOM, DIRECTION, FIELD } from '../constants/room';
 
 /**
  * Room Class
@@ -89,9 +89,8 @@ class Room {
   async enterUser(user) {
     this.users.set(user.getId(), user);
 
-    const myCharacter = user.getCharacter();
     if (this.isGameStarted === false) {
-      this._placeCharacter(myCharacter);
+      this._placeCharacter(user);
     }
 
     if (!this.nicknameList.length) {
@@ -99,6 +98,7 @@ class Room {
     }
     user.setNickname(this.nicknameList.shift());
 
+    const myCharacter = user.getCharacter();
     const characterList = this.makeCharacterList(myCharacter);
 
     const newUser = { ...characterList[characterList.length - 1], isMine: false };
@@ -143,11 +143,10 @@ class Room {
       user.deleteCharacter();
     }
     this.nicknameList.push(user.getNickname());
+    const userInfo = { nickname: user.getNickname(), isOwner: this._isOwner(user) };
 
     this.users.delete(user.getId());
-    this.users.forEach((_user) => _user.emitLeaveUser(
-      { userId: user.getId(), isOwner: this._isOwner(user) },
-    ));
+    this.users.forEach((_user) => _user.emitLeaveUser({ characterList: [userInfo] }));
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -178,17 +177,17 @@ class Room {
       default: return;
     }
 
-    if (this._canBeMoved(newIndexX, newIndexY) === false) return;
-
-    this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-    this.indexOfCharacters[newIndexX][newIndexY] = character;
-    character.setIndexes(newIndexX, newIndexY);
-
     const nickname = user.getNickname();
-
+    const canMove = this._canBeMoved(newIndexX, newIndexY);
     this.users.forEach((_user) => {
-      _user.emitMove({ nickname, direction });
+      _user.emitMove({ canMove, nickname, direction });
     });
+
+    if (canMove) {
+      user.character.setIndexes(newIndexX, newIndexY);
+      this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
+      this.indexOfCharacters[newIndexX][newIndexY] = user;
+    }
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -253,15 +252,18 @@ class Room {
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
     const { comment, answer } = this.currentQuiz;
+    const dropUsers = this._checkCharactersLocation(this.currentQuiz.answer);
     const endRoundInfos = {
       round: this.currentRound,
       comment,
       answer,
+      characterList: dropUsers,
     };
+
     this.users.forEach((user) => {
       user.emitEndRound(endRoundInfos);
     });
-    this.currentRound += 1;
+
     if (this.currentRound === ROOM.MAX_ROUND) {
       this.users.forEach((user) => {
         setTimeout(() => {
@@ -270,9 +272,29 @@ class Room {
       });
       return;
     }
+
+    this.currentRound += 1;
+
     setTimeout(() => {
       this._startRound();
     }, 3000);
+  }
+
+  _checkCharactersLocation(isTrueSide) {
+    const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.X_END];
+
+    const dropUsers = [];
+
+    for (let i = start; i < end; i += 1) {
+      for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
+        const character = this.indexOfCharacters[i][j];
+        if (character !== undefined) {
+          dropUsers.push({ nickname: character.getNickname(), isOwner: this._isOwner(character) });
+          this.indexOfCharacters[i][j] = undefined;
+        }
+      }
+    }
+    return dropUsers;
   }
 
   // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
@@ -287,10 +309,11 @@ class Room {
   /**
    * 유저의 캐릭터를 랜덤한 위치에 이동시키는 메서드
    */
-  _placeCharacter(character) {
+  _placeCharacter(user) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
+    const character = user.getCharacter();
     character.setIndexes(indexX, indexY);
-    this.indexOfCharacters[indexX][indexY] = character;
+    this.indexOfCharacters[indexX][indexY] = user;
   }
 
   /**
@@ -322,8 +345,8 @@ class Room {
     let indexX;
     let indexY;
     do {
-      indexX = Math.floor(Math.random() * (ROOM.FILED_COLUMN));
-      indexY = Math.floor(Math.random() * (ROOM.FILED_ROW));
+      indexX = Math.floor(Math.random() * (ROOM.FIELD_COLUMN));
+      indexY = Math.floor(Math.random() * (ROOM.FIELD_ROW));
     } while (this.indexOfCharacters[indexX][indexY]);
     return [indexX, indexY];
   }
@@ -332,15 +355,15 @@ class Room {
    * @returns {Array.<Array.<number, number>>}
    */
   _getEmptyIndexMatrix() {
-    return Array(ROOM.FILED_COLUMN).fill().map(() => Array(ROOM.FILED_ROW));
+    return Array(ROOM.FIELD_COLUMN).fill().map(() => Array(ROOM.FIELD_ROW));
   }
 
   /**
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FILED_COLUMN) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FILED_ROW) return false;
+    if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
+    if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }

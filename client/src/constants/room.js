@@ -32,7 +32,7 @@ const CHARACTER = {
 };
 
 const NICKNAME = {
-  WIDTH: TILE.WIDTH + TILE.WIDTH * 0.4,
+  WIDTH: TILE.WIDTH * 1.5,
   HEIGHT: TILE.HEIGHT / 3,
   FONT: '13px nanoom',
   ALIGN: 'center',

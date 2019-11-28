@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
 import Character from '../../../class/character';
 import socket from '../../../class/socket';
+import Canvas from './Canvas';
 
 const keydownEventHandler = (event, character) => {
   if ((character instanceof Character) === false) return;
@@ -20,42 +21,65 @@ const keydownEventHandler = (event, character) => {
   if (direction !== undefined) socket.emitMove(direction);
 };
 
-const Field = () => {
-  const canvasRef = React.useRef();
-  const [characters, setCharacters] = useState([]);
 
-  const moveCharacter = (data) => {
-    const matchedCharacter = characters.find((character) => character.getNickname() === data.nickname);
-    matchedCharacter.move(data.direction);
+const Field = () => {
+  const [characters, setCharacters] = useState(new Map());
+  const updateCharacters = (data) => {
+    data.characterList.forEach(({
+      url, indexX, indexY, isMine, nickname,
+    }) => {
+      const character = new Character(url, indexX, indexY, nickname, isMine);
+      if (isMine) {
+        window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
+      }
+      characters.set(nickname, character);
+    });
+    setCharacters(() => new Map(characters));
+  };
+
+  const moveCharacter = ({ canMove, nickname, direction }) => {
+    const matchedCharacter = characters.get(nickname);
+    if (matchedCharacter === undefined) return;
+
+    if (canMove === false) {
+      matchedCharacter.turn(direction);
+      return;
+    }
+    matchedCharacter.move(direction);
+  };
+
+  const deleteCharacter = ({ characterList }) => {
+    characterList.forEach(({ nickname }) => {
+      characters.delete(nickname);
+    });
+    setCharacters(() => new Map(characters));
   };
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    const getCharacters = (data) => {
-      data.characterList.forEach(({
-        url, indexX, indexY, isMine, nickname,
-      }) => {
-        const character = new Character(ctx, url, indexX, indexY, nickname, isMine);
-        setCharacters(characters.push(character));
-        if (isMine) {
-          window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
-        }
-      });
-    };
-
-    socket.onEnterRoom(getCharacters);
-    socket.onEnterNewUser(getCharacters);
+    socket.onEnterRoom(updateCharacters);
+    socket.onEnterNewUser(updateCharacters);
     socket.onMove(moveCharacter);
+    socket.onEndRound(deleteCharacter);
+    socket.onLeaveUser(deleteCharacter);
   }, []);
 
+  const getCanvasList = (characterMap) => {
+    const canvasList = [];
+    characterMap.forEach((character) => {
+      canvasList.push(<Canvas key={character.getNickname()} character={character} />);
+    });
+    return canvasList;
+  };
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ backgroundImage: `url('${FIELD.BACKGROUND}')` }}
-      width={FIELD.getWidth()}
-      height={FIELD.getHeight()} />
+    <div
+      style={{
+        backgroundImage: `url('${FIELD.BACKGROUND}')`,
+        width: FIELD.getWidth(),
+        height: FIELD.getHeight(),
+      }}>
+      {getCanvasList(characters)}
+    </div>
   );
 };
 
