@@ -31,6 +31,17 @@ const CHARACTER = {
   },
 };
 
+const NICKNAME = {
+  WIDTH: TILE.WIDTH * 1.5,
+  HEIGHT: TILE.HEIGHT / 3,
+  FONT: '13px nanoom',
+  ALIGN: 'center',
+  BASELINE: 'middle',
+  MINE_COLOR: 'yellow',
+  OTHER_COLOR: 'white',
+  BG_COLOR: 'rgba(0, 0, 0, 0.6)',
+};
+
 const KEYCODE = {
   LEFT: 37,
   UP: 38,
@@ -76,5 +87,5 @@ const ROOM = {
 };
 
 export {
-  TILE, FIELD, CHARACTER, KEYCODE, DASHBOARD, CHAT_AREA, ROOM, QUIZ, COUNTER, GAME_START_BUTTON,
+  TILE, FIELD, CHARACTER, KEYCODE, DASHBOARD, CHAT_AREA, ROOM, QUIZ, COUNTER, GAME_START_BUTTON, NICKNAME,
 };

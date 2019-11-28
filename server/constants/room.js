@@ -3,13 +3,14 @@ const ROOM = {
   FILED_COLUMN: 16,
   SECOND: 1000, // 1s
   TIME_LIMIT: 60000, // 60s
+  MAX_USER: 20,
 };
 
 const DIRECTION = {
-  LEFT: 'left',
-  RIGHT: 'right',
-  UP: 'up',
-  DOWN: 'down',
+  DOWN: 0,
+  LEFT: 1,
+  RIGHT: 2,
+  UP: 3,
 };
 
 export { ROOM, DIRECTION };
