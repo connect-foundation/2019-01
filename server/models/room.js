@@ -297,8 +297,8 @@ class Room {
     let indexX;
     let indexY;
     do {
-      indexX = Math.floor(Math.random() * (ROOM.FILED_COLUMN));
-      indexY = Math.floor(Math.random() * (ROOM.FILED_ROW));
+      indexX = Math.floor(Math.random() * (ROOM.FIELD_COLUMN));
+      indexY = Math.floor(Math.random() * (ROOM.FIELD_ROW));
     } while (this.indexOfCharacters[indexX][indexY]);
     return [indexX, indexY];
   }
@@ -307,15 +307,15 @@ class Room {
    * @returns {Array.<Array.<number, number>>}
    */
   _getEmptyIndexMatrix() {
-    return Array(ROOM.FILED_COLUMN).fill().map(() => Array(ROOM.FILED_ROW));
+    return Array(ROOM.FIELD_COLUMN).fill().map(() => Array(ROOM.FIELD_ROW));
   }
 
   /**
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FILED_COLUMN) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FILED_ROW) return false;
+    if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
+    if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }
