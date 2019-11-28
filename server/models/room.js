@@ -243,7 +243,7 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    // WAITING_TIME_MS 는 현재 3200이고 임시
+    // WAITING_TIME_MS 는 현재 3000이고 임시
     if (this.aliveUserNumber === 1 || this.currentRound === ROOM.MAX_ROUND) {
       this._endGame();
       return;
@@ -278,8 +278,11 @@ class Room {
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
+    this.indexOfCharacters = this._getEmptyIndexMatrix();
+    this.users.forEach((user) => this._placeCharacter(user));
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+      const characterList = this.makeCharacterList(user.getCharacter());
+      setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
   }
@@ -309,7 +312,8 @@ class Room {
     setTimeout(() => {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
-        return this._countTime();
+        this._countTime();
+        return;
       }
       this._endRound();
     }, ROOM.SECOND);

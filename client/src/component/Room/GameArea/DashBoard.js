@@ -13,9 +13,8 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [time, setTime] = useState();
   const [GameStarted, setGameStarted] = useState(false);
-  const [owner, setOwner] = useState(true);
+  const [owner] = useState(true);
 
   const counterHandler = () => {
     setCounter((_counter) => {
@@ -56,7 +55,7 @@ const DashBoard = () => {
     startCounter();
   };
 
-  const endRound = ({ round, comment, answer }) => {
+  const endRound = ({ comment, answer }) => {
     const answerText = `[정답 : ${answer ? 'TRUE' : 'FALSE'}]`;
     const noticeText = `${answerText} ${comment}`;
     setNotice(noticeText);
@@ -70,7 +69,7 @@ const DashBoard = () => {
   const Greeting = () => (
     owner
       ? <GameStartButton onClick={startGame}>start( );</GameStartButton>
-      : <WaitingText>waiting...</WaitingText>
+      : <WaitingText>pending...</WaitingText>
   );
 
   const QuizOrGreeting = () => (
