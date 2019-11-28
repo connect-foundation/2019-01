@@ -27,6 +27,7 @@ class Room {
     this.users = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
+    this.aliveUserNumber = 0;
   }
 
   async _fetchRandomNickname() {
@@ -115,7 +116,9 @@ class Room {
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
     });
+    this.aliveUserNumber += 1;
   }
+
 
   makeCharacterList(myCharacter) {
     const characterList = [];
@@ -147,6 +150,7 @@ class Room {
 
     this.users.delete(user.getId());
     this.users.forEach((_user) => _user.emitLeaveUser({ characterList: [userInfo] }));
+    this.aliveUserNumber -= 1;
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -156,6 +160,7 @@ class Room {
       this.isGameStarted = true;
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
+      // this.aliveUserNumber = this.users.length;
 
       await this._startRound();
     }
@@ -209,7 +214,6 @@ class Room {
    *
    */
   async _startRound() {
-    if (this.quizList.length === 0) throw new Error('No More Quiz');
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
     this.users.forEach((user) => {
@@ -239,6 +243,13 @@ class Room {
     });
 
     // WAITING_TIME_MS 는 현재 3200이고 임시
+    if (this.aliveUserNumber === 1) {
+      this.users.forEach((user) => {
+        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+      });
+      return;
+    }
+
     if (this.currentRound === ROOM.MAX_ROUND) {
       this.users.forEach((user) => {
         setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
@@ -251,12 +262,12 @@ class Room {
     setTimeout(() => this._startRound(), ROOM.WAITING_TIME_MS);
   }
 
-  _checkCharactersLocation(isTrueSide) {
-    const [start, end] = isTrueSide ? [FIELD.X_START, FIELD.X_END] : [FIELD.O_START, FIELD.O_END];
+  _checkCharactersLocation(answerSide) {
+    const [dropStart, dropEnd] = answerSide ? [FIELD.X_START, FIELD.X_END] : [FIELD.O_START, FIELD.O_END];
 
     const dropUsers = [];
 
-    for (let i = start; i < end; i += 1) {
+    for (let i = dropStart; i < dropEnd; i += 1) {
       for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
         const character = this.indexOfCharacters[i][j];
         if (character !== undefined) {
@@ -265,6 +276,7 @@ class Room {
         }
       }
     }
+    this.aliveUserNumber -= dropUsers.length;
     return dropUsers;
   }
 
