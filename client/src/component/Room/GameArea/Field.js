@@ -21,6 +21,7 @@ const keydownEventHandler = (event, character) => {
   if (direction !== undefined) socket.emitMove(direction);
 };
 
+
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const updateCharacters = (data) => {
@@ -58,6 +59,7 @@ const Field = () => {
     socket.onEnterRoom(updateCharacters);
     socket.onEnterNewUser(updateCharacters);
     socket.onMove(moveCharacter);
+    socket.onEndRound(deleteCharacter);
     socket.onLeaveUser(deleteCharacter);
   }, []);
 
