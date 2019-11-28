@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack --mode production; node ./bin/www",
+    "start": "webpack --mode develop; node ./bin/www",
     "build": "webpack --mode production; node ./bin/www",
     "test": "webpack --mode production; jest --runInBand --verbose  --forceExit"
   },
