@@ -210,8 +210,9 @@ class Room {
    * @property {string} question
    * @property {number} timeLimit
    */
+
   /**
-   *
+   * round를 시작하게 합니다.
    */
   async _startRound() {
     this.currentQuiz = this.quizList[this.currentRound];
