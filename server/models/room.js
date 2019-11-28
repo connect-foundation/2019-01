@@ -144,10 +144,10 @@ class Room {
     }
     this.nicknameList.push(user.getNickname());
 
+    const userInfo = { nickname: user.getNickname(), isOwner: this._isOwner(user) };
+
     this.users.delete(user.getId());
-    this.users.forEach((_user) => _user.emitLeaveUser(
-      { userId: user.getId(), isOwner: this._isOwner(user) },
-    ));
+    this.users.forEach((_user) => _user.emitLeaveUser({ characterList: [userInfo] }));
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -178,6 +178,7 @@ class Room {
       default: return;
     }
 
+<<<<<<< HEAD
     if (this._canBeMoved(newIndexX, newIndexY) === false) return;
 
     user.character.setIndexes(newIndexX, newIndexY);
@@ -189,11 +190,20 @@ class Room {
       this._endRound();
     }, 5000);
 
+=======
+>>>>>>> a918fd3b0bae6ee460d88d47e6a8861e7ce08f7e
     const nickname = user.getNickname();
+    const canMove = this._canBeMoved(newIndexX, newIndexY);
 
     this.users.forEach((_user) => {
-      _user.emitMove({ nickname, direction });
+      _user.emitMove({ canMove, nickname, direction });
     });
+
+    if (canMove === false) return;
+
+    this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
+    this.indexOfCharacters[newIndexX][newIndexY] = character;
+    character.setIndexes(newIndexX, newIndexY);
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
