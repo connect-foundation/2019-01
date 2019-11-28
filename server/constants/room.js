@@ -2,8 +2,10 @@ const ROOM = {
   FIELD_ROW: 8,
   FIELD_COLUMN: 16,
   SECOND: 1000, // 1s
-  TIME_LIMIT: 60000, // 60s
+  TIME_LIMIT: 60, // 60s
   MAX_USER: 20,
+  MAX_ROUND: 9,
+  WAITING_TIME_MS: 3000,
 };
 
 const DIRECTION = {
