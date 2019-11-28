@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText,
+  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
 import { DASHBOARD } from '../../../constants/room';
 import socket from '../../../class/socket';
@@ -16,6 +16,7 @@ const DashBoard = () => {
   const [time, setTime] = useState();
   const [GameStarted, setGameStarted] = useState(false);
   const [owner, setOwner] = useState(true);
+  const [GameEnded, setGameEnded] = useState(false);
 
   const counterHandler = () => {
     setCounter((_counter) => {
@@ -63,8 +64,11 @@ const DashBoard = () => {
   };
 
   const endGame = () => {
-    setGameStarted(false);
-    setCounter('--');
+    setGameEnded(true);
+    setNotice('↓↓↓↓   우승   ↓↓↓↓');
+    setTimeout(() => {
+      setGameEnded(false);
+    }, 3000);
   };
 
   const Greeting = () => (
@@ -79,6 +83,23 @@ const DashBoard = () => {
       : <Greeting />
   );
 
+  const QuizOrGreetingOrCounterWrapper = () => (
+    GameEnded && GameStarted
+      ? (
+        <div>
+          <GameEndText> {notice} </GameEndText>
+        </div>
+      )
+      : (
+        <div>
+          <QuizOrGreeting />
+          <CounterWrapper style={{ color: getCounterColor(counter) }}>
+            {changeNumberToTwoDigitString(counter)}
+          </CounterWrapper>
+        </div>
+      )
+  );
+
 
   useEffect(() => {
     setCounter('--');
@@ -90,10 +111,11 @@ const DashBoard = () => {
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
   return (
     <DashBoardWrapper style={{ backgroundImage: `url("${DASHBOARD.BACKGROUND}")` }}>
-      <QuizOrGreeting />
+      <QuizOrGreetingOrCounterWrapper />
+      {/* <QuizOrGreeting />
       <CounterWrapper style={{ color: getCounterColor(counter) }}>
         {changeNumberToTwoDigitString(counter)}
-      </CounterWrapper>
+      </CounterWrapper> */}
     </DashBoardWrapper>
   );
 };
