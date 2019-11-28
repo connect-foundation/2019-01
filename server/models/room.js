@@ -197,36 +197,24 @@ class Room {
     // TODO: 모든 유저에게 채팅 로그 (닉네임 + 메시지) emit
   }
 
-  // 아래는 자체 emit
-  // emit: start_round / 모든 유저 / 문제, 각 캐릭터 위치, 제한 시간
+  /**
+   * @event server#start_round
+   *
+   * @property {object}
+   * @property {number} currentRound
+   * @property {string} question
+   * @property {number} timeLimit
+   */
+  /**
+   *
+   */
   async _startRound() {
-    if (this.quizList[this.currentRound] === undefined) {
-      const newQuizList = await quizFinder.fetchQuizList();
-      newQuizList.forEach((newQuiz) => { // 문제 추가할 때, 전에 냈던 문제이면 추가하지 않는 걸로
-        if (this.quizList.find((oldQuiz) => oldQuiz.id === newQuiz.id)) return;
-        this.quizList.push(newQuiz);
-      });
-    }
-    this.currentQuiz = this.quizList[this.currentRound];
+    await this._changeToNewQuiz();
     this.currentTime = 0;
-
-    const characterLocations = [];
-    this.indexOfCharacters = this._getEmptyIndexMatrix();
-
-    this.users.forEach((user) => {
-      const character = user.getCharacter();
-      if (character.isPlaced() === false) return;
-
-      this._placeCharacter(character);
-      const [indexX, indexY] = character.getIndexes();
-      characterLocations.push({ userId: user.getId(), indexX, indexY });
-    });
-
     this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
-        characterLocations,
         timeLimit: ROOM.TIME_LIMIT,
       });
     });
@@ -234,12 +222,57 @@ class Room {
     this._countTime();
   }
 
+  /**
+   *
+   */
+  async _changeToNewQuiz() {
+    if (this.quizList[this.currentRound] === undefined) {
+      const newQuizList = await quizFinder.fetchQuizList();
+      this._getOnlyNewQuizsFrom(newQuizList);
+    }
+    this.currentQuiz = this.quizList[this.currentRound];
+  }
+
+  /**
+   * 문제 추가할 때, 전에 냈던 문제이면 추가하지 않는 걸로
+   * @param {Array.<{
+   * id:number,
+   * category:string,
+   * level:number,
+   * question:string,
+   * comment:string,
+   * answer:Boolean}>} quizList
+   */
+  _getOnlyNewQuizsFrom(quizList) {
+    quizList.forEach((newQuiz) => {
+      if (this.quizList.find((oldQuiz) => oldQuiz.id === newQuiz.id)) return;
+      this.quizList.push(newQuiz);
+    });
+  }
+
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
+    const { comment, answer } = this.currentQuiz;
+    const endRoundInfos = {
+      round: this.currentRound,
+      comment,
+      answer,
+    };
     this.users.forEach((user) => {
-      user.emitEndRound();
+      user.emitEndRound(endRoundInfos);
     });
     this.currentRound += 1;
+    if (this.currentRound === ROOM.MAX_ROUND) {
+      this.users.forEach((user) => {
+        setTimeout(() => {
+          user.emitEndGame();
+        }, 3000);
+      });
+      return;
+    }
+    setTimeout(() => {
+      this._startRound();
+    }, 3000);
   }
 
   // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
