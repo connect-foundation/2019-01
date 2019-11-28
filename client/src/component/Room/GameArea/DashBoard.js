@@ -43,14 +43,7 @@ const DashBoard = () => {
    * @param {number} roundInfo.timeLimit
    */
   const startRound = (roundInfo) => {
-    const {
-      round, question, timeLimit,
-    } = roundInfo;
-
-    if (round === 0) {
-      setGameStarted(true);
-    }
-
+    const { question, timeLimit } = roundInfo;
     setCounter(timeLimit);
     setNotice(question);
     startCounter();
@@ -84,6 +77,13 @@ const DashBoard = () => {
       : <Greeting />
   );
 
+  const readyGame = () => {
+    setGameStarted(true);
+    setCounter(3);
+    setNotice('게임이 곧 시작됩니다.');
+    startCounter();
+  };
+
 
   useEffect(() => {
     setCounter('--');
@@ -91,6 +91,7 @@ const DashBoard = () => {
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
     socket.onLeaveUser(setNewOwner);
+    socket.onStartGame(readyGame);
   }, []);
 
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
