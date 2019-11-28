@@ -178,12 +178,6 @@ class Room {
       default: return;
     }
 
-<<<<<<< HEAD
-    if (this._canBeMoved(newIndexX, newIndexY) === false) {
-      user.emitMove(false);
-      return;
-    }
-=======
     const nickname = user.getNickname();
     const canMove = this._canBeMoved(newIndexX, newIndexY);
 
@@ -192,7 +186,6 @@ class Room {
     });
 
     if (canMove === false) return;
->>>>>>> a918fd3b0bae6ee460d88d47e6a8861e7ce08f7e
 
     this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
     this.indexOfCharacters[newIndexX][newIndexY] = character;
