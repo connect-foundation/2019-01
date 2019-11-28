@@ -24,8 +24,8 @@ const keydownEventHandler = (event, character) => {
 
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
-  const updateCharacters = (data) => {
-    data.characterList.forEach(({
+  const updateCharacters = ({ characterList }) => {
+    characterList.forEach(({
       url, indexX, indexY, isMine, nickname,
     }) => {
       const character = new Character(url, indexX, indexY, nickname, isMine);
@@ -61,6 +61,7 @@ const Field = () => {
     socket.onMove(moveCharacter);
     socket.onEndRound(deleteCharacter);
     socket.onLeaveUser(deleteCharacter);
+    socket.onEndGame(updateCharacters);
   }, []);
 
   const getCanvasList = (characterMap) => {
