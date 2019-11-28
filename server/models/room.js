@@ -146,10 +146,12 @@ class Room {
       user.deleteCharacter();
     }
     this.nicknameList.push(user.getNickname());
-    const userInfo = { nickname: user.getNickname(), isOwner: this._isOwner(user) };
 
     this.users.delete(user.getId());
-    this.users.forEach((_user) => _user.emitLeaveUser({ characterList: [userInfo] }));
+    this.users.forEach((_user) => {
+      const characterList = [{ nickname: user.getNickname() }];
+      _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
+    });
     this.aliveUserNumber -= 1;
   }
 
@@ -264,7 +266,10 @@ class Room {
   }
 
   _checkCharactersLocation(answerSide) {
-    const [dropStart, dropEnd] = answerSide ? [FIELD.X_START, FIELD.X_END] : [FIELD.O_START, FIELD.O_END];
+    const [dropStart, dropEnd] = (
+      answerSide
+        ? [FIELD.X_START, FIELD.X_END]
+        : [FIELD.O_START, FIELD.O_END]);
 
     const dropUsers = [];
 
@@ -317,7 +322,7 @@ class Room {
       if (this.currentTime < ROOM.TIME_LIMIT) {
         return this._countTime();
       }
-      this._endRound();
+      return this._endRound();
     }, ROOM.SECOND);
   }
 
