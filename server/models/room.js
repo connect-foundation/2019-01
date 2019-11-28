@@ -27,6 +27,7 @@ class Room {
     this.users = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
+    this.aliveUserNumber = 0;
   }
 
   async _fetchRandomNickname() {
@@ -115,7 +116,9 @@ class Room {
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
     });
+    this.aliveUserNumber += 1;
   }
+
 
   makeCharacterList(myCharacter) {
     const characterList = [];
@@ -147,6 +150,7 @@ class Room {
 
     this.users.delete(user.getId());
     this.users.forEach((_user) => _user.emitLeaveUser({ characterList: [userInfo] }));
+    this.aliveUserNumber -= 1;
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -155,6 +159,8 @@ class Room {
     if (this._isOwner(user) && this.isGameStarted === false) {
       this.isGameStarted = true;
       this.currentRound = 0;
+      this.quizList = await quizFinder.fetchQuizList();
+      // this.aliveUserNumber = this.users.length;
 
       await this._startRound();
     }
@@ -196,20 +202,21 @@ class Room {
     // TODO: 모든 유저에게 채팅 로그 (닉네임 + 메시지) emit
   }
 
-  // 아래는 자체 emit
-  // emit: start_round / 모든 유저 / 문제, 각 캐릭터 위치, 제한 시간
-  async _startRound() {
-    if (this.quizList[this.currentRound] === undefined) {
-      const newQuizList = await quizFinder.fetchQuizList();
-      newQuizList.forEach((newQuiz) => { // 문제 추가할 때, 전에 냈던 문제이면 추가하지 않는 걸로
-        if (this.quizList.find((oldQuiz) => oldQuiz.id === newQuiz.id)) return;
-        this.quizList.push(newQuiz);
-      });
-    }
+  /**
+   * @event server#start_round
+   *
+   * @property {object}
+   * @property {number} currentRound
+   * @property {string} question
+   * @property {number} timeLimit
+   */
 
+  /**
+   * round를 시작하게 합니다.
+   */
+  async _startRound() {
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
-
     this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
@@ -221,22 +228,47 @@ class Room {
     this._countTime();
   }
 
-  // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트
+  // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
-    this.currentRound += 1;
+    const { comment, answer } = this.currentQuiz;
     const dropUsers = this._checkCharactersLocation(this.currentQuiz.answer);
+    const endRoundInfos = {
+      round: this.currentRound,
+      comment,
+      answer,
+      characterList: dropUsers,
+    };
 
-    this.users.forEach((_user) => {
-      _user.emitEndRound({ characterList: dropUsers });
+    this.users.forEach((user) => {
+      user.emitEndRound(endRoundInfos);
     });
+
+    // WAITING_TIME_MS 는 현재 3200이고 임시
+    if (this.aliveUserNumber === 1) {
+      this.users.forEach((user) => {
+        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+      });
+      return;
+    }
+
+    if (this.currentRound === ROOM.MAX_ROUND) {
+      this.users.forEach((user) => {
+        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+      });
+      return;
+    }
+
+    this.currentRound += 1;
+
+    setTimeout(() => this._startRound(), ROOM.WAITING_TIME_MS);
   }
 
-  _checkCharactersLocation(isTrueSide) {
-    const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.X_END];
+  _checkCharactersLocation(answerSide) {
+    const [dropStart, dropEnd] = answerSide ? [FIELD.X_START, FIELD.X_END] : [FIELD.O_START, FIELD.O_END];
 
     const dropUsers = [];
 
-    for (let i = start; i < end; i += 1) {
+    for (let i = dropStart; i < dropEnd; i += 1) {
       for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
         const character = this.indexOfCharacters[i][j];
         if (character !== undefined) {
@@ -245,6 +277,7 @@ class Room {
         }
       }
     }
+    this.aliveUserNumber -= dropUsers.length;
     return dropUsers;
   }
 
@@ -282,10 +315,9 @@ class Room {
     setTimeout(() => {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
-        this._countTime();
-      } else {
-        this.endRound();
+        return this._countTime();
       }
+      this._endRound();
     }, ROOM.SECOND);
   }
 
