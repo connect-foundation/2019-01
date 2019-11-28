@@ -34,17 +34,8 @@ describe('socket.io test', () => {
 
   test('connect test', (done) => {
     socket.on('connect', () => {
-      expect(true);
       done();
     });
-  });
-
-  test('emit test', (done) => {
-    socket.once('enter_room', (message) => {
-      expect(message).toBeTruthy();
-      done();
-    });
-    socket.emit('enter_room');
   });
 
   test('[EMIT] \'enter_room\' event test', (done) => {
@@ -52,7 +43,7 @@ describe('socket.io test', () => {
       expect(ENTER_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
-    socket.emit('enter_room');
+    socket.emit('enter_room', 1);
   });
 
   test('\'move\' event test', (done) => {
@@ -62,6 +53,6 @@ describe('socket.io test', () => {
       expect(MOVE_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       done();
     });
-    socket.emit('move', 'left');
+    socket.emit('move', 0);
   });
 });
