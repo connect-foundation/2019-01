@@ -224,25 +224,22 @@ class Room {
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트
   _endRound() {
     this.currentRound += 1;
-    const dropUsers = this._checkCaracterLocation(this.currentQuiz.answer);
+    const dropUsers = this._checkCharactersLocation(this.currentQuiz.answer);
 
     this.users.forEach((_user) => {
       _user.emitEndRound({ characterList: dropUsers });
     });
   }
 
-  _checkCaracterLocation(isTrueSide) {
+  _checkCharactersLocation(isTrueSide) {
     const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.X_END];
 
     const dropUsers = [];
-    let nickname;
-    let isOwner;
     for (let i = start; i < end; i += 1) {
       for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
-        if (this.indexOfCharacters[i][j] !== undefined) {
-          nickname = this.indexOfCharacters[i][j].getNickname();
-          isOwner = this._isOwner(this.indexOfCharacters[i][j]);
-          dropUsers.push({ nickname, isOwner });
+        const character = this.indexOfCharacters[i][j];
+        if (character !== undefined) {
+          dropUsers.push({ nickname: character.getNickname(), isOwner: this._isOwner(character) });
           this.indexOfCharacters[i][j] = undefined;
         }
       }
