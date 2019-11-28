@@ -20,6 +20,7 @@ const keydownEventHandler = (event, character) => {
   if (direction !== undefined) socket.emitMove(direction);
 };
 
+
 const Field = () => {
   const canvasRef = React.useRef();
   const [characters, setCharacters] = useState([]);
@@ -48,6 +49,7 @@ const Field = () => {
     socket.onEnterRoom(getCharacters);
     socket.onEnterNewUser(getCharacters);
     socket.onMove(moveCharacter);
+    socket.onEndRound((data) => console.log(data));
   }, []);
 
   return (

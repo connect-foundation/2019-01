@@ -13,4 +13,11 @@ const DIRECTION = {
   UP: 3,
 };
 
-export { ROOM, DIRECTION };
+const FIELD = {
+  O_START: 0,
+  O_END: 8,
+  X_START: 8,
+  X_END: 16,
+};
+
+export { ROOM, DIRECTION, FIELD };

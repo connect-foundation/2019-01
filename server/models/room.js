@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import nicknameFinder from '../database/nickname';
 import quizFinder from '../database/quiz';
-import { ROOM, DIRECTION } from '../constants/room';
+import { ROOM, DIRECTION, FIELD } from '../constants/room';
 
 /**
  * Room Class
@@ -89,9 +89,8 @@ class Room {
   async enterUser(user) {
     this.users.set(user.getId(), user);
 
-    const myCharacter = user.getCharacter();
     if (this.isGameStarted === false) {
-      this._placeCharacter(myCharacter);
+      this._placeCharacter(user);
     }
 
     if (!this.nicknameList.length) {
@@ -99,6 +98,7 @@ class Room {
     }
     user.setNickname(this.nicknameList.shift());
 
+    const myCharacter = user.getCharacter();
     const characterList = this.makeCharacterList(myCharacter);
 
     const newUser = { ...characterList[characterList.length - 1], isMine: false };
@@ -180,9 +180,14 @@ class Room {
 
     if (this._canBeMoved(newIndexX, newIndexY) === false) return;
 
+    user.character.setIndexes(newIndexX, newIndexY);
     this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-    this.indexOfCharacters[newIndexX][newIndexY] = character;
-    character.setIndexes(newIndexX, newIndexY);
+    this.indexOfCharacters[newIndexX][newIndexY] = user;
+
+    setTimeout(() => {
+      this._startRound();
+      this._endRound();
+    }, 5000);
 
     const nickname = user.getNickname();
 
@@ -207,26 +212,14 @@ class Room {
         this.quizList.push(newQuiz);
       });
     }
+
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
-
-    const characterLocations = [];
-    this.indexOfCharacters = this._getEmptyIndexMatrix();
-
-    this.users.forEach((user) => {
-      const character = user.getCharacter();
-      if (character.isPlaced() === false) return;
-
-      this._placeCharacter(character);
-      const [indexX, indexY] = character.getIndexes();
-      characterLocations.push({ userId: user.getId(), indexX, indexY });
-    });
 
     this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
-        characterLocations,
         timeLimit: ROOM.TIME_LIMIT,
       });
     });
@@ -237,6 +230,31 @@ class Room {
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트
   _endRound() {
     this.currentRound += 1;
+    const dropUsers = this.currentQuiz.answer ? this._checkCaracterLocation(false) : this._checkCaracterLocation(true);
+
+    console.log(dropUsers);
+    this.users.forEach((_user) => {
+      _user.emitEndRound({ characterList: dropUsers });
+    });
+  }
+
+  _checkCaracterLocation(isTrueSide) {
+    const [start, end] = isTrueSide ? [FIELD.O_START, FIELD.O_END] : [FIELD.X_START, FIELD.O_END];
+
+    const dropUsers = [];
+    let nickname;
+    let isOwner;
+    for (let i = 0; i < 8; i += 1) {
+      for (let j = start; j < end; j += 1) {
+        if (this.indexOfCharacters[i][j] !== undefined) {
+          nickname = this.indexOfCharacters[i][j].getNickname();
+          isOwner = this._isOwner(this.indexOfCharacters[i][j]);
+          dropUsers.push({ nickname, isOwner });
+          this.indexOfCharacters[i][j] = undefined;
+        }
+      }
+    }
+    return dropUsers;
   }
 
   // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
@@ -251,10 +269,10 @@ class Room {
   /**
    * 유저의 캐릭터를 랜덤한 위치에 이동시키는 메서드
    */
-  _placeCharacter(character) {
+  _placeCharacter(user) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
-    character.setIndexes(indexX, indexY);
-    this.indexOfCharacters[indexX][indexY] = character;
+    user.character.setIndexes(indexX, indexY);
+    this.indexOfCharacters[indexX][indexY] = user;
   }
 
   /**
