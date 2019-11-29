@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -6,6 +7,7 @@ import {
 import { DASHBOARD } from '../../../constants/room';
 import socket from '../../../class/socket';
 
+const ONE_SECOND = 1000;
 const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
@@ -13,13 +15,13 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
+  const [owner, setOwner] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
-  const [owner, setOwner] = useState(true);
 
   const counterHandler = () => {
     setCounter((_counter) => {
       if (_counter > 1) {
-        setTimeout(counterHandler, 1000);
+        setTimeout(counterHandler, ONE_SECOND);
         return _counter - DASHBOARD.A_SECOND;
       }
       return 0;
@@ -27,7 +29,7 @@ const DashBoard = () => {
   };
 
   const startCounter = () => {
-    setTimeout(counterHandler, 1000);
+    setTimeout(counterHandler, ONE_SECOND);
   };
 
   const startGame = () => {
@@ -42,11 +44,13 @@ const DashBoard = () => {
    * @param {Array.<Array.<undefined|User>>} roundInfo.characterLocations
    * @param {number} roundInfo.timeLimit
    */
-  const startRound = (roundInfo) => {
-    const { question, timeLimit } = roundInfo;
-    setCounter(timeLimit);
-    setNotice(question);
-    startCounter();
+  const startRound = ({ question, timeLimit }) => {
+    if (question !== undefined) setNotice(question);
+    if (timeLimit !== undefined) {
+      setGameStarted(true);
+      setCounter(timeLimit);
+      startCounter();
+    }
   };
 
   const endRound = ({ comment, answer }) => {
@@ -60,9 +64,20 @@ const DashBoard = () => {
     setCounter('--');
   };
 
-  const setNewOwner = ({ characterList }) => {
-    const { isOwner } = characterList[0];
-    setOwner(isOwner);
+  const enterRoom = ({
+    question, isGameStarted, timeLimit, isOwner,
+  }) => {
+    if (question !== undefined) setNotice(question);
+    if (isGameStarted !== undefined) setGameStarted(isGameStarted);
+    if (isOwner !== undefined) setOwner(isOwner);
+    if (isGameStarted && timeLimit > 0) {
+      setCounter(timeLimit);
+      startCounter();
+    }
+  };
+
+  const leaveUser = ({ isOwner }) => {
+    if (isOwner !== undefined) setOwner(isOwner);
   };
 
   const Greeting = () => (
@@ -86,11 +101,11 @@ const DashBoard = () => {
 
 
   useEffect(() => {
-    setCounter('--');
+    socket.onEnterRoom(enterRoom);
+    socket.onLeaveUser(leaveUser);
     socket.onStartRound(startRound);
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
-    socket.onLeaveUser(setNewOwner);
     socket.onStartGame(readyGame);
   }, []);
 
