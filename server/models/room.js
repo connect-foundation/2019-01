@@ -161,8 +161,9 @@ class Room {
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
       this.aliveUserNumber = this.users.size;
+      this.users.forEach((_user) => _user.emitStartGame());
 
-      await this._startRound();
+      setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
     }
   }
 
