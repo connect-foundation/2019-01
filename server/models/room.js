@@ -159,6 +159,9 @@ class Room {
   //  ㄴ 다음으로 변경: 시작 값으로 셋팅하고, emit: start_round 호출
   async startGame(user) {
     if (this._isOwner(user) && this.isGameStarted === false) {
+      this.aliveUserNumber = this.users.size;
+      if (this.aliveUserNumber === 1) return;
+
       this.isGameStarted = true;
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
@@ -246,7 +249,6 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    // WAITING_TIME_MS 는 현재 3200이고 임시
     if (this.aliveUserNumber === 1 || this.currentRound === ROOM.MAX_ROUND) {
       this._endGame();
       return;
@@ -314,9 +316,10 @@ class Room {
     setTimeout(() => {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
-        return this._countTime();
+        this._countTime();
+      } else {
+        this._endRound();
       }
-      return this._endRound();
     }, ROOM.SECOND);
   }
 

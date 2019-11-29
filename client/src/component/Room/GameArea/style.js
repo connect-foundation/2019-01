@@ -68,6 +68,14 @@ const WaitingText = styled.div`
     font-size: ${GAME_START_BUTTON.FONTSIZE}px;
 `;
 
+const GameEndText = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
+`;
+
 export {
-  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText,
+  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 };
