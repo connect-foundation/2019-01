@@ -6,6 +6,7 @@ const ROOM = {
   MAX_USER: 20,
   MAX_ROUND: 9,
   WAITING_TIME_MS: 3000,
+  READY_TIME_MS: 4000,
 };
 
 const DIRECTION = {
