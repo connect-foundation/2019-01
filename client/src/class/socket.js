@@ -50,33 +50,14 @@ class SocketContainer {
   }
 
   onMove(callback) {
-    this.socket.on(EVENT.MOVE, (data) => callback(data));
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.MOVE, (data) => callback(data));
+    }
   }
 
   onStartRound(callback) {
-    this.socket.on(EVENT.START_ROUND, (data) => {
-      if (data === false) return;
-      callback(data);
-    });
-  }
-
-  onEndRound(callback) {
-    this.socket.on(EVENT.END_ROUND, (data) => {
-      if (data === false) return;
-      callback(data);
-    });
-  }
-
-  onEndGame(callback) {
-    this.socket.on(EVENT.END_GAME, (data) => {
-      if (data === false) return;
-      callback(data);
-    });
-  }
-
-  onQuizList(callback) {
     if (isFunction(callback)) {
-      this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
+      this.socket.on(EVENT.START_ROUND, (data) => callback(data));
     }
   }
 
@@ -86,9 +67,27 @@ class SocketContainer {
     }
   }
 
+  onEndGame(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.END_GAME, (data) => callback(data));
+    }
+  }
+
+  onQuizList(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
+    }
+  }
+
   onLeaveUser(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.LEAVE_USER, (data) => callback(data));
+    }
+  }
+
+  onStartGame(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.START_GAME, (data) => callback(data));
     }
   }
 }

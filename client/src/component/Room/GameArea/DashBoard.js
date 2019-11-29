@@ -13,8 +13,7 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [time, setTime] = useState();
-  const [GameStarted, setGameStarted] = useState(false);
+  const [isGameStarted, setGameStarted] = useState(false);
   const [owner, setOwner] = useState(true);
 
   const counterHandler = () => {
@@ -23,7 +22,6 @@ const DashBoard = () => {
         setTimeout(counterHandler, 1000);
         return _counter - DASHBOARD.A_SECOND;
       }
-      // 여기서 카운트 끝났을 떄 로직 작성하면 됨.
       return 0;
     });
   };
@@ -45,18 +43,13 @@ const DashBoard = () => {
    * @param {number} roundInfo.timeLimit
    */
   const startRound = (roundInfo) => {
-    const {
-      round, question, timeLimit,
-    } = roundInfo;
-
-    if (round === 0) { setGameStarted(true); }
-
+    const { question, timeLimit } = roundInfo;
     setCounter(timeLimit);
     setNotice(question);
     startCounter();
   };
 
-  const endRound = ({ round, comment, answer }) => {
+  const endRound = ({ comment, answer }) => {
     const answerText = `[정답 : ${answer ? 'TRUE' : 'FALSE'}]`;
     const noticeText = `${answerText} ${comment}`;
     setNotice(noticeText);
@@ -67,6 +60,11 @@ const DashBoard = () => {
     setCounter('--');
   };
 
+  const setNewOwner = ({ characterList }) => {
+    const { isOwner } = characterList[0];
+    setOwner(isOwner);
+  };
+
   const Greeting = () => (
     owner
       ? <GameStartButton onClick={startGame}>start( );</GameStartButton>
@@ -74,10 +72,17 @@ const DashBoard = () => {
   );
 
   const QuizOrGreeting = () => (
-    GameStarted
+    isGameStarted
       ? <QuizWrapper>{notice}</QuizWrapper>
       : <Greeting />
   );
+
+  const readyGame = () => {
+    setGameStarted(true);
+    setCounter(3);
+    setNotice('게임이 곧 시작됩니다.');
+    startCounter();
+  };
 
 
   useEffect(() => {
@@ -85,6 +90,8 @@ const DashBoard = () => {
     socket.onStartRound(startRound);
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
+    socket.onLeaveUser(setNewOwner);
+    socket.onStartGame(readyGame);
   }, []);
 
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
