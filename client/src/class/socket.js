@@ -7,12 +7,14 @@ const isFunction = (callback) => typeof callback === 'function';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    this.url = process.env.NODE_ENV === 'production' ? 'http://45.119.146.251/socket.io' : 'http://localhost:3000';
     this.connect();
   }
 
   connect() {
-    this.socket = socketio.connect(this.url, { transports: ['websocket'] });
+    this.socket = (
+      process.env.NODE_ENV === 'production'
+        ? socketio({ path: '/socket.io', transports: ['websocket'] })
+        : socketio('http://localhost:3000', { transports: ['websocket'] }));
   }
 
   disconnect() {
