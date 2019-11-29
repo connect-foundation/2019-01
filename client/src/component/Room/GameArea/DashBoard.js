@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText,
+  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
 import { DASHBOARD } from '../../../constants/room';
 import socket from '../../../class/socket';
@@ -15,6 +15,7 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
+  const [GameEnded, setGameEnded] = useState(false);
   const [owner, setOwner] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
 
@@ -60,8 +61,13 @@ const DashBoard = () => {
   };
 
   const endGame = () => {
-    setGameStarted(false);
-    setCounter('--');
+    setGameEnded(true);
+    setNotice('↓↓↓↓   우승   ↓↓↓↓');
+    setTimeout(() => {
+      setGameEnded(false);
+      setGameStarted(false);
+      setCounter('--');
+    }, 3000);
   };
 
   const enterRoom = ({
@@ -92,6 +98,18 @@ const DashBoard = () => {
       : <Greeting />
   );
 
+  const QuizOrGreetingOrCounterWrapper = () => (
+    GameEnded && isGameStarted
+      ? <GameEndText> {notice} </GameEndText>
+      : (
+        <div>
+          <QuizOrGreeting />
+          <CounterWrapper style={{ color: getCounterColor(counter) }}>
+            {changeNumberToTwoDigitString(counter)}
+          </CounterWrapper>
+        </div>
+      )
+  );
   const readyGame = () => {
     setGameStarted(true);
     setCounter(3);
@@ -112,10 +130,7 @@ const DashBoard = () => {
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
   return (
     <DashBoardWrapper style={{ backgroundImage: `url("${DASHBOARD.BACKGROUND}")` }}>
-      <QuizOrGreeting />
-      <CounterWrapper style={{ color: getCounterColor(counter) }}>
-        {changeNumberToTwoDigitString(counter)}
-      </CounterWrapper>
+      <QuizOrGreetingOrCounterWrapper />
     </DashBoardWrapper>
   );
 };
