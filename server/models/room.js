@@ -162,9 +162,10 @@ class Room {
       this.isGameStarted = true;
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
-      // this.aliveUserNumber = this.users.length;
+      this.aliveUserNumber = this.users.size;
+      this.users.forEach((_user) => _user.emitStartGame());
 
-      await this._startRound();
+      setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
     }
   }
 
@@ -246,22 +247,12 @@ class Room {
     });
 
     // WAITING_TIME_MS 는 현재 3200이고 임시
-    if (this.aliveUserNumber === 1) {
-      this.users.forEach((user) => {
-        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
-      });
-      return;
-    }
-
-    if (this.currentRound === ROOM.MAX_ROUND) {
-      this.users.forEach((user) => {
-        setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
-      });
+    if (this.aliveUserNumber === 1 || this.currentRound === ROOM.MAX_ROUND) {
+      this._endGame();
       return;
     }
 
     this.currentRound += 1;
-
     setTimeout(() => this._startRound(), ROOM.WAITING_TIME_MS);
   }
 
@@ -292,6 +283,9 @@ class Room {
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
+    this.users.forEach((user) => {
+      setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+    });
     this.isGameStarted = false;
   }
 
