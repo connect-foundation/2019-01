@@ -1,11 +1,13 @@
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 
 import {
-  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText,
+  DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
 import { DASHBOARD } from '../../../constants/room';
 import socket from '../../../class/socket';
 
+const ONE_SECOND = 1000;
 const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
@@ -13,22 +15,22 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [GameStarted, setGameStarted] = useState(false);
-  const [owner] = useState(true);
+  const [GameEnded, setGameEnded] = useState(false);
+  const [owner, setOwner] = useState(false);
+  const [isGameStarted, setGameStarted] = useState(false);
 
   const counterHandler = () => {
     setCounter((_counter) => {
       if (_counter > 1) {
-        setTimeout(counterHandler, 1000);
+        setTimeout(counterHandler, ONE_SECOND);
         return _counter - DASHBOARD.A_SECOND;
       }
-      // 여기서 카운트 끝났을 떄 로직 작성하면 됨.
       return 0;
     });
   };
 
   const startCounter = () => {
-    setTimeout(counterHandler, 1000);
+    setTimeout(counterHandler, ONE_SECOND);
   };
 
   const startGame = () => {
@@ -43,16 +45,13 @@ const DashBoard = () => {
    * @param {Array.<Array.<undefined|User>>} roundInfo.characterLocations
    * @param {number} roundInfo.timeLimit
    */
-  const startRound = (roundInfo) => {
-    const {
-      round, question, timeLimit,
-    } = roundInfo;
-
-    if (round === 0) { setGameStarted(true); }
-
-    setCounter(timeLimit);
-    setNotice(question);
-    startCounter();
+  const startRound = ({ question, timeLimit }) => {
+    if (question !== undefined) setNotice(question);
+    if (timeLimit !== undefined) {
+      setGameStarted(true);
+      setCounter(timeLimit);
+      startCounter();
+    }
   };
 
   const endRound = ({ comment, answer }) => {
@@ -62,8 +61,29 @@ const DashBoard = () => {
   };
 
   const endGame = () => {
-    setGameStarted(false);
-    setCounter('--');
+    setGameEnded(true);
+    setNotice('↓↓↓↓   우승   ↓↓↓↓');
+    setTimeout(() => {
+      setGameEnded(false);
+      setGameStarted(false);
+      setCounter('--');
+    }, 3000);
+  };
+
+  const enterRoom = ({
+    question, isGameStarted, timeLimit, isOwner,
+  }) => {
+    if (question !== undefined) setNotice(question);
+    if (isGameStarted !== undefined) setGameStarted(isGameStarted);
+    if (isOwner !== undefined) setOwner(isOwner);
+    if (isGameStarted && timeLimit > 0) {
+      setCounter(timeLimit);
+      startCounter();
+    }
+  };
+
+  const leaveUser = ({ isOwner }) => {
+    if (isOwner !== undefined) setOwner(isOwner);
   };
 
   const Greeting = () => (
@@ -73,26 +93,44 @@ const DashBoard = () => {
   );
 
   const QuizOrGreeting = () => (
-    GameStarted
+    isGameStarted
       ? <QuizWrapper>{notice}</QuizWrapper>
       : <Greeting />
   );
 
+  const QuizOrGreetingOrCounterWrapper = () => (
+    GameEnded && isGameStarted
+      ? <GameEndText> {notice} </GameEndText>
+      : (
+        <div>
+          <QuizOrGreeting />
+          <CounterWrapper style={{ color: getCounterColor(counter) }}>
+            {changeNumberToTwoDigitString(counter)}
+          </CounterWrapper>
+        </div>
+      )
+  );
+  const readyGame = () => {
+    setGameStarted(true);
+    setCounter(3);
+    setNotice('게임이 곧 시작됩니다.');
+    startCounter();
+  };
+
 
   useEffect(() => {
-    setCounter('--');
+    socket.onEnterRoom(enterRoom);
+    socket.onLeaveUser(leaveUser);
     socket.onStartRound(startRound);
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
+    socket.onStartGame(readyGame);
   }, []);
 
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
   return (
     <DashBoardWrapper style={{ backgroundImage: `url("${DASHBOARD.BACKGROUND}")` }}>
-      <QuizOrGreeting />
-      <CounterWrapper style={{ color: getCounterColor(counter) }}>
-        {changeNumberToTwoDigitString(counter)}
-      </CounterWrapper>
+      <QuizOrGreetingOrCounterWrapper />
     </DashBoardWrapper>
   );
 };

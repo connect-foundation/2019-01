@@ -123,6 +123,10 @@ class User {
   emitChatMessage(data) {
     this.socket.emit(EVENT.CHAT_MESSAGE, data);
   }
+
+  emitStartGame() {
+    this.socket.emit(EVENT.START_GAME);
+  }
 }
 
 export default User;
