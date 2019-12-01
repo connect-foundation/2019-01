@@ -26,7 +26,6 @@ class SocketContainer {
   }
 
   emitMove(direction) {
-    console.log('move');
     this.socket.emit(EVENT.MOVE, direction);
   }
 
