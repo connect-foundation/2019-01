@@ -33,11 +33,13 @@ const Field = () => {
     }, 3000);
   };
 
-  const moveCharacter = ({ canMove, nickname, direction }) => {
+  const moveCharacter = ({
+    canMove, nickname, direction, newIndexX, newIndexY,
+  }) => {
     const moveMatchedCharacter = (character) => {
       if (character === undefined) return;
       if (canMove) {
-        character.move(direction);
+        character.move(direction, newIndexX, newIndexY);
         return;
       }
       character.turn(direction);
