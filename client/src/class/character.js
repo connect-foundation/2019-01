@@ -16,7 +16,11 @@ class Character {
     this.frameCount = 0;
     this.requestId = null;
     this.nickname = nickname;
-    this.isMine = isMine;
+    this.mine = isMine;
+  }
+
+  isMine() {
+    return this.mine;
   }
 
   getNickname() {
@@ -138,7 +142,7 @@ class Character {
     this.ctx.font = NICKNAME.FONT;
     this.ctx.textAlign = NICKNAME.ALIGN;
     this.ctx.textBaseline = NICKNAME.BASELINE;
-    this.ctx.fillStyle = this.isMine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
+    this.ctx.fillStyle = this.mine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
 
     this.ctx.fillText(
       this.nickname,
