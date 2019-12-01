@@ -192,7 +192,9 @@ class Room {
     const nickname = user.getNickname();
     const canMove = this._canBeMoved(newIndexX, newIndexY);
     this.users.forEach((_user) => {
-      _user.emitMove({ canMove, nickname, direction });
+      _user.emitMove({
+        canMove, nickname, direction, newIndexX, newIndexY,
+      });
     });
 
     if (canMove) {
