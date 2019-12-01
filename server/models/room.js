@@ -285,8 +285,11 @@ class Room {
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
+    this.indexOfCharacters = this._getEmptyIndexMatrix();
+    this.users.forEach((user) => this._placeCharacter(user));
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame(), ROOM.WAITING_TIME_MS);
+      const characterList = this.makeCharacterList(user.getCharacter());
+      setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
   }
@@ -317,9 +320,9 @@ class Room {
       this.currentTime += 1;
       if (this.currentTime < ROOM.TIME_LIMIT) {
         this._countTime();
-      } else {
-        this._endRound();
+        return;
       }
+      this._endRound();
     }, ROOM.SECOND);
   }
 

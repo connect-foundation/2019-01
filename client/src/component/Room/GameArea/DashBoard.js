@@ -89,7 +89,7 @@ const DashBoard = () => {
   const Greeting = () => (
     owner
       ? <GameStartButton onClick={startGame}>start( );</GameStartButton>
-      : <WaitingText>waiting...</WaitingText>
+      : <WaitingText>pending...</WaitingText>
   );
 
   const QuizOrGreeting = () => (
