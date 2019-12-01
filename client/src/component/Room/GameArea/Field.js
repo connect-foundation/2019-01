@@ -6,63 +6,88 @@ import Character from '../../../class/character';
 import socket from '../../../class/socket';
 import Canvas from './Canvas';
 
-const keydownEventHandler = (event, character) => {
-  if ((character instanceof Character) === false) return;
-  if (character.isMoving()) return;
-
-  const directionMap = {
-    [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
-    [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
-    [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
-    [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
-  };
-
-  const direction = directionMap[event.keyCode];
-  if (direction !== undefined) socket.emitMove(direction);
-};
-
-
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
+  const [myCharacter, setMyCharacter] = useState(null);
+
+  const keydownEventHandler = (event) => {
+    if ((myCharacter instanceof Character) === false) return;
+    if (myCharacter.isMoving()) return;
+
+    const directionMap = {
+      [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
+      [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
+      [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
+      [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
+    };
+
+    const direction = directionMap[event.keyCode];
+    if (direction !== undefined) socket.emitMove(direction);
+  };
+
+  const addCharacters = ({ characterList }) => {
+    const changeCharactersImmutable = (prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      characterList.forEach(({
+        url, indexX, indexY, isMine, nickname,
+      }) => {
+        const character = new Character(url, indexX, indexY, nickname, isMine);
+        if (isMine) setMyCharacter(() => character);
+        newCharacters.set(nickname, character);
+      });
+      return newCharacters;
+    };
+
+    setCharacters(changeCharactersImmutable);
+  };
+
   const updateCharacters = ({ characterList }) => {
-    characterList.forEach(({
-      url, indexX, indexY, isMine, nickname,
-    }) => {
-      const character = new Character(url, indexX, indexY, nickname, isMine);
-      if (isMine) {
-        window.addEventListener('keydown', (event) => keydownEventHandler(event, character));
-      }
-      characters.set(nickname, character);
-    });
-    setCharacters(() => new Map(characters));
+    setCharacters(() => new Map());
+    addCharacters({ characterList });
   };
 
   const moveCharacter = ({ canMove, nickname, direction }) => {
-    const matchedCharacter = characters.get(nickname);
-    if (matchedCharacter === undefined) return;
+    const changeCharactersImmutable = (prevCharacters) => {
+      const matchedCharacter = prevCharacters.get(nickname);
+      if (matchedCharacter === undefined) return new Map(prevCharacters);
 
-    if (canMove === false) {
-      matchedCharacter.turn(direction);
-      return;
-    }
-    matchedCharacter.move(direction);
+      if (canMove === false) {
+        matchedCharacter.turn(direction);
+        return new Map(prevCharacters);
+      }
+
+      matchedCharacter.move(direction);
+      return new Map(prevCharacters);
+    };
+
+    setCharacters(changeCharactersImmutable);
   };
 
   const deleteCharacter = ({ characterList }) => {
-    characterList.forEach(({ nickname }) => {
-      characters.delete(nickname);
-    });
-    setCharacters(() => new Map(characters));
+    const changeCharactersImmutable = (prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      characterList.forEach(({ nickname }) => {
+        newCharacters.delete(nickname);
+        setMyCharacter(() => null);
+      });
+      return newCharacters;
+    };
+
+    setCharacters(changeCharactersImmutable);
   };
 
   useEffect(() => {
-    socket.onEnterRoom(updateCharacters);
-    socket.onEnterNewUser(updateCharacters);
+    socket.onEnterRoom(addCharacters);
+    socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
     socket.onEndRound(deleteCharacter);
     socket.onLeaveUser(deleteCharacter);
     socket.onEndGame(updateCharacters);
   }, []);
+
+  useEffect(() => {
+    window.onkeydown = keydownEventHandler;
+  }, [myCharacter]);
 
   const getCanvasList = (characterMap) => {
     const canvasList = [];
