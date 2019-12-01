@@ -10,23 +10,8 @@ const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
 
-  const keydownEventHandler = (event) => {
-    if ((myCharacter instanceof Character) === false) return;
-    if (myCharacter.isMoving()) return;
-
-    const directionMap = {
-      [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
-      [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
-      [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
-      [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
-    };
-
-    const direction = directionMap[event.keyCode];
-    if (direction !== undefined) socket.emitMove(direction);
-  };
-
   const addCharacters = ({ characterList }) => {
-    const changeCharactersImmutable = (prevCharacters) => {
+    const addCharactersImmutable = (prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({
         url, indexX, indexY, isMine, nickname,
@@ -38,42 +23,47 @@ const Field = () => {
       return newCharacters;
     };
 
-    setCharacters(changeCharactersImmutable);
+    setCharacters(addCharactersImmutable);
   };
 
   const updateCharacters = ({ characterList }) => {
-    setCharacters(() => new Map());
-    addCharacters({ characterList });
+    setTimeout(() => {
+      setCharacters(() => new Map());
+      addCharacters({ characterList });
+    }, 3000);
   };
 
   const moveCharacter = ({ canMove, nickname, direction }) => {
-    const changeCharactersImmutable = (prevCharacters) => {
-      const matchedCharacter = prevCharacters.get(nickname);
-      if (matchedCharacter === undefined) return new Map(prevCharacters);
-
-      if (canMove === false) {
-        matchedCharacter.turn(direction);
-        return new Map(prevCharacters);
+    const moveMatchedCharacter = (character) => {
+      if (character === undefined) return;
+      if (canMove) {
+        character.move(direction);
+        return;
       }
+      character.turn(direction);
+    };
 
-      matchedCharacter.move(direction);
+    const moveCharactersImmutable = (prevCharacters) => {
+      const matchedCharacter = prevCharacters.get(nickname);
+      moveMatchedCharacter(matchedCharacter);
       return new Map(prevCharacters);
     };
 
-    setCharacters(changeCharactersImmutable);
+    setCharacters(moveCharactersImmutable);
   };
 
   const deleteCharacter = ({ characterList }) => {
-    const changeCharactersImmutable = (prevCharacters) => {
+    const deleteCharactersImmutable = (prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
+        const character = newCharacters.get(nickname);
+        if (character.isMine()) setMyCharacter(() => null);
         newCharacters.delete(nickname);
-        setMyCharacter(() => null);
       });
       return newCharacters;
     };
 
-    setCharacters(changeCharactersImmutable);
+    setCharacters(deleteCharactersImmutable);
   };
 
   useEffect(() => {
@@ -86,6 +76,21 @@ const Field = () => {
   }, []);
 
   useEffect(() => {
+    const keydownEventHandler = (event) => {
+      if ((myCharacter instanceof Character) === false) return;
+      if (myCharacter.isMoving()) return;
+
+      const directionMap = {
+        [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
+        [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
+        [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
+        [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
+      };
+
+      const direction = directionMap[event.keyCode];
+      if (direction !== undefined) socket.emitMove(direction);
+    };
+
     window.onkeydown = keydownEventHandler;
   }, [myCharacter]);
 
