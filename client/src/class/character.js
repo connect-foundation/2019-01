@@ -93,26 +93,26 @@ class Character {
     this._step();
     this._draw();
 
-    if (this.curShapeLoopIdx >= CHARACTER.SHAPE.LOOP.length) {
-      this.curShapeLoopIdx = 0;
-      this.requestId = null;
-      this._relocate();
-      if (this.moveQueue.length > 0) {
-        const { direction } = this.moveQueue.shift();
-        this.move(direction);
-      }
+    if (this.curShapeLoopIdx < CHARACTER.SHAPE.LOOP.length) {
+      this.requestId = window.requestAnimationFrame(() => this._walk());
       return;
     }
-    this.requestId = window.requestAnimationFrame(() => this._walk());
+
+    this._stop();
+    if (this.moveQueue.length > CHARACTER.LAST_FIVE_MOVES) {
+      this._relocate();
+    }
+    if (this.moveQueue.length > 0) {
+      const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+      this.move(direction, newIndexX, newIndexY);
+    }
   }
 
   _relocate() {
-    if (this.moveQueue.length > CHARACTER.LAST_FIVE_MOVES) {
-      this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
-      const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
-      this._teleport(newIndexX, newIndexY);
-      this.turn(direction);
-    }
+    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
+    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+    this._teleport(newIndexX, newIndexY);
+    this.turn(direction, newIndexX, newIndexY);
   }
 
   _teleport(indexX, indexY) {
@@ -127,6 +127,7 @@ class Character {
     if (this.requestId !== null) {
       window.cancelAnimationFrame(this.requestId);
       this.requestId = null;
+      this.curShapeLoopIdx = 0;
     }
   }
 
