@@ -124,7 +124,10 @@ class Character {
   }
 
   _stop() {
-    if (this.requestId !== null) window.cancelAnimationFrame(this.requestId);
+    if (this.requestId !== null) {
+      window.cancelAnimationFrame(this.requestId);
+      this.requestId = null;
+    }
   }
 
   _step() {
