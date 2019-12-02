@@ -11,7 +11,7 @@ const Field = () => {
   const [myCharacter, setMyCharacter] = useState(null);
 
   const addCharacters = ({ characterList }) => {
-    const addCharactersImmutable = (prevCharacters) => {
+    setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({
         url, indexX, indexY, isMine, nickname,
@@ -21,16 +21,7 @@ const Field = () => {
         newCharacters.set(nickname, character);
       });
       return newCharacters;
-    };
-
-    setCharacters(addCharactersImmutable);
-  };
-
-  const updateCharacters = ({ characterList }) => {
-    setTimeout(() => {
-      setCharacters(() => new Map());
-      addCharacters({ characterList });
-    }, 3000);
+    });
   };
 
   const moveCharacter = ({
@@ -45,17 +36,16 @@ const Field = () => {
       character.turn(direction);
     };
 
-    const moveCharactersImmutable = (prevCharacters) => {
-      const matchedCharacter = prevCharacters.get(nickname);
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      const matchedCharacter = newCharacters.get(nickname);
       moveMatchedCharacter(matchedCharacter);
-      return new Map(prevCharacters);
-    };
-
-    setCharacters(moveCharactersImmutable);
+      return newCharacters;
+    });
   };
 
-  const deleteCharacter = ({ characterList }) => {
-    const deleteCharactersImmutable = (prevCharacters) => {
+  const deleteCharacters = ({ characterList }) => {
+    setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
         const character = newCharacters.get(nickname);
@@ -63,17 +53,47 @@ const Field = () => {
         newCharacters.delete(nickname);
       });
       return newCharacters;
-    };
+    });
+  };
 
-    setCharacters(deleteCharactersImmutable);
+  const killCharacters = ({ characterList }) => {
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      characterList.forEach(({ nickname }) => {
+        const character = newCharacters.get(nickname);
+        character.setAlive(false);
+      });
+      return newCharacters;
+    });
+  };
+
+  const teleportCharacters = ({ characterList }) => {
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      characterList.forEach(({ nickname, indexX, indexY }) => {
+        const character = newCharacters.get(nickname);
+        if (character === undefined) return;
+
+        if (character.isAlive() === false) character.setAlive(true);
+        character.teleport(indexX, indexY);
+      });
+      return newCharacters;
+    });
+  };
+
+  const updateCharacters = ({ characterList }) => {
+    setTimeout(() => {
+      teleportCharacters({ characterList });
+    }, 3000);
   };
 
   useEffect(() => {
+    socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound(deleteCharacter);
-    socket.onLeaveUser(deleteCharacter);
+    socket.onEndRound(killCharacters);
+    socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
   }, []);
 
@@ -81,6 +101,7 @@ const Field = () => {
     const keydownEventHandler = (event) => {
       if ((myCharacter instanceof Character) === false) return;
       if (myCharacter.isMoving()) return;
+      if (myCharacter.isAlive() === false) return;
 
       const directionMap = {
         [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,

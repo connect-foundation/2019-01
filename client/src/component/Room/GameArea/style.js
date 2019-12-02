@@ -29,7 +29,7 @@ const QuizWrapper = styled.div`
     top: 50%;
     left: ${QUIZ.LEFT}px;
     transform: translateY(-50%);
-    font-size: ${QUIZ.FONTSIZE}px;
+    font-size: ${QUIZ.FONT_SIZE}px;
 `;
 
 const CounterWrapper = styled.div`
@@ -43,7 +43,7 @@ const CounterWrapper = styled.div`
     border: 1px solid black;
     border-radius: 0.8rem;
     background-color: white;
-    font-size: ${COUNTER.FONTSIZE}px;
+    font-size: ${COUNTER.FONT_SIZE}px;
 `;
 
 const GameStartButton = styled.div`
@@ -52,7 +52,7 @@ const GameStartButton = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     padding: ${GAME_START_BUTTON.PADDING};
-    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
+    font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
     border-radius: 0.8rem;
     background-color: ${GAME_START_BUTTON.BACKGROUND_COLOR};
     border: 0;
@@ -65,7 +65,7 @@ const WaitingText = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
+    font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
 
 const GameEndText = styled.div`
@@ -73,7 +73,7 @@ const GameEndText = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: ${GAME_START_BUTTON.FONTSIZE}px;
+    font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
 
 export {
