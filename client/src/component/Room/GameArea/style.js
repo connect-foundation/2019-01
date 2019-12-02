@@ -77,5 +77,6 @@ const GameEndText = styled.div`
 `;
 
 export {
-  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
+  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper,
+  GameStartButton, WaitingText, GameEndText,
 };
