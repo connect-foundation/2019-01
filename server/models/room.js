@@ -314,6 +314,9 @@ class Room {
       setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
+
+    this.aliveUsers.clear();
+    this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
   }
 
   /**

@@ -22,6 +22,7 @@ class SocketContainer {
   }
 
   emitStartGame() {
+    console.log('emit start game');
     this.socket.emit(EVENT.START_GAME);
   }
 
