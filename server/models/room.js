@@ -173,12 +173,13 @@ class Room {
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
   moveCharacter(user, direction) {
     const character = user.getCharacter();
+
     if (character.isPlaced() === false) return;
 
     const [oldIndexX, oldIndexY] = character.getIndexes();
-    let newIndexX = oldIndexX;
-    let newIndexY = oldIndexY;
+    const oldDirection = character.getDirection();
 
+    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
     switch (direction) {
       case DIRECTION.LEFT: newIndexX -= 1; break;
       case DIRECTION.RIGHT: newIndexX += 1; break;
@@ -187,16 +188,25 @@ class Room {
       default: return;
     }
 
-    const nickname = user.getNickname();
     const canMove = this._canBeMoved(newIndexX, newIndexY);
-    this.users.forEach((_user) => {
-      _user.emitMove({ canMove, nickname, direction });
-    });
+    const canTurn = oldDirection !== direction;
 
     if (canMove) {
-      user.character.setIndexes(newIndexX, newIndexY);
+      character.setIndexes(newIndexX, newIndexY);
       this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
       this.indexOfCharacters[newIndexX][newIndexY] = user;
+    }
+
+    if (canMove || canTurn) {
+      // character의 기본 direction을 null로 설정했습니다.
+      // 추후에는 캐릭터 생성시 랜덤한 방향을 바라보게 하거나 아래를 보게 해줄수도 있겠죠
+      const nickname = user.getNickname();
+      character.setDirection(direction);
+      this.users.forEach((_user) => {
+        _user.emitMove({
+          canMove, nickname, direction, newIndexX, newIndexY,
+        });
+      });
     }
   }
 
