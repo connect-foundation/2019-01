@@ -66,7 +66,20 @@ const Field = () => {
     setCharacters(deleteCharactersImmutable);
   };
 
+  const teleportCharacters = ({ characterList }) => {
+    const teleportCharactersImmutable = (prevCharacters) => {
+      characterList.forEach(({ nickname, indexX, indexY }) => {
+        const character = prevCharacters.get(nickname);
+        if (character === undefined) return;
+        character.teleport(indexX, indexY);
+      });
+      return new Map(prevCharacters);
+    };
+    setCharacters(teleportCharactersImmutable);
+  };
+
   useEffect(() => {
+    socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);

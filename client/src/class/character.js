@@ -53,6 +53,19 @@ class Character {
     this._draw();
   }
 
+  teleport(indexX, indexY) {
+    this._stop();
+    this._clear();
+    this.indexX = indexX;
+    this.indexY = indexY;
+    this._draw();
+  }
+
+  _stop() {
+    if (this.requestId !== null) window.cancelAnimationFrame(this.requestId);
+    this.requestId = null;
+  }
+
   _draw() {
     /*
      * HTML canvas drawImage() Method :
