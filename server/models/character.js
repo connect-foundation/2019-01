@@ -11,6 +11,7 @@ class Character {
     this.url = null;
     this.indexX = null;
     this.indexY = null;
+    this.direction = null;
   }
 
   /**
@@ -54,6 +55,14 @@ class Character {
    */
   getIndexes() {
     return [this.indexX, this.indexY];
+  }
+
+  setDirection(direction) {
+    this.direction = direction;
+  }
+
+  getDirection() {
+    return this.direction;
   }
 
   /**
