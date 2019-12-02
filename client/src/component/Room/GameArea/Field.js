@@ -28,8 +28,7 @@ const Field = () => {
 
   const updateCharacters = ({ characterList }) => {
     setTimeout(() => {
-      setCharacters(() => new Map());
-      addCharacters({ characterList });
+      teleportCharacters({ characterList });
     }, 3000);
   };
 
@@ -66,11 +65,26 @@ const Field = () => {
     setCharacters(deleteCharactersImmutable);
   };
 
+  const killCharacter = ({ characterList }) => {
+    const killCharactersImmutable = (prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      characterList.forEach(({ nickname }) => {
+        const character = newCharacters.get(nickname);
+        character.setAlive(false);
+      });
+      return newCharacters;
+    };
+
+    setCharacters(killCharactersImmutable);
+  };
+
   const teleportCharacters = ({ characterList }) => {
     const teleportCharactersImmutable = (prevCharacters) => {
       characterList.forEach(({ nickname, indexX, indexY }) => {
         const character = prevCharacters.get(nickname);
         if (character === undefined) return;
+
+        if (character.isAlive() === false) character.setAlive(true);
         character.teleport(indexX, indexY);
       });
       return new Map(prevCharacters);
@@ -83,7 +97,7 @@ const Field = () => {
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound(deleteCharacter);
+    socket.onEndRound(killCharacter);
     socket.onLeaveUser(deleteCharacter);
     socket.onEndGame(updateCharacters);
   }, []);
@@ -92,6 +106,7 @@ const Field = () => {
     const keydownEventHandler = (event) => {
       if ((myCharacter instanceof Character) === false) return;
       if (myCharacter.isMoving()) return;
+      if (myCharacter.isAlive() === false) return;
 
       const directionMap = {
         [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
