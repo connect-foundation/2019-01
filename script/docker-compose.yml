@@ -1,20 +1,5 @@
 version: "3.5"
 services:
-    server:
-        image: dev-2019-01.kr.ncr.ntruss.com/back-end
-        networks:
-            - backend
-
-    nginx_client:
-        restart: always
-        image: dev-2019-01.kr.ncr.ntruss.com/front-end
-        ports:
-            - "80:80"
-        depends_on:
-            - server
-        networks:
-            - backend
-
     db:
         image: dev-2019-01.kr.ncr.ntruss.com/mysql
         environment:
@@ -26,6 +11,27 @@ services:
             - mysql_secret
         ports:
             - "3306:3306"
+        networks:
+            - backend
+
+    server:
+        restart: always
+        image: dev-2019-01.kr.ncr.ntruss.com/back-end
+        depends_on:
+            - db
+        environment:
+            DB_HOST_IP: db
+            WAIT_HOSTS: db:3306
+        networks:
+            - backend
+
+    nginx_client:
+        restart: always
+        image: dev-2019-01.kr.ncr.ntruss.com/front-end
+        ports:
+            - "80:80"
+        depends_on:
+            - server
         networks:
             - backend
 
