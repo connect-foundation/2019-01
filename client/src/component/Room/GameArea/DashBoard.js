@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
-import { DASHBOARD } from '../../../constants/room';
+import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../class/socket';
 
 const ONE_SECOND = 1000;
@@ -67,7 +67,7 @@ const DashBoard = () => {
       setGameEnded(false);
       setGameStarted(false);
       setCounter('--');
-    }, 3000);
+    }, ROOM.WAITING_TIME_MS);
   };
 
   const enterRoom = ({
@@ -112,7 +112,7 @@ const DashBoard = () => {
   );
   const readyGame = () => {
     setGameStarted(true);
-    setCounter(3);
+    setCounter(ROOM.WAITING_TIME_MS / ONE_SECOND);
     setNotice('게임이 곧 시작됩니다.');
     startCounter();
   };

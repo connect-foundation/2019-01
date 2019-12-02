@@ -11,7 +11,7 @@ const Field = () => {
   const [myCharacter, setMyCharacter] = useState(null);
 
   const addCharacters = ({ characterList }) => {
-    const addCharactersImmutable = (prevCharacters) => {
+    setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({
         url, indexX, indexY, isMine, nickname,
@@ -21,9 +21,7 @@ const Field = () => {
         newCharacters.set(nickname, character);
       });
       return newCharacters;
-    };
-
-    setCharacters(addCharactersImmutable);
+    });
   };
 
   const moveCharacter = ({
@@ -38,17 +36,16 @@ const Field = () => {
       character.turn(direction);
     };
 
-    const moveCharactersImmutable = (prevCharacters) => {
-      const matchedCharacter = prevCharacters.get(nickname);
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      const matchedCharacter = newCharacters.get(nickname);
       moveMatchedCharacter(matchedCharacter);
-      return new Map(prevCharacters);
-    };
-
-    setCharacters(moveCharactersImmutable);
+      return newCharacters;
+    });
   };
 
   const deleteCharacters = ({ characterList }) => {
-    const deleteCharactersImmutable = (prevCharacters) => {
+    setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
         const character = newCharacters.get(nickname);
@@ -56,36 +53,32 @@ const Field = () => {
         newCharacters.delete(nickname);
       });
       return newCharacters;
-    };
-
-    setCharacters(deleteCharactersImmutable);
+    });
   };
 
   const killCharacters = ({ characterList }) => {
-    const killCharactersImmutable = (prevCharacters) => {
+    setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
         const character = newCharacters.get(nickname);
         character.setAlive(false);
       });
       return newCharacters;
-    };
-
-    setCharacters(killCharactersImmutable);
+    });
   };
 
   const teleportCharacters = ({ characterList }) => {
-    const teleportCharactersImmutable = (prevCharacters) => {
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname, indexX, indexY }) => {
-        const character = prevCharacters.get(nickname);
+        const character = newCharacters.get(nickname);
         if (character === undefined) return;
 
         if (character.isAlive() === false) character.setAlive(true);
         character.teleport(indexX, indexY);
       });
-      return new Map(prevCharacters);
-    };
-    setCharacters(teleportCharactersImmutable);
+      return newCharacters;
+    });
   };
 
   const updateCharacters = ({ characterList }) => {

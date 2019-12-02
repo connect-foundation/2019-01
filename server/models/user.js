@@ -69,9 +69,7 @@ class User {
   }
 
   onStartGame(callback) {
-    this.socket.on(EVENT.START_GAME, () => {
-      callback();
-    });
+    this.socket.on(EVENT.START_GAME, () => callback());
   }
 
   onMove(callback) {

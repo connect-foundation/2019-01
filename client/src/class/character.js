@@ -131,16 +131,8 @@ class Character {
   _relocate() {
     this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
     const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
-    this._teleport(newIndexX, newIndexY);
+    this.teleport(newIndexX, newIndexY);
     this.turn(direction, newIndexX, newIndexY);
-  }
-
-  _teleport(indexX, indexY) {
-    this._stop();
-    this._clear();
-    this.indexX = indexX;
-    this.indexY = indexY;
-    this._draw();
   }
 
   _stop() {
