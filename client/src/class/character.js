@@ -17,6 +17,7 @@ class Character {
     this.requestId = null;
     this.nickname = nickname;
     this.mine = isMine;
+    this.moveQueue = [];
   }
 
   isMine() {
@@ -38,9 +39,12 @@ class Character {
     return this.requestId !== null;
   }
 
-  move(direction) {
+  move(direction, newIndexX, newIndexY) {
     if (this.ctx === null) return;
-    if (this.requestId) return;
+    if (this.requestId) {
+      this.moveQueue.push({ direction, newIndexX, newIndexY });
+      return;
+    }
     this.direction = direction;
     this.requestId = window.requestAnimationFrame(() => this._walk());
   }
@@ -75,7 +79,11 @@ class Character {
 
   _walk() {
     this.frameCount += 1;
-    if (this.frameCount < CHARACTER.MOVE_FRAME) {
+    const frameFullCount = (
+      this.moveQueue.length > 0
+        ? CHARACTER.MOVE_FRAME_RELOCATE
+        : CHARACTER.MOVE_FRAME);
+    if (this.frameCount < frameFullCount) {
       this.requestId = window.requestAnimationFrame(() => this._walk());
       return;
     }
@@ -85,12 +93,42 @@ class Character {
     this._step();
     this._draw();
 
-    if (this.curShapeLoopIdx >= CHARACTER.SHAPE.LOOP.length) {
-      this.curShapeLoopIdx = 0;
-      this.requestId = null;
+    if (this.curShapeLoopIdx < CHARACTER.SHAPE.LOOP.length) {
+      this.requestId = window.requestAnimationFrame(() => this._walk());
       return;
     }
-    this.requestId = window.requestAnimationFrame(() => this._walk());
+
+    this._stop();
+    if (this.moveQueue.length > CHARACTER.LAST_FIVE_MOVES) {
+      this._relocate();
+    }
+    if (this.moveQueue.length > 0) {
+      const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+      this.move(direction, newIndexX, newIndexY);
+    }
+  }
+
+  _relocate() {
+    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
+    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+    this._teleport(newIndexX, newIndexY);
+    this.turn(direction, newIndexX, newIndexY);
+  }
+
+  _teleport(indexX, indexY) {
+    this._stop();
+    this._clear();
+    this.indexX = indexX;
+    this.indexY = indexY;
+    this._draw();
+  }
+
+  _stop() {
+    if (this.requestId !== null) {
+      window.cancelAnimationFrame(this.requestId);
+      this.requestId = null;
+      this.curShapeLoopIdx = 0;
+    }
   }
 
   _step() {
