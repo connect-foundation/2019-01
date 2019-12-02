@@ -17,6 +17,16 @@ class Character {
     this.requestId = null;
     this.nickname = nickname;
     this.mine = isMine;
+    this.alive = true;
+  }
+
+  setAlive(alive) {
+    this.alive = alive;
+    if (alive === false) this._clear();
+  }
+
+  isAlive() {
+    return this.alive;
   }
 
   isMine() {
@@ -71,6 +81,8 @@ class Character {
      * HTML canvas drawImage() Method :
      * context.drawImage(img,startX,startY,startWidth,startheight,x,y,width,height)
      */
+    if (this.alive === false) return;
+
     this.ctx.drawImage(
       this.img,
       CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,

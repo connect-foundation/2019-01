@@ -300,8 +300,17 @@ class Room {
   _endGame() {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => this._placeCharacter(user));
+
+    const characterList = [];
     this.users.forEach((user) => {
-      const characterList = this.makeCharacterList(user.getCharacter());
+      const [indexX, indexY] = this._getRandomEmptyIndex();
+      const character = user.getCharacter();
+      character.setIndexes(indexX, indexY);
+      this.indexOfCharacters[indexX][indexY] = user;
+      characterList.push({ nickname: user.getNickname(), indexX, indexY });
+    });
+
+    this.users.forEach((user) => {
       setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
