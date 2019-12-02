@@ -15,7 +15,7 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [GameEnded, setGameEnded] = useState(false);
+  const [isGameEnded, setGameEnded] = useState(false);
   const [owner, setOwner] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
 
@@ -99,7 +99,7 @@ const DashBoard = () => {
   );
 
   const QuizOrGreetingOrCounterWrapper = () => (
-    GameEnded && isGameStarted
+    isGameEnded && isGameStarted
       ? <GameEndText> {notice} </GameEndText>
       : (
         <div>
