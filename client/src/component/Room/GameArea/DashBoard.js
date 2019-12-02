@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
-import { DASHBOARD } from '../../../constants/room';
+import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../class/socket';
 
 const ONE_SECOND = 1000;
@@ -15,7 +15,7 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [GameEnded, setGameEnded] = useState(false);
+  const [isGameEnded, setGameEnded] = useState(false);
   const [owner, setOwner] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
 
@@ -67,7 +67,7 @@ const DashBoard = () => {
       setGameEnded(false);
       setGameStarted(false);
       setCounter('--');
-    }, 3000);
+    }, ROOM.WAITING_TIME_MS);
   };
 
   const enterRoom = ({
@@ -99,7 +99,7 @@ const DashBoard = () => {
   );
 
   const QuizOrGreetingOrCounterWrapper = () => (
-    GameEnded && isGameStarted
+    isGameEnded && isGameStarted
       ? <GameEndText> {notice} </GameEndText>
       : (
         <div>
@@ -112,7 +112,7 @@ const DashBoard = () => {
   );
   const readyGame = () => {
     setGameStarted(true);
-    setCounter(3);
+    setCounter(ROOM.WAITING_TIME_MS / ONE_SECOND);
     setNotice('게임이 곧 시작됩니다.');
     startCounter();
   };

@@ -18,6 +18,16 @@ class Character {
     this.nickname = nickname;
     this.mine = isMine;
     this.moveQueue = [];
+    this.alive = true;
+  }
+
+  setAlive(alive) {
+    this.alive = alive;
+    if (alive === false) this._clear();
+  }
+
+  isAlive() {
+    return this.alive;
   }
 
   isMine() {
@@ -57,11 +67,21 @@ class Character {
     this._draw();
   }
 
+  teleport(indexX, indexY) {
+    this._stop();
+    this._clear();
+    this.indexX = indexX;
+    this.indexY = indexY;
+    this._draw();
+  }
+
   _draw() {
     /*
      * HTML canvas drawImage() Method :
      * context.drawImage(img,startX,startY,startWidth,startheight,x,y,width,height)
      */
+    if (this.alive === false) return;
+
     this.ctx.drawImage(
       this.img,
       CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
@@ -111,16 +131,8 @@ class Character {
   _relocate() {
     this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
     const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
-    this._teleport(newIndexX, newIndexY);
+    this.teleport(newIndexX, newIndexY);
     this.turn(direction, newIndexX, newIndexY);
-  }
-
-  _teleport(indexX, indexY) {
-    this._stop();
-    this._clear();
-    this.indexX = indexX;
-    this.indexY = indexY;
-    this._draw();
   }
 
   _stop() {

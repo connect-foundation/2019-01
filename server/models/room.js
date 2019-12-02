@@ -27,7 +27,7 @@ class Room {
     this.users = new Map();
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
-    this.aliveUserNumber = 0;
+    this.aliveUsers = new Map();
   }
 
   async _fetchRandomNickname() {
@@ -116,7 +116,7 @@ class Room {
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
     });
-    this.aliveUserNumber += 1;
+    this.aliveUsers.set(user.getNickname(), user);
   }
 
 
@@ -152,20 +152,18 @@ class Room {
       const characterList = [{ nickname: user.getNickname() }];
       _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
     });
-    this.aliveUserNumber -= 1;
+    this.aliveUsers.delete(user.getNickname());
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
   //  ㄴ 다음으로 변경: 시작 값으로 셋팅하고, emit: start_round 호출
   async startGame(user) {
     if (this._isOwner(user) && this.isGameStarted === false) {
-      this.aliveUserNumber = this.users.size;
-      if (this.aliveUserNumber === 1) return;
+      if (this.aliveUsers.size === 1) return;
 
       this.isGameStarted = true;
       this.currentRound = 0;
       this.quizList = await quizFinder.fetchQuizList();
-      this.aliveUserNumber = this.users.size;
       this.users.forEach((_user) => _user.emitStartGame());
 
       setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
@@ -233,11 +231,23 @@ class Room {
   async _startRound() {
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
+    this.indexOfCharacters = this._getEmptyIndexMatrix();
+    const characterList = [];
+
+    this.aliveUsers.forEach((user, nickname) => {
+      const [indexX, indexY] = this._getRandomEmptyIndex();
+      const character = user.getCharacter();
+      character.setIndexes(indexX, indexY);
+      this.indexOfCharacters[indexX][indexY] = user;
+      characterList.push({ nickname, indexX, indexY });
+    });
+
     this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
         timeLimit: ROOM.TIME_LIMIT,
+        characterList,
       });
     });
 
@@ -259,7 +269,11 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    if (this.aliveUserNumber === 1 || this.currentRound === ROOM.MAX_ROUND) {
+    if (this.aliveUsers.size - dropUsers.length !== 0) {
+      dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
+    }
+
+    if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
       this._endGame();
       return;
     }
@@ -285,7 +299,6 @@ class Room {
         }
       }
     }
-    this.aliveUserNumber -= dropUsers.length;
     return dropUsers;
   }
 
@@ -297,11 +310,23 @@ class Room {
   _endGame() {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => this._placeCharacter(user));
+
+    const characterList = [];
     this.users.forEach((user) => {
-      const characterList = this.makeCharacterList(user.getCharacter());
+      const [indexX, indexY] = this._getRandomEmptyIndex();
+      const character = user.getCharacter();
+      character.setIndexes(indexX, indexY);
+      this.indexOfCharacters[indexX][indexY] = user;
+      characterList.push({ nickname: user.getNickname(), indexX, indexY });
+    });
+
+    this.users.forEach((user) => {
       setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
+
+    this.aliveUsers.clear();
+    this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
   }
 
   /**
