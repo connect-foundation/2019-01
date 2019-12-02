@@ -60,7 +60,7 @@ const DASHBOARD = {
 
 const QUIZ = {
   WIDTH: 550,
-  FONTSIZE: 24,
+  FONT_SIZE: 24,
   LEFT: 40,
 };
 
@@ -68,12 +68,12 @@ const COUNTER = {
   WIDTH: 80,
   PADDING: '10px 0',
   RIGHT: 40,
-  FONTSIZE: 28,
+  FONT_SIZE: 28,
 };
 
 const GAME_START_BUTTON = {
   PADDING: '15px 35px',
-  FONTSIZE: 28,
+  FONT_SIZE: 28,
   BACKGROUND_COLOR: 'gold',
   BOX_SHADOW: '0px 4px 10px 0px',
 };
@@ -87,6 +87,7 @@ const ROOM = {
   MARGIN: 20,
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
   getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
+  WAITING_TIME_MS: 3000,
 };
 
 export {
