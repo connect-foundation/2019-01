@@ -26,12 +26,6 @@ const Field = () => {
     setCharacters(addCharactersImmutable);
   };
 
-  const updateCharacters = ({ characterList }) => {
-    setTimeout(() => {
-      teleportCharacters({ characterList });
-    }, 3000);
-  };
-
   const moveCharacter = ({
     canMove, nickname, direction, newIndexX, newIndexY,
   }) => {
@@ -53,7 +47,7 @@ const Field = () => {
     setCharacters(moveCharactersImmutable);
   };
 
-  const deleteCharacter = ({ characterList }) => {
+  const deleteCharacters = ({ characterList }) => {
     const deleteCharactersImmutable = (prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
@@ -67,7 +61,7 @@ const Field = () => {
     setCharacters(deleteCharactersImmutable);
   };
 
-  const killCharacter = ({ characterList }) => {
+  const killCharacters = ({ characterList }) => {
     const killCharactersImmutable = (prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
@@ -94,13 +88,19 @@ const Field = () => {
     setCharacters(teleportCharactersImmutable);
   };
 
+  const updateCharacters = ({ characterList }) => {
+    setTimeout(() => {
+      teleportCharacters({ characterList });
+    }, 3000);
+  };
+
   useEffect(() => {
     socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound(killCharacter);
-    socket.onLeaveUser(deleteCharacter);
+    socket.onEndRound(killCharacters);
+    socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
   }, []);
 
