@@ -4,14 +4,13 @@ import {
 } from 'react-router-dom';
 import Lobby from './component/Lobby';
 import Room from './component/Room';
+import Login from './component/Login';
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" exact>
-          <h2>login page</h2>
-        </Route>
+        <Route path="/" exact component={Login} />
         <Route path="/lobby" exact component={Lobby} />
         <Route path="/room/:id" component={Room} />
         <Route>
