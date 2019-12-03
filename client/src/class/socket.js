@@ -7,7 +7,6 @@ const isFunction = (callback) => typeof callback === 'function';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    this.connect();
   }
 
   connect() {

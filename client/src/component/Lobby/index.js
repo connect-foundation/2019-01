@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import jwt from 'jsonwebtoken';
+import {} from 'dotenv/config';
+import cookie from 'cookie';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoButton,
 } from './style';
+import socket from '../../class/socket';
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
@@ -11,10 +14,12 @@ const Lobby = () => {
   const [userName, setUserName] = useState('guest');
 
   useEffect(() => {
-    const query = window.location.search.substring(1);
-    const token = query.split('userInfo=')[1];
-    const userInfo = jwt.verify(token, privateKey, { algorithm });
+    const cookies = cookie.parse(document.cookie);
+    const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
     setUserName(userInfo.name);
+    if (!socket.connected) {
+      socket.connect();
+    }
   }, []);
 
   return (

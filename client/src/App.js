@@ -11,7 +11,7 @@ function App() {
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
-        <Route path="/lobby" exact component={Lobby} />
+        <Route path="/lobby" xact component={Lobby} />
         <Route path="/room/:id" component={Room} />
         <Route>
           <Redirect to="/" />
