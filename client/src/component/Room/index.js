@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
 import socket from '../../class/socket';
 
 const Room = () => {
+  const { id } = useParams();
   // lobby에서 할 수도 있는 일을 임시로 Room에게 할당
   useEffect(() => {
     const enterTestRoom = (roomInfos) => {
