@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import {} from 'dotenv/config';
 
 const Login = () => (
   <div>
