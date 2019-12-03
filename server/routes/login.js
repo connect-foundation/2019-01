@@ -1,7 +1,10 @@
 import express from 'express';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 import userFinder from '../database/user';
 
+const privateKey = process.env.JWT_SECRET_KEY;
+const algorithm = process.env.JWT_ALGORITHM;
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -21,12 +24,15 @@ router.get('/', async (req, res) => {
   });
 
   console.log(data);
-  const userId = userFinder.fetchUserInfo(data.id).gitnub_id;
-  if (userId === undefined) {
+  const [user] = await userFinder.fetchUserInfo(data.id);
+  console.log(user);
+  console.log(user.github_id);
+  if (user.github_id === undefined) {
     userFinder.registerUser(data.id, data.name);
   }
 
-  res.redirect('http://localhost:3006/lobby');
+  const token = jwt.sign({ id: data.id, name: data.name }, privateKey, { algorithm });
+  res.redirect(`http://localhost:3006/lobby?userInfo=${token}`);
 });
 
 export default router;

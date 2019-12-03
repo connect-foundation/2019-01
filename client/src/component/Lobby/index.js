@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import jwt from 'jsonwebtoken';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoButton,
 } from './style';
 
+const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
+const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
+
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
+
+  useEffect(() => {
+    const query = window.location.search.substring(1);
+    const token = query.split('userInfo=')[1];
+    const userInfo = jwt.verify(token, privateKey, { algorithm });
+    setUserName(userInfo.name);
+  }, []);
+
   return (
     <LobbyWrapper>
       <LobbyHeader>
