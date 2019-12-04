@@ -1,6 +1,7 @@
 const EVENT = {
   ENTER_LOBBY: 'enter_lobby',
   ROOM_INFOS: 'room_infos',
+  CREATE_ROOM: 'create_room',
   ENTER_ROOM: 'enter_room',
   ENTER_NEW_USER: 'enter_new_user',
   LEAVE_ROOM: 'leave_room',

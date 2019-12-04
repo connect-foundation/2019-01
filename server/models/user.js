@@ -61,6 +61,10 @@ class User {
     });
   }
 
+  onCreateRoom(callback) {
+    this.socket.on(EVENT.CREATE_ROOM, (roomName) => callback(roomName));
+  }
+
   onLeaveRoom(callback) {
     this.socket.on(EVENT.LEAVE_ROOM, () => {
       callback();
@@ -86,6 +90,10 @@ class User {
 
   emitRoomInfos(data) {
     this.socket.emit(EVENT.ROOM_INFOS, data);
+  }
+
+  emitCreateRoom(data) {
+    this.socket.emit(EVENT.CREATE_ROOM, data);
   }
 
   emitEnterRoom(data) {
