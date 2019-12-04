@@ -1,6 +1,5 @@
 import EVENT from '../constants/socket-event';
-
-const isFunction = (callback) => typeof callback === 'function';
+import { isFunction } from '../util';
 
 /**
  * User Class
