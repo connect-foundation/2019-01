@@ -1,77 +1,79 @@
 import styled from 'styled-components';
+import {
+  LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON,
+} from '../../constants/lobby';
 
 const LobbyWrapper = styled.div`
     position: absolute;
-    width: 800px;
-    height: 620px;
+    width: ${LOBBY.WIDTH}px;
+    height: ${LOBBY.HEIGHT}px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: ${LOBBY.PADDING};
     box-sizing: border-box;
-    background-color: rgba(255,255,255,0.2);
-    border: 1px solid lightslategrey;
-    border-radius: 8px;
-    font-size: 30px; 
+    background-color: ${LOBBY.BACKGROUND_COLOR};
+    border: ${LOBBY.BORDER};
+    border-radius: ${LOBBY.BORDER_RADIUS}px;
+    font-size: ${LOBBY.FONT_SIZE}px; 
 `;
 
 const LobbyHeader = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 0 15px 20px;
+    height: ${HEADER.HEIGHT}px;
+    padding: ${HEADER.PADDING};
+    box-sizing: border-box;
 `;
 
 const LobbyBody = styled.div`
-    height: 520px;
-    padding: 5px 15px;
+    height: ${BODY.HEIGHT}px;
+    padding: ${BODY.PADDING};
     box-sizing: border-box;
     overflow-y: scroll;
 
     ::-webkit-scrollbar {
-        width: 10px;
+        width: ${BODY.SCROLLBAR.WIDTH}px;
     }
-
     ::-webkit-scrollbar-track {
-        background: transparent;
+        background: ${BODY.SCROLLBAR.TRACK_COLOR};
     }
-
     ::-webkit-scrollbar-thumb {
-        background: gray;
-        border-radius: 4px;
+        background: ${BODY.SCROLLBAR.THUMB_COLOR};
+        border-radius: ${BODY.SCROLLBAR.THUMB_BORDER_RADIUS}px;
     }
-
     ::-webkit-scrollbar-thumb:hover {
-        background: dimgray;
+        background: ${BODY.SCROLLBAR.THUMB_COLOR_HOVER};
     }
 `;
 
 const LobbyNickname = styled.div`
-    font-size: 36px;
+    font-size: ${NICKNAME.FONT_SIZE}px;
 `;
 
 const CreateRoomButton = styled.div`
     text-align: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 2px dashed lightslategrey;
-    border-radius: 8px;
-    background-color: rgba(255,255,255,0.2);
+    margin-bottom: ${CREATE_ROOM_BUTTON.MARGIN_BOTTOM}px;
+    padding: ${CREATE_ROOM_BUTTON.PADDING};
+    border: ${CREATE_ROOM_BUTTON.BORDER};
+    border-radius: ${CREATE_ROOM_BUTTON.BORDER_RADIUS}px;
+    background-color: ${CREATE_ROOM_BUTTON.BACKGROUND_COLOR};
     cursor: pointer;
 `;
 
-const RoomInfoButton = styled.div`
+const RoomInfoWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid lightslategrey;
-    border-radius: 8px;
-    background-color: ${(props) => (props.enterable ? 'rgba(255,255,255,0.5)' : 'rgba(10,10,10,0.1)')}; ;
-    box-shadow: ${(props) => (props.enterable ? '3px 3px 0px dimgrey' : '')};
-    color: ${(props) => (props.enterable ? 'black' : 'gray')};
-    cursor: ${(props) => (props.enterable ? 'pointer' : 'not-allowed')};
+    padding: ${ROOM_INFO.PADDING};
+    margin-bottom: ${ROOM_INFO.MARGIN_BOTTOM}px;
+    border: ${ROOM_INFO.BORDER};
+    border-radius: ${ROOM_INFO.BORDER_RADIUS}px;
+    background-color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.BACKGROUND_COLOR : ROOM_INFO.BACKGROUND_COLOR)}; ;
+    box-shadow: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.BOX_SHADOW : ROOM_INFO.BOX_SHADOW)};
+    color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.COLOR : ROOM_INFO.COLOR)};  
+    cursor: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.CURSOR : ROOM_INFO.CURSOR)};
 `;
 
 export {
-  LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoButton,
+  LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoWrapper,
 };
