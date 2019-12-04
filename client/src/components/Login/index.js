@@ -4,10 +4,11 @@ import {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 } from './style';
 import URL from '../../constants/url';
+import LOGIN from '../../constants/login';
 
 const Login = () => {
   const loginBackground = {
-    background: 'no-repeat url(https://kr.object.ncloudstorage.com/connect-2019-01/image/background-main.png)',
+    background: `no-repeat url(${LOGIN.BACKGROUND})`,
     backgroundSize: 'cover',
   };
 
