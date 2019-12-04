@@ -2,16 +2,16 @@ import React from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
-import Lobby from './component/Lobby';
-import Room from './component/Room';
-import Login from './component/Login';
+import Lobby from './components/Lobby';
+import Room from './components/Room';
+import Login from './components/Login';
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
-        <Route path="/lobby" exact component={Lobby} />
+        <Route path="/lobby" component={Lobby} />
         <Route path="/room/:id" component={Room} />
         <Route>
           <Redirect to="/" />

@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import jwt from 'jsonwebtoken';
+import {} from 'dotenv/config';
+import cookie from 'cookie';
+import socket from '../../modules/socket';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoButton,
 } from './style';
 
+const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
+const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
+
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
+
+  useEffect(() => {
+    const cookies = cookie.parse(document.cookie);
+    const { id } = jwt.verify(cookies.jwt, privateKey, { algorithm });
+    setUserName(id);
+    if (!socket.connected) {
+      socket.connect({ githubId: id });
+    }
+  }, []);
+
   return (
     <LobbyWrapper>
       <LobbyHeader>
