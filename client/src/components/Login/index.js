@@ -10,6 +10,8 @@ import LOGIN from '../../constants/login';
 const Login = () => {
   const history = useHistory();
 
+  const oAuthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
+
   const loginBackground = {
     background: `no-repeat url(${LOGIN.BACKGROUND})`,
     backgroundSize: 'cover',
@@ -22,7 +24,7 @@ const Login = () => {
   return (
     <LoginPageWrapper style={loginBackground}>
       <LoginButtonsWrapper>
-        <LoginGitHubButton as="a" href={URL.GITHUB_OAUTH}>
+        <LoginGitHubButton as="a" href={oAuthUrl}>
           <GitHubIcon>
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
             <path stroke={LOGIN.SVG.PATH.COLOR} d={LOGIN.SVG.PATH.INDEXES} />
