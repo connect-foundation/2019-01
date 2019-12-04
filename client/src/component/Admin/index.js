@@ -1,9 +1,10 @@
-import NavigationBar from './NavigationBar.js';
+import React from 'react';
+import NavigationBar from './NavigationBar';
 
 const Admin = () => (
   <div>
-      <NavigationBar />
-    </div>
+    <NavigationBar />
+  </div>
 );
 
 export default Admin;
