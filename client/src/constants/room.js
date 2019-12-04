@@ -16,7 +16,7 @@ const CHARACTER = {
   CROP_OFFSET: 4,
   getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
   getHeight() { return this.SIZE; },
-  MOVE_FRAME: 5,
+  MOVE_FRAME: 3,
   MOVE_FRAME_RELOCATE: 1,
   LAST_FIVE_MOVES: 5,
   DIRECTION: {
