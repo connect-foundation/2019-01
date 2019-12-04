@@ -16,7 +16,7 @@ const CHARACTER = {
   CROP_OFFSET: 4,
   getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
   getHeight() { return this.SIZE; },
-  MOVE_FRAME: 5,
+  MOVE_FRAME: 3,
   MOVE_FRAME_RELOCATE: 1,
   LAST_FIVE_MOVES: 5,
   DIRECTION: {
@@ -55,7 +55,8 @@ const DASHBOARD = {
   WIDTH: FIELD.getWidth() - TILE.WIDTH,
   HEIGHT: TILE.HEIGHT * 2,
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
-  A_SECOND: 1,
+  SECOND: 1,
+  SECOND_MS: 1000,
 };
 
 const QUIZ = {

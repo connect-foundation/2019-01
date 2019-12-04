@@ -49,6 +49,7 @@ const Field = () => {
       const newCharacters = new Map(prevCharacters);
       characterList.forEach(({ nickname }) => {
         const character = newCharacters.get(nickname);
+        if (character === undefined) return;
         if (character.isMine()) setMyCharacter(() => null);
         newCharacters.delete(nickname);
       });

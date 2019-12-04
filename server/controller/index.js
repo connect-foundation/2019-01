@@ -1,10 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-
 import Room from '../models/room';
 import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
-
+import { shortUuid } from '../util';
 /**
  * Controller class
  * @property {array} rooms
@@ -29,13 +28,13 @@ class Controller {
   /**
    *
    * @param {User} user
-   * @param {number} roomId
    * @param {string} roomName
    */
-  _letUserCreateRoom(user, roomId, roomName) {
+  _letUserCreateRoom(user, roomName) {
     if (user.isInLobby() === false) return;
-    const testRoom = new Room(roomId, roomName);
-    lobby.createRoom(user, testRoom);
+    const roomId = shortUuid();
+    const room = new Room(roomId, roomName);
+    lobby.createRoom(user, room);
   }
 
   /**
@@ -110,6 +109,7 @@ class Controller {
    * @param {User} user
    */
   _bindEvent(user) {
+    user.onCreateRoom((roomName) => this._letUserCreateRoom(user, roomName));
     user.onEnterRoom(async (roomId) => {
       await this._letUserEnterRoom(user, roomId);
     });
@@ -117,7 +117,10 @@ class Controller {
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
-    user.onDisconnecting(() => this._letUserLeaveRoom(user));
+    user.onDisconnecting(() => {
+      console.log('a user disconnected');
+      this._letUserLeaveRoom(user);
+    });
   }
 }
 
