@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import LOBBY from '../../constants/login';
+import LOGIN from '../../constants/login';
 
 const LoginPageWrapper = styled.div`
     position: absolute;
@@ -9,51 +9,49 @@ const LoginPageWrapper = styled.div`
 
 const LoginButtonsWrapper = styled.div`
     position: absolute;
-    width: 800px;
-    height: 200px;
+    width: ${LOGIN.WRAPPER.WIDTH}px;
+    height: ${LOGIN.WRAPPER.HEIGTH}px;
     top: 70%;
     left: 50%;
     -webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
-    padding: 20px;
+    padding: ${LOGIN.WRAPPER.PADDING}px;
     box-sizing: border-box;
-    font-size: 30px;
+    font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
 `;
 
-const LoginGitHubButton = styled.a`
-    display: flex;
-    justify-content: center;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid lightslategrey;
-    border-radius: 8px;
-    background-color: rgba(255,255,255,0.8);
-    box-shadow: 3px 3px 0px dimgrey;
-    cursor: pointer;
-`;
-const LoginGitHubText = styled.div`
-    margin-left: 10px;
-    padding-top: 9px;
-`;
 const LoginAnonyButton = styled.div`
     text-align: center;
-    height: 44px;
-    justify-content: space-between;
-    padding-top: 25px;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
-    border: 2px solid lightslategrey;
-    border-radius: 8px;
-    background-color: rgba(255,255,255,0.8);
-    box-shadow: 3px 3px 0px dimgrey;
+    padding-top: ${LOGIN.ANONY.PADDING_TOP}px;
+    margin-bottom: ${LOGIN.ANONY.MARGIN_BOTTOM}px;
+    padding-bottom: ${LOGIN.ANONY.PADDING_BOTTOM}px;
+    border: ${LOGIN.ANONY.BORDER};
+    border-radius: ${LOGIN.ANONY.BORDER_RADIUS}px;
+    background-color: ${LOGIN.ANONY.BACKGROUND_COLOR};
+    box-shadow: ${LOGIN.ANONY.BOX_SHADOW};
     cursor: pointer;
 `;
-const GitHubIcon = styled.svg`
-    width: ${LOBBY.GITHUB_ICON.WIDTH}px;
-    height: ${LOBBY.GITHUB_ICON.HEIGHT}px;
-    shape-rendering: ${LOBBY.GITHUB_ICON.SHAPE_REDERING};
+
+const LoginGitHubButton = styled(LoginAnonyButton)`
+    display: flex;
+    justify-content: center;
+    padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
+    text-decoration: none;
+    color: black;
 `;
+
+const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
+    width: ${LOGIN.GITHUB_ICON.WIDTH}px;
+    height: ${LOGIN.GITHUB_ICON.HEIGHT}px;
+    shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
+`;
+
+const LoginGitHubText = styled.div`
+    margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
+    padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
+`;
+
 export {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 };
