@@ -1,5 +1,6 @@
 import React from 'react';
 import {} from 'dotenv/config';
+import { useHistory } from 'react-router-dom';
 import {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 } from './style';
@@ -7,9 +8,15 @@ import URL from '../../constants/url';
 import LOGIN from '../../constants/login';
 
 const Login = () => {
+  const history = useHistory();
+
   const loginBackground = {
     background: `no-repeat url(${LOGIN.BACKGROUND})`,
     backgroundSize: 'cover',
+  };
+
+  const enterLobby = () => {
+    history.push('/lobby');
   };
 
   return (
@@ -24,7 +31,7 @@ const Login = () => {
             GitHub으로 로그인
           </LoginGitHubText>
         </LoginGitHubButton>
-        <LoginAnonyButton>익명으로 로그인</LoginAnonyButton>
+        <LoginAnonyButton onClick={enterLobby}>익명으로 로그인</LoginAnonyButton>
       </LoginButtonsWrapper>
     </LoginPageWrapper>
   );
