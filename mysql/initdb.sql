@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS BooleanAvengers;
 USE BooleanAvengers;
 
 CREATE TABLE IF NOT EXISTS User (
-    github_id VARCHAR(100) NOT NULL,
+    github_id int(11) NOT NULL,
     nickname VARCHAR(250) NOT NULL,
     is_admin BOOLEAN NOT NULL,
     PRIMARY KEY (github_id)
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Image (
 INSERT INTO
     User
 VALUES
-    ('ktseo41', '운좋은올빼미', true);
+    (34915280, 'Heesun Kim', true);
 
 INSERT INTO
     Quiz (
