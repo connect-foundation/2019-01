@@ -1,20 +1,24 @@
 /* eslint-disable no-underscore-dangle */
 import socketio from 'socket.io-client';
 import EVENT from '../constants/socket-event';
+import URL from '../constants/url';
 
 const isFunction = (callback) => typeof callback === 'function';
 
 class SocketContainer {
   constructor() {
     this.socket = undefined;
-    this.connect();
   }
 
-  connect() {
+  connect(query) {
     this.socket = (
       process.env.NODE_ENV === 'production'
-        ? socketio({ path: '/socket.io', transports: ['websocket'] })
-        : socketio('http://localhost:3000', { transports: ['websocket'] }));
+        ? socketio({ path: '/socket.io', transports: ['websocket'], query })
+        : socketio(URL.LOCAL_API_SERVER, { transports: ['websocket'], query }));
+  }
+
+  isConnected() {
+    return (this.socket !== undefined && this.socket.connected);
   }
 
   disconnect() {

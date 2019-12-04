@@ -4,6 +4,7 @@ import logger from 'morgan';
 import socketio from 'socket.io';
 import {} from 'dotenv/config';
 import indexRouter from './routes/index';
+import loginRouter from './routes/login';
 import controller from './controller';
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
+app.use('/oauth', loginRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
