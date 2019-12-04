@@ -10,9 +10,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" exact>
-          <h2>login page</h2>
-        </Route>
+        <Route path="/" exact component={Login} />
         <Route path="/lobby" exact component={Lobby} />
         <Route path="/room/:roomId" component={Room} />
         <Route>

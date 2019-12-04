@@ -21,7 +21,6 @@ const LoginButtonsWrapper = styled.div`
     font-size: 30px;
 `;
 
-
 const LoginGitHubButton = styled.a`
     display: flex;
     justify-content: center;
@@ -33,12 +32,10 @@ const LoginGitHubButton = styled.a`
     box-shadow: 3px 3px 0px dimgrey;
     cursor: pointer;
 `;
-
 const LoginGitHubText = styled.div`
     margin-left: 10px;
     padding-top: 9px;
 `;
-
 const LoginAnonyButton = styled.div`
     text-align: center;
     height: 44px;
@@ -52,13 +49,11 @@ const LoginAnonyButton = styled.div`
     box-shadow: 3px 3px 0px dimgrey;
     cursor: pointer;
 `;
-
 const GitHubIcon = styled.svg`
     width: ${LOBBY.GITHUB_ICON.WIDTH}px;
     height: ${LOBBY.GITHUB_ICON.HEIGHT}px;
     shape-rendering: ${LOBBY.GITHUB_ICON.SHAPE_REDERING};
 `;
-
 export {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 };
