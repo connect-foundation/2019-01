@@ -43,9 +43,9 @@ class Lobby {
   }
 
   createRoom(user, room) {
-    this.rooms.set(room.getId(), room);
-    room.enterUser(user);
-    this.leaveUser(user.getId());
+    const roomId = room.getId();
+    this.rooms.set(roomId, room);
+    user.emitCreateRoom(roomId);
   }
 }
 
