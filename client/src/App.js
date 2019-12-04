@@ -13,7 +13,7 @@ function App() {
           <h2>login page</h2>
         </Route>
         <Route path="/lobby" exact component={Lobby} />
-        <Route path="/room/:id" component={Room} />
+        <Route path="/room/:roomId" component={Room} />
         <Route>
           <Redirect to="/" />
         </Route>
