@@ -1,5 +1,7 @@
 import EVENT from '../constants/socket-event';
 
+const isFunction = (callback) => typeof callback === 'function';
+
 /**
  * User Class
  * socket을 받아서 감싸줘서 user로 내보낸다.
@@ -55,6 +57,7 @@ class User {
   }
 
   onEnterRoom(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
       callback(roomId);
       this.roomId = roomId;
@@ -62,10 +65,12 @@ class User {
   }
 
   onCreateRoom(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.CREATE_ROOM, (roomName) => callback(roomName));
   }
 
   onLeaveRoom(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.LEAVE_ROOM, () => {
       callback();
       this.roomId = null;
@@ -73,18 +78,22 @@ class User {
   }
 
   onStartGame(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.START_GAME, () => callback());
   }
 
   onMove(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.MOVE, (direction) => callback(direction));
   }
 
   onChatMessage(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.CHAT_MESSAGE, (message) => callback(message));
   }
 
   onDisconnecting(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.DISCONNECT, () => callback());
   }
 
