@@ -97,7 +97,10 @@ class Room {
     if (!this.nicknameList.length) {
       await this._fetchRandomNickname();
     }
-    user.setNickname(this.nicknameList.shift());
+
+    if (user.getNickname() === undefined) {
+      user.setNickname(this.nicknameList.shift());
+    }
 
     const myCharacter = user.getCharacter();
     const characterList = this.makeCharacterList(myCharacter);

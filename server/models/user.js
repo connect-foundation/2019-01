@@ -13,7 +13,7 @@ class User {
   constructor(socket) {
     this.id = socket.id;
     this.socket = socket;
-    this.nickname = null;
+    this.nickname = socket.handshake.query.githubId;
     this.character = null;
     this.roomId = null;
   }

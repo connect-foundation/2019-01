@@ -21,12 +21,13 @@ const githubOauth = async (req, res, next) => {
     },
   });
 
-  const [user] = await userFinder.fetchUserInfo(data.id);
+  const [user] = await userFinder.fetchUserInfo(data.login);
+
   if (user.github_id === undefined) {
-    userFinder.registerUser(data.id, data.name);
+    userFinder.registerUser(data.login);
   }
 
-  const token = jwt.sign({ id: data.id, name: data.name }, privateKey, { algorithm });
+  const token = jwt.sign({ id: data.login }, privateKey, { algorithm });
   res.cookie('jwt', token);
   return next();
 };
