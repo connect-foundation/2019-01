@@ -6,7 +6,6 @@ import {} from 'dotenv/config';
 import indexRouter from './routes/index';
 import loginRouter from './routes/login';
 import controller from './controller';
-import user from './database/user';
 
 const app = express();
 const socketIo = socketio();
