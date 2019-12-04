@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
-import socket from '../../class/socket';
+import socket from '../../modules/socket';
 
 const Room = () => {
   const { id } = useParams();

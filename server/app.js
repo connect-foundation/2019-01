@@ -6,6 +6,7 @@ import {} from 'dotenv/config';
 import indexRouter from './routes/index';
 import loginRouter from './routes/login';
 import controller from './controller';
+import user from './database/user';
 
 const app = express();
 const socketIo = socketio();
@@ -29,7 +30,7 @@ app.use((err, req, res) => {
 });
 
 socketIo.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log(socket.handshake.query);
   controller.connectUser(socket);
 });
 
