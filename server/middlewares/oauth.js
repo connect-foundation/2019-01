@@ -22,7 +22,8 @@ const githubOauth = async (req, res, next) => {
     },
   });
 
-  const [user] = await userFinder.fetchUserInfo(data.login);
+  const userId = data.login;
+  const [user] = await userFinder.fetchUserInfo(userId);
 
   if (user === undefined) {
     userFinder.registerUser(data.login);

@@ -17,6 +17,7 @@ const LobbyWrapper = styled.div`
     border-radius: ${LOBBY.BORDER_RADIUS}px;
     font-size: ${LOBBY.FONT_SIZE}px; 
 `;
+
 const LobbyHeader = styled.div`
     display: flex;
     justify-content: space-between;
@@ -24,6 +25,7 @@ const LobbyHeader = styled.div`
     padding: ${HEADER.PADDING};
     box-sizing: border-box;
 `;
+
 const LobbyBody = styled.div`
     height: ${BODY.HEIGHT}px;
     padding: ${BODY.PADDING};
@@ -43,9 +45,11 @@ const LobbyBody = styled.div`
         background: ${BODY.SCROLLBAR.THUMB_COLOR_HOVER};
     }
 `;
+
 const LobbyNickname = styled.div`
     font-size: ${NICKNAME.FONT_SIZE}px;
 `;
+
 const CreateRoomButton = styled.div`
     text-align: center;
     margin-bottom: ${CREATE_ROOM_BUTTON.MARGIN_BOTTOM}px;
@@ -56,6 +60,7 @@ const CreateRoomButton = styled.div`
     cursor: pointer;
     ${BUTTON_EFFECT.HOVER}
 `;
+
 const RoomInfoWrapper = styled.div`
     display: flex;
     justify-content: space-between;
@@ -68,6 +73,7 @@ const RoomInfoWrapper = styled.div`
     color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.COLOR : ROOM_INFO.COLOR)};  
     cursor: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.CURSOR : ROOM_INFO.CURSOR)};
 `;
+
 export {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoWrapper,
 };
