@@ -31,7 +31,6 @@ const LobbyBody = styled.div`
     padding: ${BODY.PADDING};
     box-sizing: border-box;
     overflow-y: scroll;
-
     ::-webkit-scrollbar {
         width: ${BODY.SCROLLBAR.WIDTH}px;
     }

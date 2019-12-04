@@ -5,4 +5,9 @@ const query = async (sql) => {
   return rows;
 };
 
-export default query;
+const preparedStatement = async (sql, ...args) => {
+  const [rows] = await pool.query(sql, args);
+  return rows;
+};
+
+export { query, preparedStatement };

@@ -5,7 +5,7 @@ import {
   ModalInput, ModalInputLength, ModalCreateRoomButton,
 } from './style';
 import { ROOM_INFO } from '../../../constants/lobby';
-import socket from '../../../class/socket';
+import socket from '../../../modules/socket';
 
 const RoomCreateModal = ({ setOpen }) => {
   const [roomName, setRoomName] = useState('');
