@@ -4,10 +4,9 @@ import React, { useState, useEffect } from 'react';
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
-import { DASHBOARD } from '../../../constants/room';
+import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../class/socket';
 
-const ONE_SECOND = 1000;
 const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
@@ -15,22 +14,23 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = () => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [GameEnded, setGameEnded] = useState(false);
+  const [isGameEnded, setGameEnded] = useState(false);
   const [owner, setOwner] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
+  let lastTimerId;
 
   const counterHandler = () => {
     setCounter((_counter) => {
       if (_counter > 1) {
-        setTimeout(counterHandler, ONE_SECOND);
-        return _counter - DASHBOARD.A_SECOND;
+        lastTimerId = setTimeout(counterHandler, DASHBOARD.SECOND_MS);
+        return _counter - DASHBOARD.SECOND;
       }
       return 0;
     });
   };
 
   const startCounter = () => {
-    setTimeout(counterHandler, ONE_SECOND);
+    lastTimerId = setTimeout(counterHandler, DASHBOARD.SECOND_MS);
   };
 
   const startGame = () => {
@@ -63,11 +63,11 @@ const DashBoard = () => {
   const endGame = () => {
     setGameEnded(true);
     setNotice('↓↓↓↓   우승   ↓↓↓↓');
-    setTimeout(() => {
+    lastTimerId = setTimeout(() => {
       setGameEnded(false);
       setGameStarted(false);
       setCounter('--');
-    }, 3000);
+    }, ROOM.WAITING_TIME_MS);
   };
 
   const enterRoom = ({
@@ -98,8 +98,8 @@ const DashBoard = () => {
       : <Greeting />
   );
 
-  const QuizOrGreetingOrCounterWrapper = () => (
-    GameEnded && isGameStarted
+  const DashBoardContents = () => (
+    isGameEnded && isGameStarted
       ? <GameEndText> {notice} </GameEndText>
       : (
         <div>
@@ -112,7 +112,7 @@ const DashBoard = () => {
   );
   const readyGame = () => {
     setGameStarted(true);
-    setCounter(3);
+    setCounter(ROOM.WAITING_TIME_MS / DASHBOARD.SECOND_MS);
     setNotice('게임이 곧 시작됩니다.');
     startCounter();
   };
@@ -125,12 +125,16 @@ const DashBoard = () => {
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
     socket.onStartGame(readyGame);
+
+    return () => {
+      clearTimeout(lastTimerId);
+    };
   }, []);
 
   // TODO: 카운트 시작하는 방법이 전광판 클릭하는 것. 추후 서버 통신에 의해 시작되도록 변경해야함.
   return (
     <DashBoardWrapper style={{ backgroundImage: `url("${DASHBOARD.BACKGROUND}")` }}>
-      <QuizOrGreetingOrCounterWrapper />
+      <DashBoardContents />
     </DashBoardWrapper>
   );
 };

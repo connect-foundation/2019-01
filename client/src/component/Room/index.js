@@ -1,21 +1,15 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
 import socket from '../../class/socket';
 
 const Room = () => {
-  // lobby에서 할 수도 있는 일을 임시로 Room에게 할당
+  const { roomId } = useParams();
+
   useEffect(() => {
-    const enterTestRoom = (roomInfos) => {
-      roomInfos.forEach((roomInfo, index) => {
-        console.log(roomInfo);
-        if (index === 0) {
-          socket.emitEnterRoom(roomInfo.id);
-        }
-      });
-    };
-    socket.onRoomInfos(enterTestRoom);
+    socket.emitEnterRoom(roomId);
   }, []);
 
   return (

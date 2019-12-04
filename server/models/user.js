@@ -1,4 +1,5 @@
 import EVENT from '../constants/socket-event';
+import { isFunction } from '../util';
 
 /**
  * User Class
@@ -55,13 +56,20 @@ class User {
   }
 
   onEnterRoom(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
       callback(roomId);
       this.roomId = roomId;
     });
   }
 
+  onCreateRoom(callback) {
+    if (isFunction(callback) === false) return;
+    this.socket.on(EVENT.CREATE_ROOM, (roomName) => callback(roomName));
+  }
+
   onLeaveRoom(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.LEAVE_ROOM, () => {
       callback();
       this.roomId = null;
@@ -69,23 +77,31 @@ class User {
   }
 
   onStartGame(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.START_GAME, () => callback());
   }
 
   onMove(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.MOVE, (direction) => callback(direction));
   }
 
   onChatMessage(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.CHAT_MESSAGE, (message) => callback(message));
   }
 
   onDisconnecting(callback) {
+    if (isFunction(callback) === false) return;
     this.socket.on(EVENT.DISCONNECT, () => callback());
   }
 
   emitRoomInfos(data) {
     this.socket.emit(EVENT.ROOM_INFOS, data);
+  }
+
+  emitCreateRoom(data) {
+    this.socket.emit(EVENT.CREATE_ROOM, data);
   }
 
   emitEnterRoom(data) {

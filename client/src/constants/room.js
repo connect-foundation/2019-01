@@ -16,7 +16,7 @@ const CHARACTER = {
   CROP_OFFSET: 4,
   getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
   getHeight() { return this.SIZE; },
-  MOVE_FRAME: 5,
+  MOVE_FRAME: 3,
   MOVE_FRAME_RELOCATE: 1,
   LAST_FIVE_MOVES: 5,
   DIRECTION: {
@@ -55,12 +55,13 @@ const DASHBOARD = {
   WIDTH: FIELD.getWidth() - TILE.WIDTH,
   HEIGHT: TILE.HEIGHT * 2,
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
-  A_SECOND: 1,
+  SECOND: 1,
+  SECOND_MS: 1000,
 };
 
 const QUIZ = {
   WIDTH: 550,
-  FONTSIZE: 24,
+  FONT_SIZE: 24,
   LEFT: 40,
 };
 
@@ -68,12 +69,12 @@ const COUNTER = {
   WIDTH: 80,
   PADDING: '10px 0',
   RIGHT: 40,
-  FONTSIZE: 28,
+  FONT_SIZE: 28,
 };
 
 const GAME_START_BUTTON = {
   PADDING: '15px 35px',
-  FONTSIZE: 28,
+  FONT_SIZE: 28,
   BACKGROUND_COLOR: 'gold',
   BOX_SHADOW: '0px 4px 10px 0px',
 };
@@ -87,6 +88,7 @@ const ROOM = {
   MARGIN: 20,
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
   getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
+  WAITING_TIME_MS: 3000,
 };
 
 export {

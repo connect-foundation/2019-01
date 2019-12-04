@@ -24,6 +24,7 @@
     "mysql2": "^2.0.1",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "uuid": "^3.3.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-node-externals": "^1.7.2"
