@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE,
 } from '../../../constants/room';
-import Character from '../../../class/character';
-import socket from '../../../class/socket';
+import Character from '../../../modules/character';
+import socket from '../../../modules/socket';
 import Canvas from './Canvas';
 
 const Field = () => {

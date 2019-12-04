@@ -5,7 +5,7 @@ import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
 import { DASHBOARD, ROOM } from '../../../constants/room';
-import socket from '../../../class/socket';
+import socket from '../../../modules/socket';
 
 const ONE_SECOND = 1000;
 const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
