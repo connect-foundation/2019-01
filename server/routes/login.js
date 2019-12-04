@@ -4,9 +4,7 @@ import URL from '../constants/url';
 
 const router = express.Router();
 
-router.use(githubOauth);
-
-router.get('/', async (req, res) => {
+router.get('/', githubOauth, async (req, res) => {
   res.redirect(URL.REACT_LOBBY);
 });
 
