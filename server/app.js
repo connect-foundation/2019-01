@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
-app.use('/githubLogin', loginRouter);
+app.use('/oauth', loginRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

@@ -4,8 +4,9 @@ import URL from '../constants/url';
 
 const router = express.Router();
 
-router.get('/', githubOauth, async (req, res) => {
-  res.redirect(URL.REACT_LOBBY);
+router.get('/github', githubOauth, async (req, res) => {
+  const lobbyUrl = process.env.NODE_ENV === 'production' ? URL.PROCUCTION_REACT_LOBBY : URL.LOCAL_REACT_LOBBY;
+  res.redirect(lobbyUrl);
 });
 
 export default router;
