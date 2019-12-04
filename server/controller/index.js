@@ -1,12 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-import uuidv1 from 'uuid/v1';
 import Room from '../models/room';
 import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
-
-const shortUuid = () => uuidv1().slice(0, 8);
-
+import { shortUuid } from '../util';
 /**
  * Controller class
  * @property {array} rooms
@@ -114,7 +111,6 @@ class Controller {
   _bindEvent(user) {
     user.onCreateRoom((roomName) => this._letUserCreateRoom(user, roomName));
     user.onEnterRoom(async (roomId) => {
-      console.log('enter!', roomId);
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));

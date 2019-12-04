@@ -38,10 +38,10 @@ const Lobby = () => {
   const openRoomCreateModal = () => setModalOpen(true);
 
   useEffect(() => {
-    const goToCreatedRoom = (roomId) => {
+    const enterCreatedRoom = (roomId) => {
       history.push(`/room/${roomId}`);
     };
-    socket.onCreateRoom(goToCreatedRoom);
+    socket.onCreateRoom(enterCreatedRoom);
   }, []);
 
   return (
