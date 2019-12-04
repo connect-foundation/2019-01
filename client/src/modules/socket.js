@@ -17,6 +17,10 @@ class SocketContainer {
         : socketio(URL.API_SERVER, { transports: ['websocket'], query }));
   }
 
+  isConnected() {
+    return (this.socket !== undefined && this.socket.connected);
+  }
+
   disconnect() {
     this.socket.disconnect();
   }

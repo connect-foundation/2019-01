@@ -45,11 +45,18 @@ const Lobby = () => {
 
   useEffect(() => {
     const cookies = cookie.parse(document.cookie);
-    const { id } = jwt.verify(cookies.jwt, privateKey, { algorithm });
-    setUserName(id);
-    if (!socket.connected) {
-      socket.connect({ githubId: id });
+    let id;
+
+    if (cookies.jwt !== undefined) {
+      const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
+      id = userInfo.id;
+      setUserName(id);
     }
+
+    if (socket.isConnected() === false) {
+      socket.connect(id !== undefined ? { githubId: id } : {});
+    }
+
     const enterCreatedRoom = (roomId) => {
       history.push(`/room/${roomId}`);
     };
