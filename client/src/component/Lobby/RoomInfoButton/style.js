@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ROOM_INFO } from '../../../constants/lobby';
+import { ROOM_INFO, BUTTON_EFFECT } from '../../../constants/lobby';
 
 const RoomInfoWrapper = styled.div`
     display: flex;
@@ -13,6 +13,8 @@ const RoomInfoWrapper = styled.div`
     box-shadow: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.BOX_SHADOW : ROOM_INFO.BOX_SHADOW)};
     color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.COLOR : ROOM_INFO.COLOR)};  
     cursor: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.CURSOR : ROOM_INFO.CURSOR)};
+    ${BUTTON_EFFECT.ACTIVE}
+    ${(props) => (props.enterable ? BUTTON_EFFECT.HOVER : '')}
 `;
 
 const RoomName = styled.div`

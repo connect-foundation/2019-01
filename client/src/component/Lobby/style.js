@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {
-  LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON,
+  LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
 } from '../../constants/lobby';
 
 const LobbyWrapper = styled.div`
@@ -59,6 +59,7 @@ const CreateRoomButton = styled.div`
     border-radius: ${CREATE_ROOM_BUTTON.BORDER_RADIUS}px;
     background-color: ${CREATE_ROOM_BUTTON.BACKGROUND_COLOR};
     cursor: pointer;
+    ${BUTTON_EFFECT.HOVER}
 `;
 
 const RoomInfoWrapper = styled.div`

@@ -3,7 +3,7 @@ const LOBBY = {
   HEIGHT: 620,
   PADDING: '20px',
   BACKGROUND_COLOR: 'rgba(255,255,255,0.2)',
-  BORDER: '1px solid lightslategrey',
+  BORDER: '2px solid lightslategrey',
   BORDER_RADIUS: 8,
   FONT_SIZE: 30,
 };
@@ -71,7 +71,12 @@ const CREATE_ROOM_BUTTON = {
   BACKGROUND_COLOR: 'rgba(255,255,255,0.2)',
 };
 
+const BUTTON_EFFECT = {
+  HOVER: ':hover { background-image: linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%); }',
+  ACTIVE: ':active { box-shadow: none; color: gray; }',
+};
+
 export {
   LOBBY, NICKNAME, LOGIN_BUTTON, HEADER, BODY,
-  ROOM_INFO, CREATE_ROOM_BUTTON,
+  ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
 };

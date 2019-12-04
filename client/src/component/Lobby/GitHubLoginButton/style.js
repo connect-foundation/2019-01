@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LOGIN_BUTTON } from '../../../constants/lobby';
+import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../../constants/lobby';
 
 const LoginButtonWrapper = styled.div`
     width: ${LOGIN_BUTTON.WIDTH}px;
@@ -10,6 +10,8 @@ const LoginButtonWrapper = styled.div`
     border: ${LOGIN_BUTTON.BORDER};
     border-radius: ${LOGIN_BUTTON.BORDER_RADIUS}px;
     background-color: ${LOGIN_BUTTON.BACKGROUND_COLOR};
+    ${BUTTON_EFFECT.ACTIVE}
+    ${BUTTON_EFFECT.HOVER}
     cursor: pointer;
 `;
 

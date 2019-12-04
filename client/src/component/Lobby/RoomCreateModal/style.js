@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
 } from '../../../constants/modal';
+import { BUTTON_EFFECT } from '../../../constants/lobby';
 
 const ModalWrapper = styled.div`
     width: ${MODAL.WIDTH}px;
@@ -28,9 +29,9 @@ const ModalTitle = styled.div`
 `;
 
 const ModalCloseButton = styled.span`
-    padding: ${CLOSE_BUTTON.PADDING};
     font-size: ${CLOSE_BUTTON.FONT_SIZE}px;
     cursor: pointer;
+    ${BUTTON_EFFECT.HOVER}
 `;
 
 const ModalInputWrapper = styled.div`
@@ -72,6 +73,8 @@ const ModalCreateRoomButton = styled.div`
     box-shadow: ${CREATE_ROOM_BUTTON.BOX_SHADOW};
     background-color: ${CREATE_ROOM_BUTTON.BACKGROUND_COLOR};
     cursor: pointer;
+    ${BUTTON_EFFECT.ACTIVE}
+    ${BUTTON_EFFECT.HOVER}
 `;
 
 export {
