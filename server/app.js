@@ -30,7 +30,7 @@ app.use((err, req, res) => {
 });
 
 socketIo.on('connection', (socket) => {
-  console.log(socket.handshake.query);
+  console.log('a user connected');
   controller.connectUser(socket);
 });
 
