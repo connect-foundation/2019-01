@@ -2,7 +2,8 @@ import React from 'react';
 import {} from 'dotenv/config';
 import { useHistory } from 'react-router-dom';
 import {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
+  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginPageBackground,
+  LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 } from './style';
 import URL from '../../constants/url';
 import LOGIN from '../../constants/login';
@@ -12,17 +13,13 @@ const Login = () => {
 
   const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
 
-  const loginBackground = {
-    background: `no-repeat url(${LOGIN.BACKGROUND})`,
-    backgroundSize: 'cover',
-  };
-
   const enterLobby = () => {
     history.push('/lobby');
   };
 
   return (
-    <LoginPageWrapper style={loginBackground}>
+    <LoginPageWrapper>
+      <LoginPageBackground src={LOGIN.BACKGROUND.URL} alt="background" />
       <LoginButtonsWrapper>
         <LoginGitHubButton as="a" href={oauthUrl}>
           <GitHubIcon>

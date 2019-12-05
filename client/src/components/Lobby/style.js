@@ -51,6 +51,10 @@ const LobbyNickname = styled.div`
 `;
 
 const CreateRoomButton = styled.div`
+    :active {
+        box-shadow: ${CREATE_ROOM_BUTTON.CLICKED_EFFECT};
+    }
+
     text-align: center;
     margin-bottom: ${CREATE_ROOM_BUTTON.MARGIN_BOTTOM}px;
     padding: ${CREATE_ROOM_BUTTON.PADDING};
