@@ -152,7 +152,7 @@ class Room {
 
     this.users.delete(user.getId());
     const nickname = user.getNickname();
-    const isAlive = this.aliveUsers.get(nickname) !== undefined;
+    const isAlive = this.aliveUsers.has(nickname);
     const characterList = [{ nickname, isAlive }];
 
     this.users.forEach((_user) => {

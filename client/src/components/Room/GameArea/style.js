@@ -17,7 +17,7 @@ const DashBoardWrapper = styled.div`
     margin: auto;
     width: ${DASHBOARD.WIDTH}px;
     height: ${DASHBOARD.HEIGHT}px;
-    border: 2px solid gray;
+    border: ${DASHBOARD.BORDER};
     border-radius: ${ROOM.BORDER_RADIUS_BIG}px;
     box-sizing: border-box;
     background-size: 100% 100%;
@@ -40,7 +40,7 @@ const CounterWrapper = styled.div`
     right: ${COUNTER.RIGHT}px;
     transform: translateY(-50%);
     text-align: center;
-    border: 1px solid black;
+    border: ${COUNTER.BORDER};
     border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: white;
     font-size: ${COUNTER.FONT_SIZE}px;
