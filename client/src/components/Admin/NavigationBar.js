@@ -6,7 +6,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -27,7 +26,10 @@ const NavigationBar = () => {
     drawerPaper: {
       width: drawerWidth,
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: {
+      width: drawerWidth,
+      padding: 5,
+    },
     content: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
@@ -46,18 +48,9 @@ const NavigationBar = () => {
           paper: classes.drawerPaper,
         }}
         anchor="left">
-        <div className={classes.toolbar} />
-        <Divider />
+        <img src="https://kr.object.ncloudstorage.com/connect-2019-01/image/boolean_avengers_logo2.png" className={classes.toolbar} />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {['USERS', 'NICKNAMES', 'QUIZ'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemText primary={text} />
             </ListItem>
@@ -65,12 +58,8 @@ const NavigationBar = () => {
         </List>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
         <Typography paragraph>
-          a
-        </Typography>
-        <Typography paragraph>
-          b
+          함형규 ㅗ
         </Typography>
       </main>
     </div>

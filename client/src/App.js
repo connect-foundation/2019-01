@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import Lobby from './component/Lobby';
 import Room from './component/Room';
+import Admin from './component/Admin';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         </Route>
         <Route path="/lobby" exact component={Lobby} />
         <Route path="/room/:roomId" component={Room} />
+        <Route path="/admin" component={Admin} />
         <Route>
           <Redirect to="/" />
         </Route>
