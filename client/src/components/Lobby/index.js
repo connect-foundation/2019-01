@@ -13,25 +13,14 @@ import {
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
-// 아래는 서버 연결 전 더미 데이터임.
-const dummyRoomInfos = [
-  {
-    id: '1', name: '보현님 언능 들어오세요', numOfUsers: 2, isEnterable: true,
-  },
-  {
-    id: '2', name: '형규님 그만 주무세요', numOfUsers: 2, isEnterable: false,
-  },
-  {
-    id: '3', name: '희선님... 말 잘들을게요 충성^^7', numOfUsers: 2, isEnterable: true,
-  },
-];
 
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [roomInfos, setRoomInfos] = useState([]);
   const history = useHistory();
 
-  const RoomInfoButtons = () => dummyRoomInfos.map(({
+  const RoomInfoButtons = () => roomInfos.map(({
     id, name, numOfUsers, isEnterable,
   }) => (
     <RoomInfoButton
@@ -41,6 +30,7 @@ const Lobby = () => {
       numOfUsers={numOfUsers}
       enterable={isEnterable} />
   ));
+
   const openRoomCreateModal = () => setModalOpen(true);
 
   useEffect(() => {
@@ -61,6 +51,10 @@ const Lobby = () => {
       history.push(`/room/${roomId}`);
     };
     socket.onCreateRoom(enterCreatedRoom);
+    socket.onEnterLobby((TEMProomInfos) => {
+      setRoomInfos(TEMProomInfos);
+    });
+    socket.emitEnterLobby();
   }, []);
 
   return (

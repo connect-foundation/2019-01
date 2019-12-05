@@ -22,6 +22,17 @@ class Controller {
   connectUser(socket) {
     const user = new User(socket);
     this._bindEvent(user);
+    // lobby에 자동으로 들어가게 할 필요는 없다.
+    // 아래를 주석하면 isInLobby()가 false
+    // lobby에서 users를 관리를 하는데 로비에 안들어가고
+    // 바로 room으로 들어가게 하면 lobby가 해당 유저를 모른다. 이건 어떻게?
+    // lobby.enterUser(user);
+  }
+
+  _letUserEnterLobby(user) {
+    // 로비로는 바로 들어오는 경우가 없다.
+    // 로그인창 -> 로비 -> 룸
+    // 룸 url -> 룸
     lobby.enterUser(user);
   }
 
@@ -45,9 +56,10 @@ class Controller {
    * @fires Controller#enter_room
    */
   async _letUserEnterRoom(user, roomId) {
-    if (user.isInLobby() === false) return;
+    if (user.isInLobby()) {
+      lobby.leaveUser(user.getId);
+    }
     const room = lobby.getRoom(roomId);
-    lobby.leaveUser(user.getId);
     await this._assignCharacter(user);
     await room.enterUser(user);
   }
@@ -121,6 +133,7 @@ class Controller {
       console.log('a user disconnected');
       this._letUserLeaveRoom(user);
     });
+    user.onEnterLobby(() => this._letUserEnterLobby(user));
   }
 }
 
