@@ -112,6 +112,10 @@ class User {
     this.socket.emit(EVENT.CREATE_ROOM, data);
   }
 
+  emitRoomIsCreated(data) {
+    this.socket.emit(EVENT.ROOM_IS_CREATED, data);
+  }
+
   emitEnterRoom(data) {
     this.socket.emit(EVENT.ENTER_ROOM, data);
   }
