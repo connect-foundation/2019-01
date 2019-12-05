@@ -45,6 +45,10 @@ class SocketContainer {
     this.socket.emit(EVENT.LEAVE_ROOM);
   }
 
+  emitChatMessage(data) {
+    this.socket.emit(EVENT.CHAT_MESSAGE, data);
+  }
+
   onRoomInfos(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
@@ -114,6 +118,12 @@ class SocketContainer {
   onLeaveRoom(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.LEAVE_ROOM, (data) => callback(data));
+    }
+  }
+
+  onChatMessage(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.CHAT_MESSAGE, (data) => callback(data));
     }
   }
 }
