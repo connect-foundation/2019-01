@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import GitHubLoginButton from './GitHubLoginButton';
+import jwt from 'jsonwebtoken';
+import {} from 'dotenv/config';
+import cookie from 'cookie';
+import socket from '../../modules/socket';
 import RoomInfoButton from './RoomInfoButton';
+import GitHubLoginButton from './GitHubLoginButton';
 import RoomCreateModal from './RoomCreateModal';
-import socket from '../../class/socket';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
 
+const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
+const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
 // 아래는 서버 연결 전 더미 데이터임.
 const dummyRoomInfos = [
   {
@@ -22,6 +27,7 @@ const dummyRoomInfos = [
 ];
 
 const Lobby = () => {
+  const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
   const history = useHistory();
 
@@ -38,6 +44,19 @@ const Lobby = () => {
   const openRoomCreateModal = () => setModalOpen(true);
 
   useEffect(() => {
+    const cookies = cookie.parse(document.cookie);
+    let id;
+
+    if (cookies.jwt !== undefined) {
+      const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
+      id = userInfo.id;
+      setUserName(id);
+    }
+
+    if (socket.isConnected() === false) {
+      socket.connect(id !== undefined ? { githubId: id } : {});
+    }
+
     const enterCreatedRoom = (roomId) => {
       history.push(`/room/${roomId}`);
     };
@@ -48,7 +67,7 @@ const Lobby = () => {
     <div>
       <LobbyWrapper>
         <LobbyHeader>
-          <LobbyNickname>hello, guest</LobbyNickname>
+          <LobbyNickname>hello, {userName}</LobbyNickname>
           <GitHubLoginButton />
         </LobbyHeader>
         <LobbyBody>
