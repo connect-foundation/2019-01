@@ -2,15 +2,10 @@ import React from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
-<<<<<<< HEAD
-import Lobby from './component/Lobby';
-import Room from './component/Room';
-import Admin from './component/Admin';
-=======
 import Lobby from './components/Lobby';
 import Room from './components/Room';
+import Admin from './components/Admin';
 import Login from './components/Login';
->>>>>>> 787fa8d03d521ec85b898a6fbd5cada7fe376995
 
 function App() {
   return (
