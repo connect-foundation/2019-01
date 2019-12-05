@@ -11,6 +11,7 @@ const Info = () => {
   const [numOfPlayer, setNumOfPlayer] = useState(0);
   const [numOfViewer, setNumOfViewer] = useState(0);
   const history = useHistory();
+  let lastTimerId = null;
 
   const initPlayer = ({ characterList }) => setNumOfPlayer(characterList.length);
 
@@ -42,7 +43,7 @@ const Info = () => {
   };
 
   const updateUser = ({ characterList }) => {
-    setTimeout(() => {
+    lastTimerId = setTimeout(() => {
       setNumOfPlayer(characterList.length);
       setNumOfViewer(0);
     }, ROOM.WAITING_TIME_MS);
@@ -67,6 +68,10 @@ const Info = () => {
     socket.onStartRound(updateAliveUser);
     socket.onEndGame(updateUser);
     socket.onLeaveRoom(enterLobby);
+
+    return () => {
+      clearTimeout(lastTimerId);
+    };
   }, []);
 
   return (

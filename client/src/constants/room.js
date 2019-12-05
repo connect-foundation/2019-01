@@ -58,6 +58,7 @@ const DASHBOARD = {
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
   SECOND: 1,
   SECOND_MS: 1000,
+  BORDER: '2px solid gray',
 };
 
 const QUIZ = {
@@ -71,6 +72,7 @@ const COUNTER = {
   PADDING: '10px 0',
   RIGHT: 40,
   FONT_SIZE: 28,
+  BORDER: '1px solid black',
 };
 
 const GAME_START_BUTTON = {
@@ -90,6 +92,7 @@ const CHAT_AREA = {
   BUTTON_COLOR: 'rgba(255, 255, 255, 0.5)',
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
+  BORDER: '1px solid lightslategrey',
 };
 
 const ROOM = {

@@ -9,7 +9,7 @@ const ChatAreaWrapper = styled.div`
     margin-top: ${DASHBOARD.HEIGHT + ROOM.MARGIN}px;
     box-sizing: border-box;
     padding: 1%;
-    border: 1px solid lightslategrey;
+    border: ${CHAT_AREA.BORDER};
     border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${CHAT_AREA.BG_COLOR};
     display: flex;
@@ -60,7 +60,7 @@ const buttonStyle = `
     :focus {
         outline: none;
     }
-    border: 1px solid lightslategrey;
+    border: ${CHAT_AREA.BORDER};
     border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${CHAT_AREA.BUTTON_COLOR};
     box-shadow: ${CHAT_AREA.BOX_SHADOW};
@@ -136,7 +136,7 @@ const InputBox = styled.input.attrs({
     padding: 0 3%;
     font-size: ${CHAT_AREA.FONT_SIZE}px;
     box-shadow: ${CHAT_AREA.BOX_SHADOW};
-    border: 1px solid lightslategrey;
+    border: ${CHAT_AREA.BORDER};
     font-family: ${ROOM.FONT_FAMILY};
     &:focus {
         outline: none;
