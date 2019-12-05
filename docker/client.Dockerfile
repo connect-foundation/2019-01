@@ -1,6 +1,11 @@
 # 1. Build react app
 FROM node:10.16.0-alpine as build-react
 
+ARG REACT_APP_LOCAL_CLIENT_ID
+ARG REACT_APP_PRODUCTION_CLIENT_ID
+ARG REACT_APP_JWT_SECRET_KEY
+ARG REACT_APP_JWT_ALGORITHM
+
 WORKDIR /usr/src/client
 
 COPY package.json ./
