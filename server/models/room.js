@@ -151,11 +151,15 @@ class Room {
     this.nicknameList.push(user.getNickname());
 
     this.users.delete(user.getId());
+    const nickname = user.getNickname();
+    const isAlive = this.aliveUsers.has(nickname);
+    const characterList = [{ nickname, isAlive }];
+
     this.users.forEach((_user) => {
-      const characterList = [{ nickname: user.getNickname() }];
       _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
     });
-    this.aliveUsers.delete(user.getNickname());
+    this.aliveUsers.delete(nickname);
+    user.emitLeaveRoom();
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -214,9 +218,8 @@ class Room {
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
-  chat(user, message) {
-    console.log(user.getId(), message);
-    // TODO: 모든 유저에게 채팅 로그 (닉네임 + 메시지) emit
+  chat(nickname, message) {
+    this.users.forEach((user) => user.emitChatMessage({ nickname, message }));
   }
 
   /**
