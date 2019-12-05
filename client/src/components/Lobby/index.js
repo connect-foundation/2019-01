@@ -55,6 +55,7 @@ const Lobby = () => {
 
     if (socket.isConnected() === false) {
       socket.connect(id !== undefined ? { githubId: id } : {});
+      socket.onDisconnect(() => history.push('/'));
     }
 
     const enterCreatedRoom = (roomId) => {
