@@ -44,7 +44,7 @@ jobs:
               - cd ./client
               - echo "$NCP_SECRET_KEY" | docker login -u "$NCP_ACCESS_KEY_ID" dev-2019-01.kr.ncr.ntruss.com --password-stdin
           script:
-              - docker build -t dev-2019-01.kr.ncr.ntruss.com/front-end . -f ../docker/client.Dockerfile
+              - docker build -t dev-2019-01.kr.ncr.ntruss.com/front-end . -f ../docker/client.Dockerfile --build-arg REACT_APP_LOCAL_CLIENT_ID REACT_APP_PRODUCTION_CLIENT_ID REACT_APP_JWT_SECRET_KEY REACT_APP_JWT_ALGORITHM
           after_success:
               - docker push dev-2019-01.kr.ncr.ntruss.com/front-end
 
