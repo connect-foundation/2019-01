@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import socketio from 'socket.io-client';
-import { useHistory } from 'react-router-dom';
 import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
 
@@ -27,114 +26,168 @@ class SocketContainer {
   }
 
   disconnect() {
-    if (this.isConnected) this.socket.disconnect();
+    if (this.isConnected()) this.socket.disconnect();
   }
 
   emitCreateRoom(roomName) {
-    if (this.isConnected) this.socket.emit(EVENT.CREATE_ROOM, roomName);
+    if (this.isConnected()) this.socket.emit(EVENT.CREATE_ROOM, roomName);
   }
 
   emitStartGame() {
-    if (this.isConnected) this.socket.emit(EVENT.START_GAME);
+    if (this.isConnected()) this.socket.emit(EVENT.START_GAME);
   }
 
   emitMove(direction) {
-    if (this.isConnected) this.socket.emit(EVENT.MOVE, direction);
+    if (this.isConnected()) this.socket.emit(EVENT.MOVE, direction);
   }
 
   emitEnterRoom(data) {
-    if (this.isConnected) this.socket.emit(EVENT.ENTER_ROOM, data);
+    if (this.isConnected()) this.socket.emit(EVENT.ENTER_ROOM, data);
   }
 
   emitLeaveRoom() {
-    if (this.isConnected) this.socket.emit(EVENT.LEAVE_ROOM);
+    if (this.isConnected()) this.socket.emit(EVENT.LEAVE_ROOM);
   }
 
   emitChatMessage(data) {
-    if (this.isConnected) this.socket.emit(EVENT.CHAT_MESSAGE, data);
+    if (this.isConnected()) this.socket.emit(EVENT.CHAT_MESSAGE, data);
   }
 
   onRoomInfos(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ROOM_INFOS, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onCreateRoom(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.CREATE_ROOM, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.CREATE_ROOM, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onEnterRoom(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ENTER_ROOM, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onEnterNewUser(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.ENTER_NEW_USER, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ENTER_NEW_USER, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onMove(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.MOVE, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.MOVE, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onStartRound(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.START_ROUND, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.START_ROUND, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onEndRound(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.END_ROUND, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.END_ROUND, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onEndGame(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.END_GAME, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.END_GAME, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onQuizList(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.FETCH_QUIZLIST, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.FETCH_QUIZLIST, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onLeaveUser(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.LEAVE_USER, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.LEAVE_USER, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onStartGame(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.START_GAME, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.START_GAME, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onLeaveRoom(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.LEAVE_ROOM, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.LEAVE_ROOM, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onChatMessage(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.CHAT_MESSAGE, (data) => callback(data));
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.CHAT_MESSAGE, (data) => {
+        if (this.isConnected()) callback(data);
+      });
     }
   }
 
   onDisconnect(callback) {
-    if (isFunction(callback) && this.isConnected) {
-      this.socket.on(EVENT.DISCONNECT, () => callback());
+    if (this.socket === undefined) return;
+
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.DISCONNECT, (data) => callback(data));
     }
   }
 }
