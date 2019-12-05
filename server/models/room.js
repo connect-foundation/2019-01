@@ -159,6 +159,7 @@ class Room {
       _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
     });
     this.aliveUsers.delete(nickname);
+    user.emitLeaveRoom();
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
