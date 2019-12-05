@@ -32,10 +32,15 @@ class Lobby {
     return roomInfos;
   }
 
+  /**
+   *
+   * @param {User} user
+   */
   enterUser(user) {
+    console.log('user entered lobby');
     this.users.set(user.getId(), user);
-    user.onEnterLobby();
-    user.emitRoomInfos(this._makeRoomInfos());
+    // user.onEnterLobby();
+    user.emitEnterLobby(this._makeRoomInfos());
   }
 
   leaveUser(userId) {

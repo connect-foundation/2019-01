@@ -51,8 +51,16 @@ class User {
     return this.roomId;
   }
 
-  onEnterLobby() {
-    this.roomId = null;
+  /**
+   *
+   * @param {Function} callback
+   */
+  onEnterLobby(callback) {
+    if (isFunction(callback) === false) return;
+    this.socket.on(EVENT.ENTER_LOBBY, () => {
+      callback();
+      this.roomId = null;
+    });
   }
 
   onEnterRoom(callback) {
@@ -96,8 +104,8 @@ class User {
     this.socket.on(EVENT.DISCONNECT, () => callback());
   }
 
-  emitRoomInfos(data) {
-    this.socket.emit(EVENT.ROOM_INFOS, data);
+  emitEnterLobby(data) {
+    this.socket.emit(EVENT.ENTER_LOBBY, data);
   }
 
   emitCreateRoom(data) {

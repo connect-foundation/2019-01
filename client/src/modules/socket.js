@@ -37,13 +37,23 @@ class SocketContainer {
     this.socket.emit(EVENT.MOVE, direction);
   }
 
+  emitEnterLobby() {
+    this.socket.emit(EVENT.ENTER_LOBBY);
+  }
+
   emitEnterRoom(data) {
     this.socket.emit(EVENT.ENTER_ROOM, data);
   }
 
-  onRoomInfos(callback) {
+  // onRoomInfos(callback) {
+  //   if (isFunction(callback)) {
+  //     this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
+  //   }
+  // }
+
+  onEnterLobby(callback) {
     if (isFunction(callback)) {
-      this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
+      this.socket.on(EVENT.ENTER_LOBBY, (data) => callback(data));
     }
   }
 
