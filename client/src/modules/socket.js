@@ -63,6 +63,12 @@ class SocketContainer {
     }
   }
 
+  onRoomIsCreated(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ROOM_IS_CREATED, (data) => callback(data));
+    }
+  }
+
   onEnterRoom(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ENTER_ROOM, (data) => callback(data));

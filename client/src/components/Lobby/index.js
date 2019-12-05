@@ -17,10 +17,11 @@ const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
-  const [roomInfos, setRoomInfos] = useState([]);
+  const [roomInfoButtons, setRoomInfoButtons] = useState([]);
   const history = useHistory();
 
-  const RoomInfoButtons = () => roomInfos.map(({
+
+  const makeRoomInfoButton = ({
     id, name, numOfUsers, isEnterable,
   }) => (
     <RoomInfoButton
@@ -29,7 +30,7 @@ const Lobby = () => {
       name={name}
       numOfUsers={numOfUsers}
       enterable={isEnterable} />
-  ));
+  );
 
   const openRoomCreateModal = () => setModalOpen(true);
 
@@ -50,9 +51,17 @@ const Lobby = () => {
     const enterCreatedRoom = (roomId) => {
       history.push(`/room/${roomId}`);
     };
+
     socket.onCreateRoom(enterCreatedRoom);
-    socket.onEnterLobby((TEMProomInfos) => {
-      setRoomInfos(TEMProomInfos);
+
+    socket.onRoomIsCreated((createdRoomInfo) => {
+      setRoomInfoButtons(
+        (currentRoomButtons) => [...currentRoomButtons, makeRoomInfoButton(createdRoomInfo)],
+      );
+    });
+
+    socket.onEnterLobby((currentRoomInfos) => {
+      setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
     });
     socket.emitEnterLobby();
   }, []);
@@ -66,7 +75,7 @@ const Lobby = () => {
         </LobbyHeader>
         <LobbyBody>
           <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
-          {RoomInfoButtons()}
+          {roomInfoButtons}
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
