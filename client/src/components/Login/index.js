@@ -2,7 +2,8 @@ import React from 'react';
 import {} from 'dotenv/config';
 import { useHistory } from 'react-router-dom';
 import {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
+  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon,
+  LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
 } from './style';
 import URL from '../../constants/url';
 import LOGIN from '../../constants/login';
