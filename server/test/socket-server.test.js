@@ -55,4 +55,9 @@ describe('socket.io test', () => {
     });
     socket.emit('move', 0);
   });
+
+  test('[EMIT] \'leave_room\' event test', (done) => {
+    socket.once('leave_room', () => done());
+    socket.emit('leave_room', 1);
+  });
 });
