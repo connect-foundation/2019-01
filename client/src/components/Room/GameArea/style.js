@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {
-  DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON,
+  DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON, ROOM,
 } from '../../../constants/room';
 
 const GameAreaWrapper = styled.div`
@@ -18,7 +18,7 @@ const DashBoardWrapper = styled.div`
     width: ${DASHBOARD.WIDTH}px;
     height: ${DASHBOARD.HEIGHT}px;
     border: 2px solid gray;
-    border-radius: 0.8rem;
+    border-radius: ${ROOM.BORDER_RADIUS_BIG}px;
     box-sizing: border-box;
     background-size: 100% 100%;
 `;
@@ -41,19 +41,26 @@ const CounterWrapper = styled.div`
     transform: translateY(-50%);
     text-align: center;
     border: 1px solid black;
-    border-radius: 0.8rem;
+    border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: white;
     font-size: ${COUNTER.FONT_SIZE}px;
 `;
 
 const GameStartButton = styled.div`
+    :active {
+        box-shadow: ${GAME_START_BUTTON.BOX_SHADOW_CLICKED};
+    }
+    :hover {
+        background-image: ${ROOM.BUTTON_HOVER_EFFECT};
+    }
+
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: ${GAME_START_BUTTON.PADDING};
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
-    border-radius: 0.8rem;
+    border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${GAME_START_BUTTON.BACKGROUND_COLOR};
     border: 0;
     box-shadow: ${GAME_START_BUTTON.BOX_SHADOW};
