@@ -13,7 +13,7 @@ const EVENT = {
   END_GAME: 'end_game',
   MOVE: 'move',
   CHAT_MESSAGE: 'chat_message',
-  DISCONNECT: 'disconnecting',
+  DISCONNECT: 'disconnect',
   FETCH_QUIZLIST: 'get_quiz_list',
 };
 
