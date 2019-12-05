@@ -41,6 +41,10 @@ class SocketContainer {
     this.socket.emit(EVENT.ENTER_ROOM, data);
   }
 
+  emitLeaveRoom() {
+    this.socket.emit(EVENT.LEAVE_ROOM);
+  }
+
   onRoomInfos(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
@@ -104,6 +108,12 @@ class SocketContainer {
   onStartGame(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.START_GAME, (data) => callback(data));
+    }
+  }
+
+  onLeaveRoom(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.LEAVE_ROOM, (data) => callback(data));
     }
   }
 }

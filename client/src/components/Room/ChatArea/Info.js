@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ROOM, CHAT_AREA } from '../../../constants/room';
 import {
   ChatHeader, RoomInfo, ExitButton, PlayerInfo, Emoji,
@@ -9,6 +10,7 @@ const Info = () => {
   const [isGameStarted, setGameStarted] = useState(false);
   const [numOfPlayer, setNumOfPlayer] = useState(0);
   const [numOfViewer, setNumOfViewer] = useState(0);
+  const history = useHistory();
 
   const initPlayer = ({ characterList }) => setNumOfPlayer(characterList.length);
 
@@ -46,13 +48,25 @@ const Info = () => {
     }, ROOM.WAITING_TIME_MS);
   };
 
+  const inactiveExitButton = () => setGameStarted(true);
+  const activeExitButton = () => setTimeout(() => setGameStarted(false), ROOM.WAITING_TIME_MS);
+  const exitRoom = () => {
+    if (isGameStarted) return;
+    socket.emitLeaveRoom();
+  };
+
+  const enterLobby = () => history.push('/lobby');
+
   useEffect(() => {
+    socket.onStartGame(inactiveExitButton);
+    socket.onEndGame(activeExitButton);
     socket.onEnterRoom(initPlayer);
     socket.onEnterNewUser(addPlayer);
     socket.onLeaveUser(subUser);
     socket.onEndRound(updateDropUser);
     socket.onStartRound(updateAliveUser);
     socket.onEndGame(updateUser);
+    socket.onLeaveRoom(enterLobby);
   }, []);
 
   return (
@@ -67,7 +81,7 @@ const Info = () => {
           <div>{numOfViewer}</div>
         </PlayerInfo>
       </RoomInfo>
-      <ExitButton isGameStarted={isGameStarted}>exit</ExitButton>
+      <ExitButton onClick={exitRoom} isGameStarted={isGameStarted}>exit</ExitButton>
     </ChatHeader>
   );
 };
