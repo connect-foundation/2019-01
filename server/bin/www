@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ *
+ * app.js = babel + webpack으로 번들링된 파일
+ * 참고: https://stackoverflow.com/questions/40294870/module-exports-vs-export-default-in-node-js-and-es6
+ */
+const debug = require('debug')('server:server');
+const http = require('http');
+
+const { app, socketIo } = require('./app').default;
+const { normalizePort, onError, onListening } = require('./util');
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+const server = http.createServer(app);
+
+socketIo.attach(server, { transports: ['websocket'], reconnection: false });
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+server.on('error', (error) => onError(error, port));
+server.on('listening', () => onListening(server, debug));

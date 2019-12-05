@@ -1,0 +1,44 @@
+version: "3.5"
+services:
+    db:
+        image: dev-2019-01.kr.ncr.ntruss.com/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_secret
+            MYSQL_USER: drstrange
+            MYSQL_PASSWORD_FILE: /run/secrets/mysql_secret
+            MYSQL_DATABASE: BooleanAvengers
+        secrets:
+            - mysql_secret
+        ports:
+            - "3306:3306"
+        networks:
+            - backend
+
+    server:
+        restart: always
+        image: dev-2019-01.kr.ncr.ntruss.com/back-end
+        depends_on:
+            - db
+        environment:
+            DB_HOST_IP: db
+            WAIT_HOSTS: db:3306
+        networks:
+            - backend
+
+    nginx_client:
+        restart: always
+        image: dev-2019-01.kr.ncr.ntruss.com/front-end
+        ports:
+            - "80:80"
+        depends_on:
+            - server
+        networks:
+            - backend
+
+networks:
+    backend:
+        driver: bridge
+
+secrets:
+    mysql_secret:
+        file: secret

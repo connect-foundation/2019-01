@@ -1,0 +1,3 @@
+node_modules
+bin/app.js
+.env

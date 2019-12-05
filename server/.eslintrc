@@ -1,0 +1,11 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jest": true
+    },
+    "rules": {
+        "class-methods-use-this": "off"
+    }
+}
