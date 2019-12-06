@@ -170,7 +170,7 @@ class Room {
   //  ㄴ 다음으로 변경: 시작 값으로 셋팅하고, emit: start_round 호출
   async startGame(user) {
     if (this._isOwner(user) && this.isGameStarted === false) {
-      if (this.aliveUsers.size === 1) return;
+      if (this.aliveUsers.size === 1) return false;
 
       this.isGameStarted = true;
       this.currentRound = 0;
@@ -178,7 +178,9 @@ class Room {
       this.users.forEach((_user) => _user.emitStartGame());
 
       setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
+      return true;
     }
+    return false;
   }
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
