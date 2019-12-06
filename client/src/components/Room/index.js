@@ -10,15 +10,6 @@ const Room = () => {
   const { roomId } = useParams();
   const history = useHistory();
 
-  // const listenBackButton = () => {
-  //   history.listen((location) => {
-  //     if (location.action === 'POP') {
-  //       console.log('www');
-  //       socket.emitLeaveRoom();
-  //     }
-  //   });
-  // };
-
   useEffect(() => {
     if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
