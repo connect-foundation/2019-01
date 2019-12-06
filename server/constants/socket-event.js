@@ -15,6 +15,7 @@ const EVENT = {
   MOVE: 'move',
   CHAT_MESSAGE: 'chat_message',
   DISCONNECT: 'disconnecting',
+  UPDATE_ROOM_INFO: 'update_room_info',
 };
 
 export default EVENT;
