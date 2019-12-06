@@ -45,11 +45,9 @@ class SocketContainer {
     this.socket.emit(EVENT.ENTER_ROOM, data);
   }
 
-  // onRoomInfos(callback) {
-  //   if (isFunction(callback)) {
-  //     this.socket.on(EVENT.ROOM_INFOS, (data) => callback(data));
-  //   }
-  // }
+  emitEndGame(data) {
+    this.socket.emit(EVENT.END_GAME, data);
+  }
 
   onEnterLobby(callback) {
     if (isFunction(callback)) {
@@ -66,6 +64,12 @@ class SocketContainer {
   onRoomIsCreated(callback) {
     if (isFunction(callback)) {
       this.socket.on(EVENT.ROOM_IS_CREATED, (data) => callback(data));
+    }
+  }
+
+  onUpdateRoomInfo(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.UPDATE_ROOM_INFO, (data) => callback(data));
     }
   }
 

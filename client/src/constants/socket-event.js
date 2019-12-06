@@ -16,6 +16,7 @@ const EVENT = {
   CHAT_MESSAGE: 'chat_message',
   DISCONNECT: 'disconnecting',
   FETCH_QUIZLIST: 'get_quiz_list',
+  UPDATE_ROOM_INFO: 'update_room_info',
 };
 
 export default EVENT;

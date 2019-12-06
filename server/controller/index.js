@@ -4,15 +4,13 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
+import LOBBY from '../constants/lobby';
 /**
  * Controller class
  * @property {array} rooms
  */
 class Controller {
   constructor() {
-    // 임시 코드
-    this.testRoom = new Room(1, 'test room');
-    lobby.rooms.set(this.testRoom.getId(), this.testRoom);
   }
 
   /**
@@ -22,17 +20,9 @@ class Controller {
   connectUser(socket) {
     const user = new User(socket);
     this._bindEvent(user);
-    // lobby에 자동으로 들어가게 할 필요는 없다.
-    // 아래를 주석하면 isInLobby()가 false
-    // lobby에서 users를 관리를 하는데 로비에 안들어가고
-    // 바로 room으로 들어가게 하면 lobby가 해당 유저를 모른다. 이건 어떻게?
-    // lobby.enterUser(user);
   }
 
   _letUserEnterLobby(user) {
-    // 로비로는 바로 들어오는 경우가 없다.
-    // 로그인창 -> 로비 -> 룸
-    // 룸 url -> 룸
     lobby.enterUser(user);
   }
 
@@ -57,11 +47,12 @@ class Controller {
    */
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby()) {
-      lobby.leaveUser(user.getId);
+      lobby.leaveUser(user.getId());
     }
     const room = lobby.getRoom(roomId);
     await this._assignCharacter(user);
     await room.enterUser(user);
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_ENTERED);
   }
 
   /**
@@ -81,7 +72,14 @@ class Controller {
   _letUserLeaveRoom(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
+    const roomId = room.getId();
     room.leaveUser(user);
+    if (room.getNumOfUsers() === 0) {
+      lobby.updateRoomInfo(roomId, LOBBY.ACTION.NO_USERS);
+      lobby.deleteRoom(roomId);
+      return;
+    }
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_LEAVED);
   }
 
   /**
@@ -91,7 +89,9 @@ class Controller {
   async _letUserStartGame(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
+    const roomId = room.getId();
     await room.startGame(user);
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
   }
 
   /**
@@ -116,6 +116,14 @@ class Controller {
     room.chat(user, message);
   }
 
+  _letUsersKnowGameEnded(user, roomId) {
+    const room = lobby.getRoom(roomId);
+
+    if (room !== undefined && room.isStarted() === false) {
+      lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
+    }
+  }
+
   /**
    *
    * @param {User} user
@@ -126,6 +134,7 @@ class Controller {
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));
+    user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));

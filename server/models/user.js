@@ -89,6 +89,12 @@ class User {
     this.socket.on(EVENT.START_GAME, () => callback());
   }
 
+  onEndGame(callback) {
+    if (isFunction(callback) === false) return;
+    this.socket.on(EVENT.END_GAME, (roomId) => callback(roomId));
+  }
+
+
   onMove(callback) {
     if (isFunction(callback) === false) return;
     this.socket.on(EVENT.MOVE, (direction) => callback(direction));
@@ -114,6 +120,10 @@ class User {
 
   emitRoomIsCreated(data) {
     this.socket.emit(EVENT.ROOM_IS_CREATED, data);
+  }
+
+  emitUpdateRoomInfo(data) {
+    this.socket.emit(EVENT.UPDATE_ROOM_INFO, data);
   }
 
   emitEnterRoom(data) {
