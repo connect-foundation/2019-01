@@ -8,7 +8,7 @@ const GitHubLoginButton = () => {
     <LoginButtonWrapper onClick={() => setLogin(!isLogin)}>
       {
         isLogin
-          ? <div>logout</div>
+          ? <div>구현중</div>
           : (
             <LoginTextWrapper>
               <GitHubIcon viewBox="0 -0.5 11 11">

@@ -41,6 +41,10 @@ class SocketContainer {
     if (this.isConnected()) this.socket.emit(EVENT.MOVE, direction);
   }
 
+  emitEnterLobby() {
+    this.socket.emit(EVENT.ENTER_LOBBY);
+  }
+
   emitEnterRoom(data) {
     if (this.isConnected()) this.socket.emit(EVENT.ENTER_ROOM, data);
   }
@@ -53,13 +57,13 @@ class SocketContainer {
     if (this.isConnected()) this.socket.emit(EVENT.CHAT_MESSAGE, data);
   }
 
-  onRoomInfos(callback) {
-    if (this.socket === undefined) return;
+  emitEndGame(data) {
+    this.socket.emit(EVENT.END_GAME, data);
+  }
 
+  onEnterLobby(callback) {
     if (isFunction(callback)) {
-      this.socket.on(EVENT.ROOM_INFOS, (data) => {
-        if (this.isConnected()) callback(data);
-      });
+      this.socket.on(EVENT.ENTER_LOBBY, (data) => callback(data));
     }
   }
 
@@ -70,6 +74,18 @@ class SocketContainer {
       this.socket.on(EVENT.CREATE_ROOM, (data) => {
         if (this.isConnected()) callback(data);
       });
+    }
+  }
+
+  onRoomIsCreated(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.ROOM_IS_CREATED, (data) => callback(data));
+    }
+  }
+
+  onUpdateRoomInfo(callback) {
+    if (isFunction(callback)) {
+      this.socket.on(EVENT.UPDATE_ROOM_INFO, (data) => callback(data));
     }
   }
 

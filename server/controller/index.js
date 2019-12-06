@@ -4,17 +4,12 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
+import LOBBY from '../constants/lobby';
 /**
  * Controller class
  * @property {array} rooms
  */
 class Controller {
-  constructor() {
-    // 임시 코드
-    this.testRoom = new Room(1, 'test room');
-    lobby.rooms.set(this.testRoom.getId(), this.testRoom);
-  }
-
   /**
    *
    * @param {object} socket
@@ -22,6 +17,9 @@ class Controller {
   connectUser(socket) {
     const user = new User(socket);
     this._bindEvent(user);
+  }
+
+  _letUserEnterLobby(user) {
     lobby.enterUser(user);
   }
 
@@ -47,9 +45,10 @@ class Controller {
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
-    lobby.leaveUser(user.getId);
     await this._assignCharacter(user);
+    lobby.leaveUser(user.getId());
     await room.enterUser(user);
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_ENTERED);
   }
 
   /**
@@ -69,7 +68,14 @@ class Controller {
   _letUserLeaveRoom(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
+    const roomId = room.getId();
     room.leaveUser(user);
+    if (room.getNumOfUsers() === 0) {
+      lobby.updateRoomInfo(roomId, LOBBY.ACTION.NO_USERS);
+      lobby.deleteRoom(roomId);
+      return;
+    }
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_LEAVED);
   }
 
   /**
@@ -79,7 +85,9 @@ class Controller {
   async _letUserStartGame(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
+    const roomId = room.getId();
     await room.startGame(user);
+    lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
   }
 
   /**
@@ -104,6 +112,14 @@ class Controller {
     room.chat(user.getNickname(), message);
   }
 
+  _letUsersKnowGameEnded(user, roomId) {
+    const room = lobby.getRoom(roomId);
+
+    if (room !== undefined && room.isStarted() === false) {
+      lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
+    }
+  }
+
   /**
    *
    * @param {User} user
@@ -114,6 +130,7 @@ class Controller {
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));
+    user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
@@ -121,6 +138,7 @@ class Controller {
       console.log('a user disconnected');
       this._letUserLeaveRoom(user);
     });
+    user.onEnterLobby(() => this._letUserEnterLobby(user));
   }
 }
 
