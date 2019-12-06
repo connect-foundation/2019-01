@@ -18,9 +18,9 @@
 > #### 개발자를 위한 OX 퀴즈 게임 서비스
 > 개발자가 풀 수 있는 ox 퀴즈 토너먼트를 여러 유저들이 동시에 참여할 수 있는 웹 시리어스 게임. 귀여운 어벤져스 캐릭터 컨셉으로 흥미를 유발하는 것이 장점이다.
 
-### 🏠 [Homepage](http://45.119.146.251)
+### 🏠 [Homepage](https://github.com/connect-foundation/2019-01/)
 
-### ✨ [Demo](https://github.com/connect-foundation/2019-01)
+### 🕹️ [Demo](http://45.119.146.251)
 
 ### 📖 [Documentation](https://github.com/connect-foundation/2019-01/wiki)
 
@@ -50,7 +50,7 @@ npm test
 
 ## Author
 
-👤 **BoostCamp 2019-01**
+👤 **boostcamp 2019-01**
 > 👸 [김희선](https://github.com/bellaah)<br />
 > 🌟 [함형규](https://github.com/gyustar)<br />
 > 🤐 [서보현](https://github.com/ktseo41)👨‍⚕️<br />
