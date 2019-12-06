@@ -1,7 +1,11 @@
 export default {
-  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/background-main.png',
+  BACKGROUND: {
+    URL: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/background-main.png',
+    MIN_W: 1000,
+    MIN_H: 500,
+  },
   WRAPPER: {
-    WIDTH: 800,
+    WIDTH: 700,
     HEIGHT: 200,
     PADDING: 20,
     FONT_SIZE: 30,

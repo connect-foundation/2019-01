@@ -49,6 +49,7 @@ const KEYCODE = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
+  ENTER: 13,
 };
 
 const DASHBOARD = {
@@ -57,6 +58,7 @@ const DASHBOARD = {
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
   SECOND: 1,
   SECOND_MS: 1000,
+  BORDER: '2px solid gray',
 };
 
 const QUIZ = {
@@ -70,6 +72,7 @@ const COUNTER = {
   PADDING: '10px 0',
   RIGHT: 40,
   FONT_SIZE: 28,
+  BORDER: '1px solid black',
 };
 
 const GAME_START_BUTTON = {
@@ -77,11 +80,19 @@ const GAME_START_BUTTON = {
   FONT_SIZE: 28,
   BACKGROUND_COLOR: 'gold',
   BOX_SHADOW: '0px 4px 10px 0px',
+  BOX_SHADOW_CLICKED: '0px 2px 5px 0px',
 };
 
 const CHAT_AREA = {
-  BG_COLOR: 'rgba(255, 255, 255, 0.1)',
+  BG_COLOR: 'rgba(255, 255, 255, 0.2)',
   WIDTH: 280,
+  FONT_SIZE: 15,
+  MAX_MESSAGE_LENGTH: 50,
+  BOX_SHADOW: '1px 1px 0px dimgrey',
+  BUTTON_COLOR: 'rgba(255, 255, 255, 0.5)',
+  EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
+  EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
+  BORDER: '1px solid lightslategrey',
 };
 
 const ROOM = {
@@ -89,6 +100,10 @@ const ROOM = {
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
   getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
   WAITING_TIME_MS: 3000,
+  BORDER_RADIUS_SMALL: 8,
+  BORDER_RADIUS_BIG: 12,
+  FONT_FAMILY: 'DungGeunMo',
+  BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
 };
 
 export {

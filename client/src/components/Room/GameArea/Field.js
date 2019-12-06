@@ -100,6 +100,7 @@ const Field = () => {
 
   useEffect(() => {
     const keydownEventHandler = (event) => {
+      if (event.target.tagName === 'INPUT') return;
       if ((myCharacter instanceof Character) === false) return;
       if (myCharacter.isMoving()) return;
       if (myCharacter.isAlive() === false) return;

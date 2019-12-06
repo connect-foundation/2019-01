@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
@@ -8,11 +8,10 @@ import { ROOM } from '../../constants/room';
 
 const Room = () => {
   const { roomId } = useParams();
-  if (socket.isConnected() === false) {
-    socket.connect({});
-  }
+  const history = useHistory();
 
   useEffect(() => {
+    if (socket.isConnected() === false) history.push('/');
     socket.emitEnterRoom(roomId);
     socket.onEndGame(({ isOwner }) => {
       if (isOwner) {
