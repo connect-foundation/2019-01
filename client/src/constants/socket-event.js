@@ -2,6 +2,7 @@ const EVENT = {
   ENTER_LOBBY: 'enter_lobby',
   ROOM_INFOS: 'room_infos',
   CREATE_ROOM: 'create_room',
+  ROOM_IS_CREATED: 'room_is_created',
   ENTER_ROOM: 'enter_room',
   ENTER_NEW_USER: 'enter_new_user',
   LEAVE_ROOM: 'leave_room',
@@ -15,6 +16,7 @@ const EVENT = {
   CHAT_MESSAGE: 'chat_message',
   DISCONNECT: 'disconnect',
   FETCH_QUIZLIST: 'get_quiz_list',
+  UPDATE_ROOM_INFO: 'update_room_info',
 };
 
 export default EVENT;
