@@ -58,13 +58,10 @@ const Lobby = () => {
 
     socket.onCreateRoom(enterCreatedRoom);
 
+    /**
+     * - socket on 이벤트에 익명 함수들은 빠르게 따로 빼주려고 합니다!
+     */
     socket.onRoomIsCreated((createdRoomInfo) => {
-      const {
-        id, name, numOfUsers, isEnterable,
-      } = createdRoomInfo;
-      roomInfos.set(id, {
-        id, name, numOfUsers, isEnterable,
-      });
       roomInfos.set(createdRoomInfo.id, createdRoomInfo);
       setRoomInfoButtons(
         (currentRoomButtons) => [...currentRoomButtons, makeRoomInfoButton(createdRoomInfo)],
@@ -72,14 +69,7 @@ const Lobby = () => {
     });
 
     socket.onEnterLobby((currentRoomInfos) => {
-      currentRoomInfos.forEach(({
-        id, name, numOfUsers, isEnterable,
-      }) => {
-        roomInfos.set(id, {
-          id, name, numOfUsers, isEnterable,
-        });
-      });
-      currentRoomInfos.forEach((roomInfo) => {
+        currentRoomInfos.forEach((roomInfo) => {
         roomInfos.set(roomInfo.id, roomInfo);
       });
       setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
@@ -87,6 +77,14 @@ const Lobby = () => {
 
     socket.emitEnterLobby();
 
+    /**
+     * - switch문을 사용해줬는데 반복되는 부분들은 많고 수정할 부분은 적은 것 같아서 개선해보려고 합니다.
+     *   - 딱히 방법이 떠오르지 않는데 case에 따라 numOfUsers와 isEnterable가 가져야할 값을 정하고 switch문을 탈출했을 때
+     *     한번에 적용시키는 방법정도가 떠오르는 중인데, NO_USERS 케이스 때문에 바로 될 것 같지 않습니다. 더 생각해볼텐데
+     *     좋은 방법이 있을까요?
+     * - 마지막 setRoomInfoButtons에서 모든 Map을 돌면서 새로 컴포넌트 배열을 만들어서 반환하는 것이 아쉽습니다.
+     *   변경된 내용만 찾아서 바꾸도록 하는 함수를 만드는 것이 좋을까요?
+     */
     socket.onUpdateRoomInfo(({ roomId, action }) => {
       const {
         id, name, numOfUsers, isEnterable,
