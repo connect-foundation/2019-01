@@ -46,7 +46,7 @@ const Lobby = () => {
   };
 
   const enterCreatedRoom = (roomId) => {
-    history.push(`/room/${roomId}`);
+    history.replace(`/room/${roomId}`);
   };
 
   const updateCreatedRoom = (createdRoomInfo) => {
@@ -107,7 +107,7 @@ const Lobby = () => {
     if (socket.isConnected() === false) {
       setUserName(githubId === undefined ? 'guest' : githubId);
       socket.connect(githubId === undefined ? {} : { githubId });
-      socket.onDisconnect(() => history.push('/'));
+      socket.onDisconnect(() => history.replace('/'));
     }
 
     socket.onEnterLobby(updateCurrentRoomInfos);

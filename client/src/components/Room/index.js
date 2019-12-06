@@ -10,14 +10,26 @@ const Room = () => {
   const { roomId } = useParams();
   const history = useHistory();
 
+  // const listenBackButton = () => {
+  //   history.listen((location) => {
+  //     if (location.action === 'POP') {
+  //       console.log('www');
+  //       socket.emitLeaveRoom();
+  //     }
+  //   });
+  // };
+
   useEffect(() => {
-    if (socket.isConnected() === false) history.push('/');
+    if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
     socket.onEndGame(({ isOwner }) => {
       if (isOwner) {
         setTimeout(() => socket.emitEndGame(roomId), ROOM.WAITING_TIME_MS);
       }
     });
+    return () => {
+      socket.emitLeaveRoom();
+    };
   }, []);
 
   return (
