@@ -10,9 +10,6 @@ import LOBBY from '../constants/lobby';
  * @property {array} rooms
  */
 class Controller {
-  constructor() {
-  }
-
   /**
    *
    * @param {object} socket
@@ -46,11 +43,10 @@ class Controller {
    * @fires Controller#enter_room
    */
   async _letUserEnterRoom(user, roomId) {
-    if (user.isInLobby()) {
-      lobby.leaveUser(user.getId());
-    }
+    if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
     await this._assignCharacter(user);
+    lobby.leaveUser(user.getId());
     await room.enterUser(user);
     lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_ENTERED);
   }
