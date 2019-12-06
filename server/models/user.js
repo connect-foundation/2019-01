@@ -165,6 +165,10 @@ class User {
   emitStartGame() {
     this.socket.emit(EVENT.START_GAME);
   }
+
+  emitLeaveRoom() {
+    this.socket.emit(EVENT.LEAVE_ROOM);
+  }
 }
 
 export default User;

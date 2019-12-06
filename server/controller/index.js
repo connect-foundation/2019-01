@@ -113,7 +113,7 @@ class Controller {
   _letUserChat(user, message) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
-    room.chat(user, message);
+    room.chat(user.getNickname(), message);
   }
 
   _letUsersKnowGameEnded(user, roomId) {

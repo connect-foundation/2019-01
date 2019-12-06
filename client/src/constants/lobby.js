@@ -76,6 +76,7 @@ const CREATE_ROOM_BUTTON = {
   BORDER: '2px dashed lightslategrey',
   BORDER_RADIUS: 8,
   BACKGROUND_COLOR: 'rgba(255,255,255,0.2)',
+  CLICKED_EFFECT: '0 2px 10px 0 rgba(150, 150, 150, 0.4) inset',
 };
 
 const BUTTON_EFFECT = {

@@ -48,7 +48,7 @@ const ModalInputWrapper = styled.div`
     box-shadow: ${INPUT.WRAPPER.BOX_SHADOW};
 `;
 
-const ModalInput = styled.input`
+const ModalInput = styled.input.attrs({ autoFocus: true })`
     flex: 1;
     border: 0;
     outline: none;

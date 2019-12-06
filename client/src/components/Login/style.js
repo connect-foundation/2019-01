@@ -1,17 +1,28 @@
 import styled from 'styled-components';
 import LOGIN from '../../constants/login';
+import { ROOM } from '../../constants/room';
 
 const LoginPageWrapper = styled.div`
     position: absolute;
     width: 100vw;
     height: 100vh;
+    min-width: ${LOGIN.BACKGROUND.MIN_W}px;
+    min-height: ${LOGIN.BACKGROUND.MIN_H}px;
+`;
+
+const LoginPageBackground = styled.img`
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 `;
 
 const LoginButtonsWrapper = styled.div`
     position: absolute;
     width: ${LOGIN.WRAPPER.WIDTH}px;
-    height: ${LOGIN.WRAPPER.HEIGTH}px;
-    top: 70%;
+    height: ${LOGIN.WRAPPER.HEIGHT}px;
+    top: 75%;
     left: 50%;
     -webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
@@ -22,6 +33,13 @@ const LoginButtonsWrapper = styled.div`
 `;
 
 const LoginAnonyButton = styled.div`
+    :active {
+        box-shadow: none;
+    }
+    :hover {
+        background-image: ${ROOM.BUTTON_HOVER_EFFECT};
+    }
+
     text-align: center;
     padding-top: ${LOGIN.ANONY.PADDING_TOP}px;
     margin-bottom: ${LOGIN.ANONY.MARGIN_BOTTOM}px;
@@ -53,5 +71,6 @@ const LoginGitHubText = styled.div`
 `;
 
 export {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
+  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton,
+  LoginAnonyButton, LoginGitHubText, LoginPageBackground,
 };
