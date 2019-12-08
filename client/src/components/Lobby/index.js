@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
@@ -10,29 +11,20 @@ import RoomCreateModal from './RoomCreateModal';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
-import ChatArea from '../Room/ChatArea';
+import { LOBBY } from '../../constants/lobby';
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
-// 아래는 서버 연결 전 더미 데이터임.
-const dummyRoomInfos = [
-  {
-    id: '1', name: '보현님 언능 들어오세요', numOfUsers: 2, isEnterable: true,
-  },
-  {
-    id: '2', name: '형규님 그만 주무세요', numOfUsers: 2, isEnterable: false,
-  },
-  {
-    id: '3', name: '희선님... 말 잘들을게요 충성^^7', numOfUsers: 2, isEnterable: true,
-  },
-];
 
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [roomInfoButtons, setRoomInfoButtons] = useState([]);
   const history = useHistory();
+  const roomInfos = new Map();
 
-  const RoomInfoButtons = () => dummyRoomInfos.map(({
+  const makeRoomInfoButton = ({
+    // eslint-disable-next-line react/prop-types
     id, name, numOfUsers, isEnterable,
   }) => (
     <RoomInfoButton
@@ -41,28 +33,88 @@ const Lobby = () => {
       name={name}
       numOfUsers={numOfUsers}
       enterable={isEnterable} />
-  ));
+  );
+
   const openRoomCreateModal = () => setModalOpen(true);
 
-  useEffect(() => {
+  const getNicknameFromJwt = () => {
     const cookies = cookie.parse(document.cookie);
-    let id;
+    if (cookies.jwt === undefined) return undefined;
+    const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
+    if (userInfo === undefined || userInfo.id === undefined) return undefined;
+    return userInfo.id;
+  };
 
-    if (cookies.jwt !== undefined) {
-      const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
-      id = userInfo.id;
-      setUserName(id);
+  const enterCreatedRoom = (roomId) => {
+    history.push(`/room/${roomId}`);
+  };
+
+  const updateCreatedRoom = (createdRoomInfo) => {
+    roomInfos.set(createdRoomInfo.id, createdRoomInfo);
+    setRoomInfoButtons((currentRoomButtons) => [
+      ...currentRoomButtons,
+      makeRoomInfoButton(createdRoomInfo),
+    ]);
+  };
+
+  const updateCurrentRoomInfos = (currentRoomInfos) => {
+    currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
+    setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
+  };
+
+  const updateRoomInfo = ({ roomId, action }) => {
+    const {
+      id, name, numOfUsers, isEnterable,
+    } = roomInfos.get(roomId);
+    switch (action) {
+      case LOBBY.ACTION.USER_ENTERED:
+        roomInfos.set(id, {
+          id, name, numOfUsers: numOfUsers + 1, isEnterable,
+        });
+        break;
+      case LOBBY.ACTION.USER_LEAVED:
+        roomInfos.set(id, {
+          id, name, numOfUsers: numOfUsers - 1, isEnterable,
+        });
+        break;
+      case LOBBY.ACTION.GAME_STARTED:
+        roomInfos.set(id, {
+          id, name, numOfUsers, isEnterable: false,
+        });
+        break;
+      case LOBBY.ACTION.GAME_ENDED:
+        roomInfos.set(id, {
+          id, name, numOfUsers, isEnterable: true,
+        });
+        break;
+      case LOBBY.ACTION.NO_USERS:
+        roomInfos.delete(id);
+        break;
+      default:
     }
+    setRoomInfoButtons(() => {
+      const _roomInfoButtons = [];
+      roomInfos.forEach((roominfo) => {
+        _roomInfoButtons.push(makeRoomInfoButton(roominfo));
+      });
+      return _roomInfoButtons;
+    });
+  };
+
+  useEffect(() => {
+    const githubId = getNicknameFromJwt();
 
     if (socket.isConnected() === false) {
-      socket.connect(id !== undefined ? { githubId: id } : {});
+      setUserName(githubId === undefined ? 'guest' : githubId);
+      socket.connect(githubId === undefined ? {} : { githubId });
       socket.onDisconnect(() => history.push('/'));
     }
 
-    const enterCreatedRoom = (roomId) => {
-      history.push(`/room/${roomId}`);
-    };
+    socket.onEnterLobby(updateCurrentRoomInfos);
+    socket.emitEnterLobby();
     socket.onCreateRoom(enterCreatedRoom);
+    socket.onRoomIsCreated(updateCreatedRoom);
+    socket.onUpdateRoomInfo(updateRoomInfo);
   }, []);
 
   return (
@@ -74,7 +126,7 @@ const Lobby = () => {
         </LobbyHeader>
         <LobbyBody>
           <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
-          {RoomInfoButtons()}
+          {roomInfoButtons}
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}

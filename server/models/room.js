@@ -56,6 +56,10 @@ class Room {
     return true;
   }
 
+  isStarted() {
+    return this.isGameStarted;
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
@@ -327,7 +331,7 @@ class Room {
     });
 
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame({ characterList }), ROOM.WAITING_TIME_MS);
+      setTimeout(() => user.emitEndGame({ characterList, isOwner: this._isOwner(user) }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
 
