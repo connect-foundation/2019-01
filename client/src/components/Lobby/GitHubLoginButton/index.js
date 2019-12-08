@@ -1,19 +1,39 @@
 import React from 'react';
+import axios from 'axios';
 import {
   LoginButtonWrapper, GitHubIcon, LoginTextWrapper, GitHubPath,
 } from './style';
 import URL from '../../../constants/url';
 
 const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
-const GitHubLoginButton = () => (
-  <LoginButtonWrapper as="a" href={oauthUrl}>
-    <LoginTextWrapper>
-      <GitHubIcon>
-        <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
-        <GitHubPath />
-      </GitHubIcon>
-      <div>login</div>
-    </LoginTextWrapper>
-  </LoginButtonWrapper>
-);
+const logoutUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_LOGOUT : URL.LOCAL_GITHUB_LOGOUT;
+
+const GitHubLoginButton = ({ userName, setUserName }) => {
+  const logout = async () => {
+    const { data } = await axios.get(logoutUrl, { withCredentials: true });
+    if (data) setUserName('guest');
+  };
+
+  return (
+    userName === 'guest'
+      ? (
+        <LoginButtonWrapper as="a" href={oauthUrl}>
+          <LoginTextWrapper>
+            <GitHubIcon>
+              <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
+              <GitHubPath />
+            </GitHubIcon>
+            <div>login</div>
+          </LoginTextWrapper>
+        </LoginButtonWrapper>
+      )
+      : (
+        <LoginButtonWrapper as="a" onClick={logout}>
+          <LoginTextWrapper logout>
+            <div>logout</div>
+          </LoginTextWrapper>
+        </LoginButtonWrapper>
+      )
+  );
+};
 export default GitHubLoginButton;

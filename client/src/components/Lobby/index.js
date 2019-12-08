@@ -122,7 +122,7 @@ const Lobby = () => {
       <LobbyWrapper>
         <LobbyHeader>
           <LobbyNickname>hello, {userName}</LobbyNickname>
-          <GitHubLoginButton />
+          <GitHubLoginButton setUserName={setUserName} userName={userName} />
         </LobbyHeader>
         <LobbyBody>
           <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
