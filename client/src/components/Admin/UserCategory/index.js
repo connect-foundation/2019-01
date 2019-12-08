@@ -20,13 +20,12 @@ const UserCategory = () => {
       <UserTr>
         <UserTd>{user.github_id}</UserTd>
         <UserTd>{user.is_admin}</UserTd>
-        <DeleteButton onClick={() => deleteButtonHandler(user.github_id)}>X</DeleteButton>
         <UpdateButton onClick={() => updateButtonHandler(user.github_id)}>update</UpdateButton>
+        <DeleteButton onClick={() => deleteButtonHandler(user.github_id)}>X</DeleteButton>
       </UserTr>
     ));
     setUserData(userTagList);
   };
-
 
   useEffect(() => {
     // const userList = fetch(`${URL.LOCAL_API_SERVER}`);

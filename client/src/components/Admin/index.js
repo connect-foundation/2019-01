@@ -13,6 +13,8 @@ import NicknameList from './NicknameCategory';
 
 const Admin = () => {
   const [body, setBody] = useState(<UserList />);
+  const listItem = [{ text: 'USERS', component: <UserList /> }, { text: 'NICKNAMES', component: <NicknameList /> },
+    { text: 'QUIZ', component: <QuizList /> }];
 
   const classes = useStyles();
 
@@ -30,15 +32,13 @@ const Admin = () => {
         anchor="left">
         <img src={URL.ADMIN_BACKGROUND} className={classes.toolbar} />
         <List>
-          <ListItem button key="USERS" onClick={() => changeBody(<UserList />)}>
-            <ListItemText primary="USERS" />
-          </ListItem>
-          <ListItem button key="NICKNAMES" onClick={() => changeBody(<QuizList />)}>
-            <ListItemText primary="NICKNAMES" />
-          </ListItem>
-          <ListItem button key="QUIZ" onClick={() => changeBody(<NicknameList />)}>
-            <ListItemText primary="QUIZ" />
-          </ListItem>
+          {
+            listItem.map((category) => (
+              <ListItem button key={category.text} onClick={() => changeBody(category.component)}>
+                <ListItemText primary={category.text} />
+              </ListItem>
+            ))
+          }
         </List>
       </Drawer>
       <main className={classes.content}>

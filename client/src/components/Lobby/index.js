@@ -10,6 +10,7 @@ import RoomCreateModal from './RoomCreateModal';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
+import ChatArea from '../Room/ChatArea';
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;

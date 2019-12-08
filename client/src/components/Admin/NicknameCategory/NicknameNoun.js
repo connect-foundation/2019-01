@@ -20,8 +20,8 @@ const NicknameNoun = () => {
       <NicknameTr>
         <NicknameTh>{nicknameNoun.id }</NicknameTh>
         <NicknameTd>{nicknameNoun.noun}</NicknameTd>
-        <DeleteButton onClick={() => deleteButtonHandler(nicknameNoun.id)}>X</DeleteButton>
         <UpdateButton onClick={() => updateButtonHandler(nicknameNoun.id)}>update</UpdateButton>
+        <DeleteButton onClick={() => deleteButtonHandler(nicknameNoun.id)}>X</DeleteButton>
       </NicknameTr>
     ));
     setNounData(nicknameTagList);

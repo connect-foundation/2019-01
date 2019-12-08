@@ -15,19 +15,17 @@ const QuizCategory = () => {
     fetch('');
   };
 
-  const makeNewRow = (quizList) => {
-    const quizTagList = () => quizList.map((quiz) => (
-      <QuizTr>
-        <QuizTh>{quiz.id}</QuizTh>
-        <QuizTd>{quiz.category}</QuizTd>
-        <QuizTd>{quiz.level}</QuizTd>
-        <QuizTd>{quiz.question}</QuizTd>
-        <QuizTd>{quiz.comment}</QuizTd>
-        <QuizTd>{quiz.answer}</QuizTd>
-        <DeleteButton onClick={() => deleteButtonHandler(quiz.id)}>X</DeleteButton>
-        <UpdateButton onClick={() => updateButtonHandler(quiz.id)}>update</UpdateButton>
-      </QuizTr>
-    ));
+  const makeRows = (quizList) => {
+    const quizTagList = () => quizList.map((quiz) => {
+      const keys = Object.keys(quiz);
+      return (
+        <QuizTr>
+          {keys.map((key) => <QuizTd>{quiz[key]}</QuizTd>)}
+          <UpdateButton onClick={() => updateButtonHandler(quiz.id)}>update</UpdateButton>
+          <DeleteButton onClick={() => deleteButtonHandler(quiz.id)}>X</DeleteButton>
+        </QuizTr>
+      );
+    });
     setQuizData(quizTagList);
   };
 
@@ -37,7 +35,7 @@ const QuizCategory = () => {
     const testList = [{
       id: 'a', category: 'b', level: 3, question: 'aa', comment: 'bb', answer: 'O',
     }];
-    makeNewRow(testList);
+    makeRows(testList);
   }, []);
 
   return (

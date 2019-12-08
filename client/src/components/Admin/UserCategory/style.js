@@ -22,6 +22,7 @@ const UserThead = styled.thead`
 
 const UserTh = styled.th`
   width: 20%;
+  border: 1px solid black;
 `;
 
 const UserTbody = styled.tbody`
