@@ -8,10 +8,11 @@ import URL from '../../../constants/url';
 const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
 const logoutUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_LOGOUT : URL.LOCAL_GITHUB_LOGOUT;
 
-const GitHubLoginButton = ({ userName, setUserName }) => {
+const GitHubLoginButton = ({ userName, makeUserGuest }) => {
   const logout = async () => {
-    const { data } = await axios.get(logoutUrl, { withCredentials: true });
-    if (data) setUserName('guest');
+    const res = await fetch(logoutUrl, { credentials: 'include' });
+    const isJwtDeleted = await res.json();
+    if (isJwtDeleted) makeUserGuest();
   };
 
   return (
