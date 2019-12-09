@@ -21,7 +21,7 @@ const LoginButtonWrapper = styled.div`
 const LoginTextWrapper = styled.div`
     display: flex;
     align-items: center;
-    justify-content: ${(props) => (props.logout ? 'center' : 'space-between')};
+    justify-content: ${({ isLoggedOut }) => (isLoggedOut ? 'center' : 'space-between')};
 `;
 
 const GitHubPath = styled.path.attrs({ d: LOGIN_BUTTON.SVG.PATH.INDEXES })``;

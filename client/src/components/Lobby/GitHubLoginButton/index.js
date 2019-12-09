@@ -29,7 +29,7 @@ const GitHubLoginButton = ({ userName, makeUserGuest }) => {
       )
       : (
         <LoginButtonWrapper as="a" onClick={logout}>
-          <LoginTextWrapper logout>
+          <LoginTextWrapper isLoggedOut>
             <div>logout</div>
           </LoginTextWrapper>
         </LoginButtonWrapper>
