@@ -98,7 +98,7 @@ class Room {
       this._placeCharacter(user);
     }
 
-    if (!this.nicknameList.length) {
+    if (this.nicknameList.length === 0) {
       await this._fetchRandomNickname();
     }
 
@@ -333,7 +333,9 @@ class Room {
     });
 
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame({ characterList, isOwner: this._isOwner(user) }), ROOM.WAITING_TIME_MS);
+      setTimeout(() => user.emitEndGame({
+        characterList, isOwner: this._isOwner(user),
+      }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
 
