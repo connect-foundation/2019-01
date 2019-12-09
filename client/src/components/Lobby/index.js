@@ -122,7 +122,7 @@ const Lobby = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <LobbyWrapper>
         <LobbyHeader>
           <LobbyNickname>hello, {userName}</LobbyNickname>
@@ -134,7 +134,7 @@ const Lobby = () => {
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
-    </div>
+    </>
   );
 };
 
