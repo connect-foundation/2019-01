@@ -8,10 +8,6 @@ const Input = () => {
 
   const sendMessage = () => {
     if (message === '') return;
-    if (message.length > CHAT_AREA.MAX_MESSAGE_LENGTH) {
-      setMessage(message.slice(0, CHAT_AREA.MAX_MESSAGE_LENGTH));
-    }
-
     socket.emitChatMessage(message);
     setMessage('');
   };
@@ -23,8 +19,13 @@ const Input = () => {
   };
 
   const updateMessage = (event) => {
-    const { value } = event.target;
-    setMessage(value);
+    const messageText = event.target.value;
+    const newMessage = (
+      messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
+        ? messageText.slice(0, CHAT_AREA.MAX_MESSAGE_LENGTH)
+        : messageText
+    );
+    setMessage(newMessage);
   };
 
   return (
