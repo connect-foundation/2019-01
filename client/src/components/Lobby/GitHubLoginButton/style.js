@@ -12,7 +12,7 @@ const LoginButtonWrapper = styled.div`
     background-color: ${LOGIN_BUTTON.BACKGROUND_COLOR};
     ${BUTTON_EFFECT.ACTIVE}
     ${BUTTON_EFFECT.HOVER}
-    stroke: #000000;
+    stroke: black;
     color: black;
     text-decoration: none;
     cursor: pointer;
