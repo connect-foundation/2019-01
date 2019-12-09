@@ -29,10 +29,9 @@ class SocketContainer {
     if (this.isConnected()) this.socket.disconnect();
   }
 
-  _emit(eventName, data) {
-    if (this.isConnected() === false) return;
-    if (data === undefined) this.socket.emit(eventName);
-    else this.socket.emit(eventName, data);
+  _emit(eventName, data, strongCheck = true) {
+    if (this.isConnected() === false && strongCheck) return;
+    this.socket.emit(eventName, data);
   }
 
   emitCreateRoom(roomName) {
@@ -48,7 +47,7 @@ class SocketContainer {
   }
 
   emitEnterLobby() {
-    this._emit(EVENT.ENTER_LOBBY);
+    this._emit(EVENT.ENTER_LOBBY, undefined, false);
   }
 
   emitEnterRoom(roomId) {
