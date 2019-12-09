@@ -36,6 +36,16 @@ const LOGIN_BUTTON = {
     HEIGHT: 33,
     SHAPE_REDERING: 'crispEdges',
   },
+  SVG: {
+    X: 0,
+    Y: -0.5,
+    W: 11,
+    H: 11,
+    PATH: {
+      COLOR: 'black',
+      INDEXES: 'M3 0h5M2 1h7M1 2h2M4 2h3M8 2h2M0 3h3M8 3h3M0 4h2M9 4h2M0 5h2M9 5h2M0 6h2M9 6h2M0 7h3M8 7h3M1 8h1M3 8h1M7 8h3M2 9h1M7 9h2M3 10h1M7 10h1',
+    },
+  },
 };
 
 const BODY = {
@@ -81,7 +91,7 @@ const CREATE_ROOM_BUTTON = {
 
 const BUTTON_EFFECT = {
   HOVER: ':hover { background-image: linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%); }',
-  ACTIVE: ':active { box-shadow: none; color: gray; }',
+  ACTIVE: ':active { box-shadow: none; color: gray; stroke: gray; }',
 };
 
 export {
