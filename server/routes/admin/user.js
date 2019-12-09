@@ -16,7 +16,7 @@ router.get('/list', async (req, res, next) => {
 router.get('/:githubId', async (req, res, next) => {
   try {
     const { githubId } = req.params;
-    const [user] = await userDb.fetch(githubId);
+    const [user] = await userDb.fetchUser(githubId);
     res.status(200).send({ result: true, user });
   } catch (error) {
     next(error);

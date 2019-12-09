@@ -13,7 +13,7 @@ const isAdmin = async (req, res, next) => {
     if (userInfo === undefined) throw new Error('jwt not verified');
 
     const githubId = userInfo.id;
-    const [user] = await userDb.fetch(githubId);
+    const [user] = await userDb.fetchUser(githubId);
     if (user === undefined) throw new Error('user not existed');
     if (user.is_admin === false) throw new Error('user not authorized');
 
