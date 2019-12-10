@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const NicknameBodyWrapper = styled.div`
-  width: 80vw;
-  height: 100vh;
   display: flex;
   font-variant-caps: all-small-caps;
   text-align: center;
@@ -40,16 +38,17 @@ const NicknameTd = styled.td`
   width: 40%;
 `;
 
-const DeleteButton = styled.button`
+const NicknameButton = styled.button`
   width: fit-content;
-  background-color: brown;
+  background-color: white;
 `;
 
-const UpdateButton = styled.button`
+const NicknameInput = styled.input.attrs({
+  type: 'text',
+})`
   width: fit-content;
-  background-color: sandybrown;
 `;
 
 export {
-  NicknameBodyWrapper, NicknameTable, NicknameTh, NicknameTd, NicknameThead, NicknameTr, NicknameTbody, DeleteButton, UpdateButton,
+  NicknameBodyWrapper, NicknameTable, NicknameTh, NicknameTd, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput,
 };

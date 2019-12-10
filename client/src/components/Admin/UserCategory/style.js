@@ -43,21 +43,11 @@ const UserTd = styled.td`
   width: 40%;
 `;
 
-const DeleteButton = styled.button`
-  width: fit-content;
-  background-color: brown;
-`;
-
-const UpdateButton = styled.button`
-  width: fit-content;
-  background-color: sandybrown;
-`;
-
-const AddButton = styled.button`
+const CustomButton = styled.button`
   width: fit-content;
   background-color: white;
 `;
 
 export {
-  UserBodyWrapper, UserTable, UserTh, UserTd, UserThead, UserTr, UserTbody, DeleteButton, UpdateButton, UserInput, AddButton,
+  UserBodyWrapper, UserTable, UserTh, UserTd, UserThead, UserTr, UserTbody, CustomButton, UserInput,
 };
