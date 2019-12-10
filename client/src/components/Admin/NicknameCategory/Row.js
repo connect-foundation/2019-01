@@ -18,9 +18,7 @@ const Row = ({ id, type, nickname }) => {
     fetchData('put', `/admin/nickname/${type}`, data);
   };
 
-  const updateNickname = (e) => {
-    setNickname(e.target.value);
-  };
+  const updateNickname = (e) => setNickname(e.target.value);
 
   return (
     <NicknameTr>

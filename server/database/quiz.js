@@ -7,10 +7,9 @@ export default {
     add: async(category, level, question, comment, answer) => await preparedStatement(
         `INSERT INTO Quiz (category, level, question, comment, answer) VALUES (?,?,?,?,?);`,
         category, level, question, comment, answer),
-    updateCategory: async(id, category) => await preparedStatement(`UPDATE Quiz SET category = ? WHERE id = ?;`, category, id),
-    updateLevel: async(id, level) => await preparedStatement(`UPDATE Quiz SET level = ? WHERE id = ?;`, level, id),
-    updateQuestion: async(id, question) => await preparedStatement(`UPDATE Quiz SET question = ? WHERE id = ?;`, question, id),
-    updateAnswer: async(id, comment) => await preparedStatement(`UPDATE Quiz SET comment = ? WHERE id = ?;`, comment, id),
-    updateComment: async(id, answer) => await preparedStatement(`UPDATE Quiz SET answer = ? WHERE id = ?;`, answer, id),
+    updateQuiz: async(id, category) => {
+        await preparedStatement(`UPDATE Quiz SET category = ?, level = ?, question = ?, comment = ?,
+        answer = ? WHERE id = ?;`, category, id)
+    },
     delete: async(id) => await preparedStatement(`DELETE FROM Quiz WHERE id = ?;`, id),
 };

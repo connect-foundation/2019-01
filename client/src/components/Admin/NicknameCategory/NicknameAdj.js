@@ -17,9 +17,7 @@ const NicknameAdj = ({ type }) => {
     setnicknameList(nicknameTagList);
   };
 
-  const updateNewNickname = (e) => {
-    setNewNickname(e.target.value);
-  };
+  const updateNewNickname = (e) => setNewNickname(e.target.value);
 
   const addNickname = () => {
     const nicknameData = {};
