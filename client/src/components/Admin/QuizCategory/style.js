@@ -8,7 +8,7 @@ const QuizBodyWrapper = styled.div`
 const QuizTable = styled.table`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
   border: 1px solid black;
 `;
 
