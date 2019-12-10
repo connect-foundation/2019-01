@@ -169,18 +169,15 @@ class Room {
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
   //  ㄴ 다음으로 변경: 시작 값으로 셋팅하고, emit: start_round 호출
   async startGame(user) {
-    if (this._isOwner(user) && this.isGameStarted === false) {
-      if (this.aliveUsers.size === 1) return false;
+    if (this._canBeStarted(user) === false) return false;
 
-      this.isGameStarted = true;
-      this.currentRound = 0;
-      this.quizList = await quizFinder.fetchQuizList();
-      this.users.forEach((_user) => _user.emitStartGame());
+    this.isGameStarted = true;
+    this.currentRound = 0;
+    this.quizList = await quizFinder.fetchQuizList();
+    this.users.forEach((_user) => _user.emitStartGame());
 
-      setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
-      return true;
-    }
-    return false;
+    setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
+    return true;
   }
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
@@ -403,6 +400,16 @@ class Room {
     if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
     if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
+  }
+
+  /**
+   * @returns {Boolean}
+   */
+  _canBeStarted(user) {
+    return (
+      this.aliveUsers.size > 1
+      && this._isOwner(user)
+      && this.isGameStarted === false);
   }
 }
 
