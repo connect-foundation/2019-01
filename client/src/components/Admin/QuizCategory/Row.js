@@ -1,38 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  QuizTh, QuizTr, CustomButton,
+  QuizTh, QuizTr, QuizButton,
 } from './style';
 import fetchData from '../util';
 
-const Row = ({ quiz }) => {
-  const [quizInfo, setQuizInfo] = useState(quiz);
+const Row = ({ openModal, quiz }) => {
   const keys = Object.keys(quiz);
 
   const deleteButtonHandler = (id) => {
     fetchData('delete', '/admin/quiz', { id });
   };
 
-  const updateButtonHandler = (id) => {
-    fetchData('put', '/admin/quiz', { id, quizInfo });
-  };
-
-  const updateQuiz = (e) => {
-    console.log(e);
-    // setQuiz((currentInfo) => {...currentInfo, e});
-  };
-
   return (
     <QuizTr>
-      {keys.map((key) => <QuizTh onChange={updateQuiz}>{quiz[key]}</QuizTh>)}
-      <CustomButton onClick={() => updateButtonHandler(quiz.id)}>수정</CustomButton>
-      <CustomButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</CustomButton>
+      {keys.map((key) => <QuizTh>{quiz[key]}</QuizTh>)}
+      <QuizButton onClick={openModal}>수정</QuizButton>
+      <QuizButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</QuizButton>
     </QuizTr>
   );
 };
 
-Row.propTypes = PropTypes.shape({
-  quiz: PropTypes.object,
-}).isRequired;
+Row.propTypes = {
+  openModal: PropTypes.func.isRequired,
+  quiz: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    answer: PropTypes.number.isRequired,
+    comment: PropTypes.string.isRequired,
+    question: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    level: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default Row;

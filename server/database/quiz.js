@@ -9,7 +9,7 @@ export default {
         category, level, question, comment, answer),
     updateQuiz: async(id, category, level, question, comment, answer) => {
         await preparedStatement(`UPDATE Quiz SET category = ?, level = ?, question = ?, comment = ?,
-        answer = ? WHERE id = ?;`, category, id,level, question, comment, answer);
+        answer = ? WHERE id = ?;`, category, level, question, comment, answer, id);
     },
     delete: async(id) => await preparedStatement(`DELETE FROM Quiz WHERE id = ?;`, id),
 };
