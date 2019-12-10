@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const QuizBodyWrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
   font-variant-caps: all-small-caps;
   text-align: center;
 `;

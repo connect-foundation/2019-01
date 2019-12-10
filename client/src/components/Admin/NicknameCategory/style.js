@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const NicknameBodyWrapper = styled.div`
-  width: 80vw;
-  height: 100vh;
   display: flex;
   font-variant-caps: all-small-caps;
   text-align: center;
