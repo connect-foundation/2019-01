@@ -39,16 +39,11 @@ const QuizTd = styled.td`
   width: 15%;
 `;
 
-const DeleteButton = styled.button`
+const CustomButton = styled.button`
   width: fit-content;
-  background-color: brown;
-`;
-
-const UpdateButton = styled.button`
-  width: fit-content;
-  background-color: sandybrown;
+  background-color: white
 `;
 
 export {
-  QuizBodyWrapper, QuizTable, QuizTh, QuizTd, QuizThead, QuizTr, QuizTbody, DeleteButton, UpdateButton,
+  QuizBodyWrapper, QuizTable, QuizTh, QuizTd, QuizThead, QuizTr, QuizTbody, CustomButton,
 };

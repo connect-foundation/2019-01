@@ -1,37 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
-  NicknameTable, NicknameTh, NicknameTd, NicknameThead, NicknameTr, NicknameTbody, DeleteButton, UpdateButton,
+  NicknameTable, NicknameTh, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput, NicknameTd,
 } from './style';
-import URL from '../../../constants/url';
+import fetchData from '../util';
+import Row from './Row';
 
-const NicknameAdj = () => {
-  const [adjData, setAdjData] = useState('');
+const NicknameAdj = ({ type }) => {
+  const [nicknameList, setnicknameList] = useState('');
+  const [newNickname, setNewNickname] = useState('');
 
-  const deleteButtonHandler = (nicknameId) => {
-    fetch('');
-  };
-
-  const updateButtonHandler = (nicknameId) => {
-    fetch('');
-  };
-
-  const makeNewAdjRow = (NicknameAdjList) => {
-    const nicknameTagList = () => NicknameAdjList.map((nicknameAdj) => (
-      <NicknameTr>
-        <NicknameTh>{nicknameAdj.id}</NicknameTh>
-        <NicknameTd>{nicknameAdj.noun}</NicknameTd>
-        <UpdateButton onClick={() => updateButtonHandler(nicknameAdj.id)}><p>update</p></UpdateButton>
-        <DeleteButton onClick={() => deleteButtonHandler(nicknameAdj.id)}><p>X</p></DeleteButton>
-      </NicknameTr>
+  const makeNewRow = (nicknameArray) => {
+    const nicknameTagList = () => nicknameArray.map((nickname) => (
+      <Row id={nickname.id} type={type} nickname={type === 'adj' ? nickname.adj : nickname.noun} />
     ));
-    setAdjData(nicknameTagList);
+    setnicknameList(nicknameTagList);
+  };
+
+  const updateNewNickname = (e) => {
+    setNewNickname(e.target.value);
+  };
+
+  const addNickname = () => {
+    const nicknameData = {};
+    nicknameData[type] = newNickname;
+    fetchData('post', `/admin/nickname/${type}`, nicknameData);
   };
 
   useEffect(() => {
-    // const QuizList = fetch(`${URL.LOCAL_API_SERVER}`);
-    // makeNewRow(QuizList);
-    const testList1 = [{ id: 1, noun: 'aa' }];
-    makeNewAdjRow(testList1);
+    fetchData('get', `/admin/nickname/${type}/list`)
+      .then((res) => makeNewRow(type === 'adj' ? res.adjList : res.nounList));
   }, []);
 
   return (
@@ -39,12 +37,23 @@ const NicknameAdj = () => {
       <NicknameThead>
         <NicknameTr>
           <NicknameTh><p>id</p></NicknameTh>
-          <NicknameTh><p>adj</p></NicknameTh>
+          <NicknameTh><p>{type}</p></NicknameTh>
         </NicknameTr>
       </NicknameThead>
-      <NicknameTbody>{adjData}</NicknameTbody>
+      <NicknameTbody>
+        {nicknameList}
+        <NicknameTr>
+          <NicknameTh />
+          <NicknameInput onChange={updateNewNickname} />
+          <NicknameButton onClick={addNickname}>추가</NicknameButton>
+        </NicknameTr>
+      </NicknameTbody>
     </NicknameTable>
   );
 };
+
+Row.propTypes = PropTypes.shape({
+  type: PropTypes.string.isRequired,
+}).isRequired;
 
 export default NicknameAdj;

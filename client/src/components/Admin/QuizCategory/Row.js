@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
-  QuizTh, QuizTr, DeleteButton, UpdateButton,
+  QuizTh, QuizTr, CustomButton,
 } from './style';
 import fetchData from '../util';
 
@@ -17,22 +17,22 @@ const Row = ({ quiz }) => {
     fetchData('put', '/admin/quiz', { id, quizInfo });
   };
 
-  const setQuiz = (e) => {
+  const updateQuiz = (e) => {
     console.log(e);
     // setQuiz((currentInfo) => {...currentInfo, e});
   };
 
   return (
     <QuizTr>
-      {keys.map((key) => <QuizTh onChange={() => setQuiz()}>{quiz[key]}</QuizTh>)}
-      <UpdateButton onClick={() => updateButtonHandler(quiz.id)}>수정</UpdateButton>
-      <DeleteButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</DeleteButton>
+      {keys.map((key) => <QuizTh onChange={updateQuiz}>{quiz[key]}</QuizTh>)}
+      <CustomButton onClick={() => updateButtonHandler(quiz.id)}>수정</CustomButton>
+      <CustomButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</CustomButton>
     </QuizTr>
   );
 };
 
-Row.propTypes = propTypes.shape({
-  quiz: propTypes.object,
+Row.propTypes = PropTypes.shape({
+  quiz: PropTypes.object,
 }).isRequired;
 
 export default Row;

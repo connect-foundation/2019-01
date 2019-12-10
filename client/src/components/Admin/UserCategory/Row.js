@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
-  UserTd, UserTr, DeleteButton, UpdateButton,
+  UserTd, UserTr, CustomButton,
 } from './style';
 import fetchData from '../util';
 
@@ -18,7 +18,7 @@ const Row = ({ user }) => {
     fetchData('put', '/admin/user', { githubId, action });
   };
 
-  const setUserAuthority = () => {
+  const updateUserAuthority = () => {
     setAuthority((currentAuthority) => !currentAuthority);
   };
 
@@ -26,16 +26,16 @@ const Row = ({ user }) => {
     <UserTr>
       <UserTd>{githubId}</UserTd>
       <UserTd>
-        <input type="checkbox" onClick={() => setUserAuthority()} checked={userAuthority} />
+        <input type="checkbox" onClick={updateUserAuthority} checked={userAuthority} />
       </UserTd>
-      <UpdateButton onClick={() => updateButtonHandler()}>수정</UpdateButton>
-      <DeleteButton onClick={() => deleteButtonHandler()}>삭제</DeleteButton>
+      <CustomButton onClick={() => updateButtonHandler()}>수정</CustomButton>
+      <CustomButton onClick={() => deleteButtonHandler()}>삭제</CustomButton>
     </UserTr>
   );
 };
 
-Row.propTypes = propTypes.shape({
-  user: propTypes.Object,
+Row.propTypes = PropTypes.shape({
+  user: PropTypes.Object,
 }).isRequired;
 
 export default Row;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  UserBodyWrapper, UserTable, UserTh, UserThead, UserTbody, UserTr, UserTd, UserInput, AddButton,
+  UserBodyWrapper, UserTable, UserTh, UserThead, UserTbody, UserTr, UserTd, UserInput, CustomButton,
 } from './style';
 import Row from './Row';
 import fetchData from '../util';
@@ -29,11 +29,6 @@ const UserCategory = () => {
         </UserThead>
         <UserTbody>
           {userData}
-          <UserTr>
-            <UserTd><UserInput name="gitHubId" /></UserTd>
-            <UserTd><UserInput name="isAdmin" /></UserTd>
-            <AddButton>추가</AddButton>
-          </UserTr>
         </UserTbody>
       </UserTable>
     </UserBodyWrapper>
