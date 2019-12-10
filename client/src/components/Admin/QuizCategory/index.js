@@ -4,13 +4,31 @@ import {
 } from './style';
 import fetchData from '../util';
 import Row from './Row';
+import EditModal from './EditModal';
 
 const QuizCategory = () => {
   const [quizData, setQuizData] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+
+  const openEditModal = (quiz) => () => {
+    setIsModalOpen((prevIsModalOpen) => {
+      if (prevIsModalOpen === false) {
+        setModalContent(quiz);
+      }
+      return true;
+    });
+  };
+
+  const closeEditModal = () => setIsModalOpen(false);
 
   const makeNewRow = (quizList) => {
-    const quizTagList = () => quizList.map((quiz) => <Row quiz={quiz} />);
-    setQuizData(quizTagList);
+    setQuizData(() => quizList.map(
+      (quiz) => {
+        const openModal = openEditModal(quiz);
+        return <Row openModal={openModal} quiz={quiz} />;
+      },
+    ));
   };
 
   useEffect(() => {
@@ -33,6 +51,7 @@ const QuizCategory = () => {
         </QuizThead>
         <QuizTbody>{quizData}</QuizTbody>
       </QuizTable>
+      {isModalOpen ? <EditModal quiz={modalContent} closeModal={closeEditModal} /> : ''}
     </QuizBodyWrapper>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
@@ -18,9 +18,7 @@ const Admin = () => {
 
   const classes = useStyles();
 
-  const changeBody = (component) => {
-    setBody(() => component);
-  };
+  const changeBody = (component) => setBody(() => component);
 
   return (
     <div className={classes.root}>

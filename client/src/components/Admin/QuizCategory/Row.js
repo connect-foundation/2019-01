@@ -5,7 +5,7 @@ import {
 } from './style';
 import fetchData from '../util';
 
-const Row = ({ quiz }) => {
+const Row = ({ openModal, quiz }) => {
   const [quizInfo, setQuizInfo] = useState(quiz);
   const keys = Object.keys(quiz);
 
@@ -13,9 +13,9 @@ const Row = ({ quiz }) => {
     fetchData('delete', '/admin/quiz', { id });
   };
 
-  const updateButtonHandler = (id) => {
-    fetchData('put', '/admin/quiz', { id, quizInfo });
-  };
+  // const updateButtonHandler = (id) => {
+  //   fetchData('put', '/admin/quiz', { id, quizInfo });
+  // };
 
   const setQuiz = (e) => {
     console.log(e);
@@ -25,13 +25,14 @@ const Row = ({ quiz }) => {
   return (
     <QuizTr>
       {keys.map((key) => <QuizTh onChange={() => setQuiz()}>{quiz[key]}</QuizTh>)}
-      <UpdateButton onClick={() => updateButtonHandler(quiz.id)}>수정</UpdateButton>
+      <UpdateButton onClick={openModal}>수정</UpdateButton>
       <DeleteButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</DeleteButton>
     </QuizTr>
   );
 };
 
 Row.propTypes = propTypes.shape({
+  openModal: propTypes.func.isRequired,
   quiz: propTypes.object,
 }).isRequired;
 

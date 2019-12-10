@@ -39,13 +39,23 @@ const QuizTd = styled.td`
   width: 15%;
 `;
 
-const DeleteButton = styled.button`
+const buttonStyle = `
+  :hover {
+    cursor: pointer;
+  }
   width: fit-content;
+  height: fit-content;
+  outline: 0;
+  border: 0;
+`;
+
+const DeleteButton = styled.button`
+  ${buttonStyle}
   background-color: brown;
 `;
 
 const UpdateButton = styled.button`
-  width: fit-content;
+  ${buttonStyle}
   background-color: sandybrown;
 `;
 
