@@ -122,10 +122,10 @@ class Room {
       question: this.currentQuiz.question,
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
+      roomName: this.name,
     });
     this.aliveUsers.set(user.getNickname(), user);
   }
-
 
   makeCharacterList(myCharacter) {
     const characterList = [];
