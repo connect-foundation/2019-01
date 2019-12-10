@@ -6,7 +6,7 @@ import {
 import fetchData from '../util';
 import Row from './Row';
 
-const NicknameAdj = ({ type }) => {
+const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState('');
   const [newNickname, setNewNickname] = useState('');
 
@@ -54,4 +54,4 @@ Row.propTypes = PropTypes.shape({
   type: PropTypes.string.isRequired,
 }).isRequired;
 
-export default NicknameAdj;
+export default Nickname;

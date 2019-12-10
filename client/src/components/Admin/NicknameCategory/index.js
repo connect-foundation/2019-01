@@ -1,11 +1,11 @@
 import React from 'react';
 import { NicknameBodyWrapper } from './style';
-import NicknameAdj from './NicknameAdj';
+import Nickname from './Nickname';
 
 const NicknameCategory = () => (
   <NicknameBodyWrapper>
-    <NicknameAdj type="adj" />
-    <NicknameAdj type="noun" />
+    <Nickname type="adj" />
+    <Nickname type="noun" />
   </NicknameBodyWrapper>
 );
 
