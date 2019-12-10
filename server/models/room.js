@@ -51,9 +51,7 @@ class Room {
   }
 
   isEnterable() {
-    if (this.isGameStarted) return false;
-    if (this.users.size >= ROOM.MAX_USER) return false;
-    return true;
+    return this.isGameStarted === false && this.users.size < ROOM.MAX_USER;
   }
 
   isStarted() {
@@ -408,6 +406,7 @@ class Room {
   _canBeStarted(user) {
     return (
       this.aliveUsers.size > 1
+      && this.aliveUsers.size <= ROOM.MAX_USER
       && this._isOwner(user)
       && this.isGameStarted === false);
   }
