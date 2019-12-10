@@ -39,5 +39,6 @@ export const QuizTd = styled.td`
 
 export const QuizButton = styled.button`
   width: fit-content;
-  background-color: white
+  height: 20%;
+  background-color: white;
 `;

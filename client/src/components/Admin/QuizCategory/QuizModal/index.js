@@ -4,16 +4,15 @@ import {
   ModalWrapper, ModalContent, ModalButtonWrapper, ModalOkButton, ModalCloseButton,
 } from './style';
 import Row from './row';
-import fetchData from '../../util';
 
-const EditModal = ({ quiz, closeModal }) => {
+const QuizModal = ({ quiz, closeModal, fetchData }) => {
   const [categoryValue, setCategoryValue] = useState(quiz.category);
   const [levelValue, setLevelValue] = useState(quiz.level);
   const [questionValue, setQuestionValue] = useState(quiz.question);
   const [commentValue, setCommentValue] = useState(quiz.comment);
   const [answerValue, setAnswerValue] = useState(quiz.answer);
 
-  const fetchEditQuiz = () => {
+  const fetchQuiz = () => {
     const quizInfo = {
       id: quiz.id,
       category: categoryValue,
@@ -22,7 +21,8 @@ const EditModal = ({ quiz, closeModal }) => {
       comment: commentValue,
       answer: answerValue,
     };
-    fetchData('put', '/admin/quiz', { id: quiz.id, data: quizInfo });
+
+    fetchData(quizInfo);
     closeModal();
   };
 
@@ -51,14 +51,14 @@ const EditModal = ({ quiz, closeModal }) => {
           changeValue={(e) => setAnswerValue(e.target.value)} />
       </ModalContent>
       <ModalButtonWrapper>
-        <ModalOkButton onClick={fetchEditQuiz}>수정</ModalOkButton>
+        <ModalOkButton onClick={fetchQuiz}>확인</ModalOkButton>
         <ModalCloseButton onClick={closeModal}>취소</ModalCloseButton>
       </ModalButtonWrapper>
     </ModalWrapper>
   );
 };
 
-EditModal.propTypes = {
+QuizModal.propTypes = {
   quiz: PropTypes.shape({
     id: PropTypes.number.isRequired,
     answer: PropTypes.number.isRequired,
@@ -68,6 +68,7 @@ EditModal.propTypes = {
     level: PropTypes.number.isRequired,
   }).isRequired,
   closeModal: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
-export default EditModal;
+export default QuizModal;
