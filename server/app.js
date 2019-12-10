@@ -4,10 +4,12 @@ import logger from 'morgan';
 import socketio from 'socket.io';
 import cookieParser from 'cookie-parser';
 import {} from 'dotenv/config';
+import cors from 'cors';
 import indexRouter from './routes/index';
 import loginRouter from './routes/login';
 import adminRouter from './routes/admin';
 import controller from './controller';
+
 
 const app = express();
 const socketIo = socketio();
@@ -17,6 +19,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+const corsOptions = {
+  origin: 'http://localhost:3006',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use('/admin', adminRouter);
 app.use('/oauth', loginRouter);
 app.use('/', indexRouter);

@@ -20,8 +20,8 @@ const NicknameNoun = () => {
       <NicknameTr>
         <NicknameTh>{nicknameNoun.id }</NicknameTh>
         <NicknameTd>{nicknameNoun.noun}</NicknameTd>
-        <UpdateButton onClick={() => updateButtonHandler(nicknameNoun.id)}>update</UpdateButton>
-        <DeleteButton onClick={() => deleteButtonHandler(nicknameNoun.id)}>X</DeleteButton>
+        <UpdateButton onClick={() => updateButtonHandler(nicknameNoun.id)}><p>update</p></UpdateButton>
+        <DeleteButton onClick={() => deleteButtonHandler(nicknameNoun.id)}><p>X</p></DeleteButton>
       </NicknameTr>
     ));
     setNounData(nicknameTagList);
@@ -36,12 +36,12 @@ const NicknameNoun = () => {
   return (
     <NicknameTable>
       <NicknameThead>
-        <NicknameTd>id</NicknameTd>
-        <NicknameTd>Noun</NicknameTd>
+        <NicknameTr>
+          <NicknameTh><p>id</p></NicknameTh>
+          <NicknameTh><p>Noun</p></NicknameTh>
+        </NicknameTr>
       </NicknameThead>
-      <NicknameTbody>
-        {NounData}
-      </NicknameTbody>
+      <NicknameTbody>{NounData}</NicknameTbody>
     </NicknameTable>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
@@ -14,12 +14,12 @@ import NicknameList from './NicknameCategory';
 const Admin = () => {
   const [body, setBody] = useState(<UserList />);
   const listItem = [{ text: 'USERS', component: <UserList /> }, { text: 'NICKNAMES', component: <NicknameList /> },
-    { text: 'QUIZ', component: <QuizList /> }];
+    { text: 'QUIZS', component: <QuizList /> }];
 
   const classes = useStyles();
 
   const changeBody = (component) => {
-    setBody(component);
+    setBody(() => component);
   };
 
   return (
@@ -30,7 +30,7 @@ const Admin = () => {
         variant="permanent"
         classes={{ paper: classes.drawerPaper }}
         anchor="left">
-        <img src={URL.ADMIN_BACKGROUND} className={classes.toolbar} />
+        <img src={URL.ADMIN_BACKGROUND} className={classes.toolbar} alt="admin-background" />
         <List>
           {
             listItem.map((category) => (

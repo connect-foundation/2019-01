@@ -1,48 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import {
-  UserBodyWrapper, UserTable, UserTd, UserThead, UserTr, UserTbody, DeleteButton, UpdateButton,
+  UserBodyWrapper, UserTable, UserTh, UserThead, UserTbody, UserTr, UserTd, UserInput, AddButton,
 } from './style';
-import URL from '../../../constants/url';
+import Row from './Row';
+import fetchData from '../util';
 
 const UserCategory = () => {
   const [userData, setUserData] = useState('');
 
-  const deleteButtonHandler = (githubId) => {
-    fetch('');
-  };
-
-  const updateButtonHandler = (githubId) => {
-    fetch('');
-  };
-
   const makeNewRow = (userList) => {
-    const userTagList = userList.map((user) => (
-      <UserTr>
-        <UserTd>{user.github_id}</UserTd>
-        <UserTd>{user.is_admin}</UserTd>
-        <UpdateButton onClick={() => updateButtonHandler(user.github_id)}>update</UpdateButton>
-        <DeleteButton onClick={() => deleteButtonHandler(user.github_id)}>X</DeleteButton>
-      </UserTr>
-    ));
+    const userTagList = userList.map((user) => <Row user={user} />);
     setUserData(userTagList);
   };
 
   useEffect(() => {
-    // const userList = fetch(`${URL.LOCAL_API_SERVER}`);
-    // makeNewRow(userList);
-    const testList = [{ github_id: 'bella', is_admin: 1 }];
-    makeNewRow(testList);
+    fetchData('get', '/admin/user/list')
+      .then((res) => makeNewRow(res.userList));
   }, []);
 
   return (
     <UserBodyWrapper>
       <UserTable>
         <UserThead>
-          <UserTd>github_id</UserTd>
-          <UserTd>is_Admin</UserTd>
+          <UserTr>
+            <UserTh><p>github_id</p></UserTh>
+            <UserTh><p>is_Admin</p></UserTh>
+          </UserTr>
         </UserThead>
         <UserTbody>
           {userData}
+          <UserTr>
+            <UserTd><UserInput name="gitHubId" /></UserTd>
+            <UserTd><UserInput name="isAdmin" /></UserTd>
+            <AddButton>추가</AddButton>
+          </UserTr>
         </UserTbody>
       </UserTable>
     </UserBodyWrapper>

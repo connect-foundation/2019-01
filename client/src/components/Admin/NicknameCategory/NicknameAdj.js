@@ -20,8 +20,8 @@ const NicknameAdj = () => {
       <NicknameTr>
         <NicknameTh>{nicknameAdj.id}</NicknameTh>
         <NicknameTd>{nicknameAdj.noun}</NicknameTd>
-        <UpdateButton onClick={() => updateButtonHandler(nicknameAdj.id)}>update</UpdateButton>
-        <DeleteButton onClick={() => deleteButtonHandler(nicknameAdj.id)}>X</DeleteButton>
+        <UpdateButton onClick={() => updateButtonHandler(nicknameAdj.id)}><p>update</p></UpdateButton>
+        <DeleteButton onClick={() => deleteButtonHandler(nicknameAdj.id)}><p>X</p></DeleteButton>
       </NicknameTr>
     ));
     setAdjData(nicknameTagList);
@@ -33,15 +33,16 @@ const NicknameAdj = () => {
     const testList1 = [{ id: 1, noun: 'aa' }];
     makeNewAdjRow(testList1);
   }, []);
+
   return (
     <NicknameTable>
       <NicknameThead>
-        <NicknameTd>id</NicknameTd>
-        <NicknameTd>adj</NicknameTd>
+        <NicknameTr>
+          <NicknameTh><p>id</p></NicknameTh>
+          <NicknameTh><p>adj</p></NicknameTh>
+        </NicknameTr>
       </NicknameThead>
-      <NicknameTbody>
-        {adjData}
-      </NicknameTbody>
+      <NicknameTbody>{adjData}</NicknameTbody>
     </NicknameTable>
   );
 };

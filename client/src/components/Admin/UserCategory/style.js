@@ -21,8 +21,7 @@ const UserThead = styled.thead`
 `;
 
 const UserTh = styled.th`
-  width: 20%;
-  border: 1px solid black;
+  width: 40%;
 `;
 
 const UserTbody = styled.tbody`
@@ -34,6 +33,10 @@ const UserTbody = styled.tbody`
 const UserTr = styled.tr`
   width: 100%;
   display: flex;
+`;
+
+const UserInput = styled.input`
+  align-self: center;
 `;
 
 const UserTd = styled.td`
@@ -50,6 +53,11 @@ const UpdateButton = styled.button`
   background-color: sandybrown;
 `;
 
+const AddButton = styled.button`
+  width: fit-content;
+  background-color: white;
+`;
+
 export {
-  UserBodyWrapper, UserTable, UserTh, UserTd, UserThead, UserTr, UserTbody, DeleteButton, UpdateButton,
+  UserBodyWrapper, UserTable, UserTh, UserTd, UserThead, UserTr, UserTbody, DeleteButton, UpdateButton, UserInput, AddButton,
 };
