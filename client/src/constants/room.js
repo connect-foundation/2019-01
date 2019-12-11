@@ -83,13 +83,6 @@ const GAME_START_BUTTON = {
   BOX_SHADOW_CLICKED: '0px 2px 5px 0px',
 };
 
-const ROOM_NAME = {
-  WIDTH: 1000,
-  FONT_SIZE: 30,
-  COLOR: 'dimgray',
-  WRAPPER_MARGIN: '5px 0',
-};
-
 const CHAT_AREA = {
   BG_COLOR: 'rgba(255, 255, 255, 0.2)',
   WIDTH: 280,
@@ -111,6 +104,23 @@ const ROOM = {
   BORDER_RADIUS_BIG: 12,
   FONT_FAMILY: 'DungGeunMo',
   BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
+};
+
+const ROOM_NAME = {
+  WIDTH: 1000,
+  FONT_SIZE: 30,
+  COLOR: 'dimgray',
+  WRAPPER_MARGIN: '5px 0',
+  WRAPPER_WIDTH: CHAT_AREA.WIDTH - 30,
+  REGEX: {
+    HANGUL: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g,
+    EMOJI: /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
+  },
+  FONT_WIDTH: {
+    HANGUL: 30,
+    EMOJI: 30,
+    OTHERS: 16,
+  },
 };
 
 export {

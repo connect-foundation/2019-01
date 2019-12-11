@@ -1,34 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { RoomNameWrapper, NameText } from './style';
-import { CHAT_AREA } from '../../../../constants/room';
+import { ROOM_NAME } from '../../../../constants/room';
 import socket from '../../../../modules/socket';
-
-const WRAPPER_WIDTH = CHAT_AREA.WIDTH - 30;
-let requestId = null;
 
 const RoomName = () => {
   const [roomNameText, setRoomNameText] = useState('');
   const [position, setPosition] = useState(0);
   const [width, setWidth] = useState(0);
+  const [requestId, setRequestId] = useState(null);
 
   const moveOnePixel = () => {
     setPosition((prevPositon) => {
-      if (prevPositon < -width) return WRAPPER_WIDTH;
+      if (prevPositon < -width) return ROOM_NAME.WRAPPER_WIDTH;
       return prevPositon - 1;
     });
-    requestId = window.requestAnimationFrame(moveOnePixel);
+    setRequestId(window.requestAnimationFrame(moveOnePixel));
   };
   const move = () => {
-    requestId = window.requestAnimationFrame(moveOnePixel);
+    setRequestId(window.requestAnimationFrame(moveOnePixel));
   };
   const stop = () => {
     window.cancelAnimationFrame(requestId);
   };
   const setup = ({ roomName }) => {
-    setRoomNameText(`🤔${roomName}`);
-    const totalLength = roomName.length + 1;
-    const hangulLength = (roomName.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g) || []).length + 1;
-    setWidth(hangulLength * 30 + (totalLength - hangulLength) * 16);
+    const newRoomName = `🤔${roomName}`;
+    setRoomNameText(newRoomName);
+    const totalLength = newRoomName.length;
+    const hangulLength = (newRoomName.match(ROOM_NAME.REGEX.HANGUL) || []).length;
+    const emojiLength = (newRoomName.match(ROOM_NAME.REGEX.EMOJI) || []).length;
+    const othersLength = totalLength - hangulLength - emojiLength;
+    const newWidth = (
+      hangulLength * ROOM_NAME.FONT_WIDTH.HANGUL
+      + emojiLength * ROOM_NAME.FONT_WIDTH.EMOJI
+      + othersLength * ROOM_NAME.FONT_WIDTH.OTHERS);
+    setWidth(newWidth);
   };
 
   useEffect(() => {
