@@ -3,6 +3,7 @@ import userDb from '../database/user';
 
 const privateKey = process.env.JWT_SECRET_KEY;
 const algorithm = process.env.JWT_ALGORITHM;
+const FALSE = 0;
 
 const isAdmin = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ const isAdmin = async (req, res, next) => {
     const githubId = userInfo.id;
     const [user] = await userDb.fetchUser(githubId);
     if (user === undefined) throw new Error('user not existed');
-    if (user.is_admin === false) throw new Error('user not authorized');
+    if (user.is_admin === FALSE) throw new Error('user not authorized');
 
     next();
   } catch (error) {

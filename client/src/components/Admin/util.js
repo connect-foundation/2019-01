@@ -9,6 +9,7 @@ const fetchData = async (method, path, body) => {
       Accept: 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(body),
   };
   const data = await fetch(`${API_SERVER}${path}`, options);
