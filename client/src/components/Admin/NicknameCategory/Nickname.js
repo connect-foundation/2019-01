@@ -35,7 +35,7 @@ const Nickname = ({ type }) => {
     <NicknameTable>
       <NicknameThead>
         <NicknameTr>
-          <NicknameTh>id=</NicknameTh>
+          <NicknameTh>id</NicknameTh>
           <NicknameTh>{type}</NicknameTh>
         </NicknameTr>
       </NicknameThead>
