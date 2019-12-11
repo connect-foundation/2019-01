@@ -6,6 +6,13 @@ const URL = {
   LOCAL_GITHUB_LOGOUT: 'http://localhost:3000/oauth/github/logout',
   PRODUCTION_GITHUB_LOGOUT: 'http://45.119.146.251:3000/api/oauth/github/logout',
   ADMIN_BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/boolean_avengers_logo2.png',
+  ADMIN: {
+    USER: '/admin/user',
+    USER_LIST: '/admin/user/list',
+    QUIZ: '/admin/quiz',
+    QUIZ_LIST: '/admin/quiz/list',
+    NICKNAME: '/admin/nickname/',
+  },
 };
 
 export default URL;
