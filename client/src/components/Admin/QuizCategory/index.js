@@ -3,7 +3,7 @@ import {
   QuizBodyWrapper, QuizTable, QuizTh, QuizThead, QuizTr, QuizTbody, QuizButton,
 } from './style';
 import fetchData from '../util';
-import Row from './Row';
+import QuizRow from './Row';
 import QuizModal from './QuizModal';
 import URL from '../../../constants/url';
 
@@ -52,7 +52,7 @@ const QuizCategory = () => {
     setQuizData(() => quizList.map(
       (quiz) => {
         const openModal = openEditModal(quiz);
-        return <Row openModal={openModal} quiz={quiz} />;
+        return <QuizRow openModal={openModal} quiz={quiz} />;
       },
     ));
   };

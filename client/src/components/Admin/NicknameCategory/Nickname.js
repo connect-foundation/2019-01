@@ -4,7 +4,7 @@ import {
   NicknameTable, NicknameTh, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput,
 } from './style';
 import fetchData from '../util';
-import Row from './Row';
+import NicknameRow from './Row';
 import URL from '../../../constants/url';
 
 const Nickname = ({ type }) => {
@@ -13,7 +13,7 @@ const Nickname = ({ type }) => {
 
   const makeNewRow = (nicknameArray) => {
     const nicknameTagList = () => nicknameArray.map((nickname) => (
-      <Row id={nickname.id} type={type} nickname={type === 'adj' ? nickname.adj : nickname.noun} />
+      <NicknameRow id={nickname.id} type={type} nickname={type === 'adj' ? nickname.adj : nickname.noun} />
     ));
     setnicknameList(nicknameTagList);
   };
@@ -51,7 +51,7 @@ const Nickname = ({ type }) => {
   );
 };
 
-Row.propTypes = PropTypes.shape({
+NicknameRow.propTypes = PropTypes.shape({
   type: PropTypes.string.isRequired,
 }).isRequired;
 

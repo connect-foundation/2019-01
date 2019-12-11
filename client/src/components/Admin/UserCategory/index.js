@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   UserBodyWrapper, UserTable, UserTh, UserThead, UserTbody, UserTr,
 } from './style';
-import Row from './Row';
+import UserRow from './Row';
 import fetchData from '../util';
 import URL from '../../../constants/url';
 
@@ -10,7 +10,7 @@ const UserCategory = () => {
   const [userData, setUserData] = useState('');
 
   const makeNewRow = (userList) => {
-    const userTagList = userList.map((user) => <Row user={user} />);
+    const userTagList = userList.map((user) => <UserRow user={user} />);
     setUserData(userTagList);
   };
 
