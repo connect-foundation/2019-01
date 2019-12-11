@@ -52,22 +52,22 @@ const LoginAnonyButton = styled.div`
 `;
 
 const LoginGitHubButton = styled(LoginAnonyButton)`
-    display: flex;
-    justify-content: center;
-    padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
-    text-decoration: none;
-    color: black;
+  display: flex;
+  justify-content: center;
+  padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
+  text-decoration: none;
+  color: black;
 `;
 
 const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
-    width: ${LOGIN.GITHUB_ICON.WIDTH}px;
-    height: ${LOGIN.GITHUB_ICON.HEIGHT}px;
-    shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
+  width: ${LOGIN.GITHUB_ICON.WIDTH}px;
+  height: ${LOGIN.GITHUB_ICON.HEIGHT}px;
+  shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
 `;
 
 const LoginGitHubText = styled.div`
-    margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
-    padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
+  margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
+  padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
 `;
 
 export {
