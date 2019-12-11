@@ -66,12 +66,12 @@ const QuizCategory = () => {
       <QuizTable>
         <QuizThead>
           <QuizTr>
-            <QuizTh><p>id</p></QuizTh>
-            <QuizTh><p>category</p></QuizTh>
-            <QuizTh><p>level</p></QuizTh>
-            <QuizTh><p>quistion</p></QuizTh>
-            <QuizTh><p>comment</p></QuizTh>
-            <QuizTh><p>answer</p></QuizTh>
+            <QuizTh>id</QuizTh>
+            <QuizTh>category</QuizTh>
+            <QuizTh>level</QuizTh>
+            <QuizTh>quistion</QuizTh>
+            <QuizTh>comment</QuizTh>
+            <QuizTh>answer</QuizTh>
           </QuizTr>
         </QuizThead>
         <QuizTbody>

@@ -6,7 +6,7 @@ import {
 import fetchData from '../util';
 
 const Row = ({ openModal, quiz }) => {
-  const keys = Object.keys(quiz);
+  const columns = Object.keys(quiz);
 
   const deleteButtonHandler = (id) => {
     fetchData('delete', '/admin/quiz', { id });
@@ -14,7 +14,7 @@ const Row = ({ openModal, quiz }) => {
 
   return (
     <QuizTr>
-      {keys.map((key) => <QuizTh>{quiz[key]}</QuizTh>)}
+      {columns.map((key) => <QuizTh>{quiz[key]}</QuizTh>)}
       <QuizButton onClick={openModal}>수정</QuizButton>
       <QuizButton onClick={() => deleteButtonHandler(quiz.id)}>삭제</QuizButton>
     </QuizTr>

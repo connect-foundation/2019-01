@@ -13,7 +13,9 @@ import NicknameList from './NicknameCategory';
 
 const Admin = () => {
   const [body, setBody] = useState(<UserList />);
-  const listItem = [{ text: 'USERS', component: <UserList /> }, { text: 'NICKNAMES', component: <NicknameList /> },
+  const listItem = [
+    { text: 'USERS', component: <UserList /> },
+    { text: 'NICKNAMES', component: <NicknameList /> },
     { text: 'QUIZS', component: <QuizList /> }];
 
   const classes = useStyles();

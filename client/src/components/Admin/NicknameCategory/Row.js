@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes, { object } from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   NicknameTh, NicknameTr, NicknameButton, NicknameInput,
 } from './style';
@@ -24,8 +24,8 @@ const Row = ({ id, type, nickname }) => {
     <NicknameTr>
       <NicknameTh>{id}</NicknameTh>
       <NicknameInput onChange={updateNickname} value={currentNickname} />
-      <NicknameButton onClick={updateButtonHandler}><p>수정</p></NicknameButton>
-      <NicknameButton onClick={deleteButtonHandler}><p>삭제</p></NicknameButton>
+      <NicknameButton onClick={updateButtonHandler}>수정</NicknameButton>
+      <NicknameButton onClick={deleteButtonHandler}>삭제</NicknameButton>
     </NicknameTr>
   );
 };

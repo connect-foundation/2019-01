@@ -1,19 +1,17 @@
 import URL from '../../constants/url';
 
+const API_SERVER = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_API_SERVER : URL.LOCAL_API_SERVER;
+
 const fetchData = async (method, path, body) => {
-  let data;
-  if (method === 'get') {
-    data = await fetch(URL.LOCAL_API_SERVER + path);
-  } else {
-    data = await fetch(URL.LOCAL_API_SERVER + path, {
-      method,
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-  }
+  const options = method === 'get' ? {} : {
+    method,
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const data = await fetch(`${API_SERVER}${path}`, options);
   return data.json();
 };
 

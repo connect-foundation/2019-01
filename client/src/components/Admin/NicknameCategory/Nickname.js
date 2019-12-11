@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  NicknameTable, NicknameTh, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput, NicknameTd,
+  NicknameTable, NicknameTh, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput,
 } from './style';
 import fetchData from '../util';
 import Row from './Row';
 
 const Nickname = ({ type }) => {
-  const [nicknameList, setnicknameList] = useState('');
+  const [nicknameList, setnicknameList] = useState([]);
   const [newNickname, setNewNickname] = useState('');
 
   const makeNewRow = (nicknameArray) => {
@@ -34,8 +34,8 @@ const Nickname = ({ type }) => {
     <NicknameTable>
       <NicknameThead>
         <NicknameTr>
-          <NicknameTh><p>id</p></NicknameTh>
-          <NicknameTh><p>{type}</p></NicknameTh>
+          <NicknameTh>id=</NicknameTh>
+          <NicknameTh>{type}</NicknameTh>
         </NicknameTr>
       </NicknameThead>
       <NicknameTbody>

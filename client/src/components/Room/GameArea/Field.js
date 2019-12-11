@@ -5,6 +5,7 @@ import {
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
 import Canvas from './Canvas';
+import Thanos from '../../../modules/thanos';
 
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
@@ -96,6 +97,8 @@ const Field = () => {
     socket.onEndRound(killCharacters);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
+    const thanos = new Thanos();
+    thanos.draw();
   }, []);
 
   useEffect(() => {
