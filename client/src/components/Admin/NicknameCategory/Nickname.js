@@ -5,6 +5,7 @@ import {
 } from './style';
 import fetchData from '../util';
 import Row from './Row';
+import URL from '../../../constants/url';
 
 const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState([]);
@@ -22,11 +23,11 @@ const Nickname = ({ type }) => {
   const addNickname = () => {
     const nicknameData = {};
     nicknameData[type] = newNickname;
-    fetchData('post', `/admin/nickname/${type}`, nicknameData);
+    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData);
   };
 
   useEffect(() => {
-    fetchData('get', `/admin/nickname/${type}/list`)
+    fetchData('get', `${URL.ADMIN.NICKNAME}${type}/list`)
       .then((res) => makeNewRow(type === 'adj' ? res.adjList : res.nounList));
   }, []);
 

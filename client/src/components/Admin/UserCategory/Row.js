@@ -4,18 +4,19 @@ import {
   UserTd, UserTr, CustomButton,
 } from './style';
 import fetchData from '../util';
+import URL from '../../../constants/url';
 
 const Row = ({ user }) => {
   const [isAdmin, githubId] = [user.is_admin, user.github_id];
   const [userAuthority, setAuthority] = useState(isAdmin);
 
   const deleteButtonHandler = () => {
-    fetchData('delete', '/admin/user', { githubId });
+    fetchData('delete', URL.ADMIN.USER, { githubId });
   };
 
   const updateButtonHandler = () => {
     const action = userAuthority ? 'authorize' : 'deauthorize';
-    fetchData('put', '/admin/user', { githubId, action });
+    fetchData('put', URL.ADMIN.USER, { githubId, action });
   };
 
   const updateUserAuthority = () => {

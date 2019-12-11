@@ -97,8 +97,6 @@ const Field = () => {
     socket.onEndRound(killCharacters);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
-    const thanos = new Thanos();
-    thanos.draw();
   }, []);
 
   useEffect(() => {

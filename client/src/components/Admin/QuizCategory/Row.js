@@ -4,12 +4,13 @@ import {
   QuizTh, QuizTr, QuizButton,
 } from './style';
 import fetchData from '../util';
+import URL from '../../../constants/url';
 
 const Row = ({ openModal, quiz }) => {
   const columns = Object.keys(quiz);
 
   const deleteButtonHandler = (id) => {
-    fetchData('delete', '/admin/quiz', { id });
+    fetchData('delete', URL.ADMIN.QUIZ, { id });
   };
 
   return (

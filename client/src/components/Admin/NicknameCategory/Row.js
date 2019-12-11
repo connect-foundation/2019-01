@@ -4,18 +4,19 @@ import {
   NicknameTh, NicknameTr, NicknameButton, NicknameInput,
 } from './style';
 import fetchData from '../util';
+import URL from '../../../constants/url';
 
 const Row = ({ id, type, nickname }) => {
   const [currentNickname, setNickname] = useState(nickname);
 
   const deleteButtonHandler = () => {
-    fetchData('delete', `/admin/nickname/${type}`, { id });
+    fetchData('delete', `${URL.ADMIN.NICKNAME}${type}`, { id });
   };
 
   const updateButtonHandler = () => {
     const data = { id };
     data[type] = currentNickname;
-    fetchData('put', `/admin/nickname/${type}`, data);
+    fetchData('put', `${URL.ADMIN.NICKNAME}${type}`, data);
   };
 
   const updateNickname = (e) => setNickname(e.target.value);

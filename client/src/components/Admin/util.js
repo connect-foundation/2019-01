@@ -3,7 +3,7 @@ import URL from '../../constants/url';
 const API_SERVER = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_API_SERVER : URL.LOCAL_API_SERVER;
 
 const fetchData = async (method, path, body) => {
-  const options = method === 'get' ? {} : {
+  const options = method === 'get' ? { credentials: 'include' } : {
     method,
     headers: {
       Accept: 'application/json, text/plain, */*',

@@ -4,6 +4,7 @@ import {
 } from './style';
 import Row from './Row';
 import fetchData from '../util';
+import URL from '../../../constants/url';
 
 const UserCategory = () => {
   const [userData, setUserData] = useState('');
@@ -14,7 +15,7 @@ const UserCategory = () => {
   };
 
   useEffect(() => {
-    fetchData('get', '/admin/user/list')
+    fetchData('get', URL.ADMIN.USER_LIST)
       .then((res) => makeNewRow(res.userList));
   }, []);
 

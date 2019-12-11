@@ -5,6 +5,7 @@ import {
 import fetchData from '../util';
 import Row from './Row';
 import QuizModal from './QuizModal';
+import URL from '../../../constants/url';
 
 const QuizCategory = () => {
   const [quizData, setQuizData] = useState('');
@@ -16,7 +17,7 @@ const QuizCategory = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
         const fetchEditData = (quizInfo) => {
-          fetchData('put', '/admin/quiz', { id: quizInfo.id, data: quizInfo });
+          fetchData('put', URL.ADMIN.QUIZ, { id: quizInfo.id, data: quizInfo });
         };
         setFetchQuiz(() => fetchEditData);
         setModalContent(quiz);
@@ -29,7 +30,7 @@ const QuizCategory = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
         const fetchAddData = (quizInfo) => {
-          fetchData('post', '/admin/quiz', quizInfo);
+          fetchData('post', URL.ADMIN.QUIZ, quizInfo);
         };
         setFetchQuiz(() => fetchAddData);
         setModalContent({
@@ -57,7 +58,7 @@ const QuizCategory = () => {
   };
 
   useEffect(() => {
-    fetchData('get', '/admin/quiz/list')
+    fetchData('get', URL.ADMIN.QUIZ_LIST)
       .then((res) => makeNewRow(res.quizList));
   }, []);
 
