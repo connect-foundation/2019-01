@@ -5,10 +5,12 @@ import {
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
 import Canvas from './Canvas';
+import ThanosCanvas from './ThanosCanvas';
 
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
+  const [thanos, setThanos] = useState('');
   let lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
@@ -89,12 +91,20 @@ const Field = () => {
     }, 3000);
   };
 
+  const appearThanos = ({ answer }) => {
+    setThanos(<ThanosCanvas fieldX={answer ? 400 : 0} />);
+  };
+
+  const disappearThanos = () => {
+    setThanos('');
+  };
+
   useEffect(() => {
-    socket.onStartRound(teleportCharacters);
+    socket.onStartRound((data) => { teleportCharacters(data); disappearThanos(); });
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound(killCharacters);
+    socket.onEndRound((data) => { killCharacters(data); appearThanos(data); });
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
 
@@ -140,6 +150,7 @@ const Field = () => {
         height: FIELD.getHeight(),
       }}>
       {getCanvasList(characters)}
+      {thanos}
     </div>
   );
 };
