@@ -4,12 +4,17 @@ import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
 import socket from '../../modules/socket';
+import URL from '../../constants/url';
 
 const Room = () => {
   const { roomId } = useParams();
+  const backgroundMusic = new Audio(URL.BACKGROUND_MUSIC);
   const history = useHistory();
 
   useEffect(() => {
+    backgroundMusic.autoplay = true;
+    backgroundMusic.loop = true;
+
     if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
     socket.onEndGame(({ isOwner }) => {
@@ -17,6 +22,7 @@ const Room = () => {
     });
     return () => {
       socket.emitLeaveRoom();
+      backgroundMusic.pause();
     };
   }, []);
 

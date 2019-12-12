@@ -13,6 +13,7 @@ const URL = {
     QUIZ_LIST: '/admin/quiz/list',
     NICKNAME: '/admin/nickname/',
   },
+  BACKGROUND_MUSIC: 'https://kr.object.ncloudstorage.com/connect-2019-01/music/backgound-groovyhiphop.mp3',
 };
 
 export default URL;
