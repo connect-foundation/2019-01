@@ -96,6 +96,12 @@ export const CHAT_AREA = {
   BORDER: '1px solid lightslategrey',
 };
 
+export const SOUND_TOGGLE = {
+  HEIGHT: 30,
+  FONT_SIZE: 20,
+  PADDING_RIGHT: 5,
+};
+
 export const ROOM = {
   MARGIN: 20,
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },

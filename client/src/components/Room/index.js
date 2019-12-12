@@ -1,15 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
-import Wrapper from './style';
+import {
+  Wrapper, RoomWrapper, SoundToggleWrapper, SoundToggle,
+} from './style';
 import socket from '../../modules/socket';
 import URL from '../../constants/url';
 
 const Room = () => {
+  const [backgroundMusic] = useState(new Audio(URL.BACKGROUND_MUSIC));
+  const [musicPlaying, setMusicPlaying] = useState(true);
   const { roomId } = useParams();
-  const backgroundMusic = new Audio(URL.BACKGROUND_MUSIC);
   const history = useHistory();
+
+  const toggleMusic = () => setMusicPlaying((prevMusicPlaying) => {
+    if (prevMusicPlaying) {
+      backgroundMusic.pause();
+      return false;
+    }
+
+    backgroundMusic.play();
+    return true;
+  });
 
   useEffect(() => {
     backgroundMusic.autoplay = true;
@@ -28,8 +41,13 @@ const Room = () => {
 
   return (
     <Wrapper>
-      <GameArea />
-      <ChatArea />
+      <SoundToggleWrapper>
+        <SoundToggle onClick={toggleMusic}>{musicPlaying ? 'sound on' : 'sound off'}</SoundToggle>
+      </SoundToggleWrapper>
+      <RoomWrapper>
+        <GameArea />
+        <ChatArea />
+      </RoomWrapper>
     </Wrapper>
   );
 };
