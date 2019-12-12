@@ -9,6 +9,7 @@ import Canvas from './Canvas';
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
+  let lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -83,7 +84,7 @@ const Field = () => {
   };
 
   const updateCharacters = ({ characterList }) => {
-    setTimeout(() => {
+    lastTimerId = setTimeout(() => {
       teleportCharacters({ characterList });
     }, 3000);
   };
@@ -96,6 +97,10 @@ const Field = () => {
     socket.onEndRound(killCharacters);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
+
+    return () => {
+      clearTimeout(lastTimerId);
+    };
   }, []);
 
   useEffect(() => {
