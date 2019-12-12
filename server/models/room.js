@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import nicknameFinder from "../database/nickname";
-import quizFinder from "../database/quiz";
-import { ROOM, DIRECTION, FIELD } from "../constants/room";
+import nicknameFinder from '../database/nickname';
+import quizFinder from '../database/quiz';
+import { ROOM, DIRECTION, FIELD } from '../constants/room';
 
 /**
  * Room Class
@@ -51,7 +51,14 @@ class Room {
   }
 
   isEnterable() {
-    return this.isGameStarted === false && this.users.size < ROOM.MAX_USER;
+    if (this.isGameStarted) return false;
+    if (this.users.size >= ROOM.MAX_USER) return false;
+    return true;
+  }
+
+  isUserEntered(user) {
+    if (user.isGuest()) return false;
+    return this.users.has(user.getNickname());
   }
 
   isStarted() {
@@ -108,10 +115,10 @@ class Room {
 
     const newUser = {
       ...characterList[characterList.length - 1],
-      isMine: false
+      isMine: false,
     };
 
-    this.users.forEach(_user => {
+    this.users.forEach((_user) => {
       if (user === _user) return;
       _user.emitEnterNewUser({ characterList: [newUser] });
     });
@@ -121,7 +128,7 @@ class Room {
       isGameStarted: this.isGameStarted,
       question: this.currentQuiz.question,
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
-      isOwner: this._isOwner(user)
+      isOwner: this._isOwner(user),
     });
     this.aliveUsers.set(user.getNickname(), user);
   }
@@ -129,14 +136,14 @@ class Room {
   makeCharacterList(myCharacter) {
     const characterList = [];
 
-    this.users.forEach(_user => {
+    this.users.forEach((_user) => {
       const character = _user.getCharacter();
       if (character.isPlaced() === false) return;
       characterList.push({
         userId: _user.getId(),
         isMine: character === myCharacter,
         nickname: _user.getNickname(),
-        ...character.getInfo()
+        ...character.getInfo(),
       });
     });
 
@@ -158,7 +165,7 @@ class Room {
     const isAlive = this.aliveUsers.has(nickname);
     const characterList = [{ nickname, isAlive }];
 
-    this.users.forEach(_user => {
+    this.users.forEach((_user) => {
       _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
     });
     this.aliveUsers.delete(nickname);
@@ -173,7 +180,7 @@ class Room {
     this.isGameStarted = true;
     this.currentRound = 0;
     this.quizList = await quizFinder.fetchQuizList();
-    this.users.forEach(_user => _user.emitStartGame());
+    this.users.forEach((_user) => _user.emitStartGame());
 
     setTimeout(() => this._startRound(), ROOM.READY_TIME_MS);
     return true;
@@ -220,13 +227,13 @@ class Room {
       // 추후에는 캐릭터 생성시 랜덤한 방향을 바라보게 하거나 아래를 보게 해줄수도 있겠죠
       const nickname = user.getNickname();
       character.setDirection(direction);
-      this.users.forEach(_user => {
+      this.users.forEach((_user) => {
         _user.emitMove({
           canMove,
           nickname,
           direction,
           newIndexX,
-          newIndexY
+          newIndexY,
         });
       });
     }
@@ -234,7 +241,7 @@ class Room {
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
   chat(nickname, message) {
-    this.users.forEach(user => user.emitChatMessage({ nickname, message }));
+    this.users.forEach((user) => user.emitChatMessage({ nickname, message }));
   }
 
   /**
@@ -263,12 +270,12 @@ class Room {
       characterList.push({ nickname, indexX, indexY });
     });
 
-    this.users.forEach(user => {
+    this.users.forEach((user) => {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
         timeLimit: ROOM.TIME_LIMIT,
-        characterList
+        characterList,
       });
     });
 
@@ -283,10 +290,10 @@ class Room {
       round: this.currentRound,
       comment,
       answer,
-      characterList: dropUsers
+      characterList: dropUsers,
     };
 
-    this.users.forEach(user => {
+    this.users.forEach((user) => {
       user.emitEndRound(endRoundInfos);
     });
 
@@ -316,7 +323,7 @@ class Room {
         if (character !== undefined) {
           dropUsers.push({
             nickname: character.getNickname(),
-            isOwner: this._isOwner(character)
+            isOwner: this._isOwner(character),
           });
           this.indexOfCharacters[i][j] = undefined;
         }
@@ -332,10 +339,10 @@ class Room {
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
-    this.users.forEach(user => this._placeCharacter(user));
+    this.users.forEach((user) => this._placeCharacter(user));
 
     const characterList = [];
-    this.users.forEach(user => {
+    this.users.forEach((user) => {
       const [indexX, indexY] = this._getRandomEmptyIndex();
       const character = user.getCharacter();
       character.setIndexes(indexX, indexY);
@@ -343,20 +350,19 @@ class Room {
       characterList.push({ nickname: user.getNickname(), indexX, indexY });
     });
 
-    this.users.forEach(user => {
+    this.users.forEach((user) => {
       setTimeout(
-        () =>
-          user.emitEndGame({
-            characterList,
-            isOwner: this._isOwner(user)
-          }),
-        ROOM.WAITING_TIME_MS
+        () => user.emitEndGame({
+          characterList,
+          isOwner: this._isOwner(user),
+        }),
+        ROOM.WAITING_TIME_MS,
       );
     });
     this.isGameStarted = false;
 
     this.aliveUsers.clear();
-    this.users.forEach(user => this.aliveUsers.set(user.getNickname(), user));
+    this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
   }
 
   /**
@@ -419,8 +425,7 @@ class Room {
   _canBeMoved(newIndexX, newIndexY) {
     if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
     if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
-    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined)
-      return false;
+    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) { return false; }
     return true;
   }
 
@@ -429,10 +434,10 @@ class Room {
    */
   _canBeStarted(user) {
     return (
-      this.aliveUsers.size > 1 &&
-      this.aliveUsers.size <= ROOM.MAX_USER &&
-      this._isOwner(user) &&
-      this.isGameStarted === false
+      this.aliveUsers.size > 1
+      && this.aliveUsers.size <= ROOM.MAX_USER
+      && this._isOwner(user)
+      && this.isGameStarted === false
     );
   }
 }

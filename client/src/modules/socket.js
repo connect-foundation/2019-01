@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-import socketio from 'socket.io-client';
-import EVENT from '../constants/socket-event';
-import URL from '../constants/url';
+import socketio from "socket.io-client";
+import EVENT from "../constants/socket-event";
+import URL from "../constants/url";
 
-const isFunction = (callback) => typeof callback === 'function';
+const isFunction = callback => typeof callback === "function";
 
 class SocketContainer {
   constructor() {
@@ -11,18 +11,23 @@ class SocketContainer {
   }
 
   connect(query) {
-    this.socket = (
-      process.env.NODE_ENV === 'production'
+    this.socket =
+      process.env.NODE_ENV === "production"
         ? socketio({
-          path: '/socket.io', transports: ['websocket'], query, reconnection: false,
-        })
+            path: "/socket.io",
+            transports: ["websocket"],
+            query,
+            reconnection: false
+          })
         : socketio(URL.LOCAL_API_SERVER, {
-          transports: ['websocket'], query, reconnection: false,
-        }));
+            transports: ["websocket"],
+            query,
+            reconnection: false
+          });
   }
 
   isConnected() {
-    return (this.socket !== undefined && this.socket.connected);
+    return this.socket !== undefined && this.socket.connected;
   }
 
   disconnect() {
@@ -50,6 +55,10 @@ class SocketContainer {
     this._emit(EVENT.ENTER_LOBBY, undefined, false);
   }
 
+  emitKnockRoom(roomId) {
+    this._emit(EVENT.KNOCK_ROOM, roomId);
+  }
+
   emitEnterRoom(roomId) {
     this._emit(EVENT.ENTER_ROOM, roomId);
   }
@@ -69,7 +78,7 @@ class SocketContainer {
   _on(eventName, callback) {
     if (this.socket === undefined) return;
     if (isFunction(callback) === false) return;
-    this.socket.on(eventName, (data) => callback(data));
+    this.socket.on(eventName, data => callback(data));
   }
 
   onEnterLobby(callback) {
@@ -86,6 +95,10 @@ class SocketContainer {
 
   onUpdateRoomInfo(callback) {
     this._on(EVENT.UPDATE_ROOM_INFO, callback);
+  }
+
+  onKnockRoom(callback) {
+    this._on(EVENT.KNOCK_ROOM, callback);
   }
 
   onEnterRoom(callback) {

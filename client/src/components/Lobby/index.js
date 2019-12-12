@@ -8,6 +8,7 @@ import socket from '../../modules/socket';
 import RoomInfoButton from './RoomInfoButton';
 import GitHubLoginButton from './GitHubLoginButton';
 import RoomCreateModal from './RoomCreateModal';
+import RoomEnterAlert from './RoomEnterAlert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
@@ -20,6 +21,8 @@ const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
   const [roomInfoButtons, setRoomInfoButtons] = useState([]);
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const history = useHistory();
   const roomInfos = new Map();
 
@@ -30,14 +33,17 @@ const Lobby = () => {
   const makeRoomInfoButton = ({
     // eslint-disable-next-line react/prop-types
     id, name, numOfUsers, isEnterable,
-  }) => (
-    <RoomInfoButton
-      key={id}
-      roomId={id}
-      name={name}
-      numOfUsers={numOfUsers}
-      enterable={isEnterable} />
-  );
+  }) => {
+    const onClick = () => socket.emitKnockRoom(id);
+    return (
+      <RoomInfoButton
+        key={id}
+        name={name}
+        numOfUsers={numOfUsers}
+        enterable={isEnterable}
+        onClick={onClick} />
+    );
+  };
 
   const openRoomCreateModal = () => setModalOpen(true);
 
@@ -63,7 +69,9 @@ const Lobby = () => {
 
   const updateCurrentRoomInfos = (currentRoomInfos) => {
     currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
-    setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
+    setRoomInfoButtons(
+      currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)),
+    );
   };
 
   const updateRoomInfo = ({ roomId, action }) => {
@@ -73,22 +81,34 @@ const Lobby = () => {
     switch (action) {
       case LOBBY.ACTION.USER_ENTERED:
         roomInfos.set(id, {
-          id, name, numOfUsers: numOfUsers + 1, isEnterable,
+          id,
+          name,
+          numOfUsers: numOfUsers + 1,
+          isEnterable,
         });
         break;
       case LOBBY.ACTION.USER_LEAVED:
         roomInfos.set(id, {
-          id, name, numOfUsers: numOfUsers - 1, isEnterable,
+          id,
+          name,
+          numOfUsers: numOfUsers - 1,
+          isEnterable,
         });
         break;
       case LOBBY.ACTION.GAME_STARTED:
         roomInfos.set(id, {
-          id, name, numOfUsers, isEnterable: false,
+          id,
+          name,
+          numOfUsers,
+          isEnterable: false,
         });
         break;
       case LOBBY.ACTION.GAME_ENDED:
         roomInfos.set(id, {
-          id, name, numOfUsers, isEnterable: true,
+          id,
+          name,
+          numOfUsers,
+          isEnterable: true,
         });
         break;
       case LOBBY.ACTION.NO_USERS:
@@ -105,6 +125,16 @@ const Lobby = () => {
     });
   };
 
+  const enterRoom = ({ isEnterable, roomId, message }) => {
+    if (isEnterable) {
+      history.push(`/room/${roomId}`);
+      return;
+    }
+
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
   useEffect(() => {
     const githubId = getNicknameFromJwt();
 
@@ -119,6 +149,7 @@ const Lobby = () => {
     socket.onCreateRoom(enterCreatedRoom);
     socket.onRoomIsCreated(updateCreatedRoom);
     socket.onUpdateRoomInfo(updateRoomInfo);
+    socket.onKnockRoom(enterRoom);
   }, []);
 
   return (
@@ -126,14 +157,19 @@ const Lobby = () => {
       <LobbyWrapper>
         <LobbyHeader>
           <LobbyNickname>hello, {userName}</LobbyNickname>
-          <GitHubLoginButton makeUserGuest={makeUserGuest} userName={userName} />
+          <GitHubLoginButton
+            makeUserGuest={makeUserGuest}
+            userName={userName} />
         </LobbyHeader>
         <LobbyBody>
-          <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
+          <CreateRoomButton onClick={openRoomCreateModal}>
+            + new Room();
+          </CreateRoomButton>
           {roomInfoButtons}
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
+      {isAlertOpen ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} /> : ''}
     </>
   );
 };
