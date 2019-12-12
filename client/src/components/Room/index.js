@@ -14,13 +14,13 @@ const Room = () => {
   const [buttonClickSound] = useState(new Audio(URL.BUTTON_CLICK_SOUND));
   const [gameStartSound] = useState(new Audio(URL.GAME_START_SOUND));
   const [gameEndSound] = useState(new Audio(URL.GAME_END_SOUND));
-  const [musicPlaying, setMusicPlaying] = useState(true);
+  const [isSoundOn, setSoundOn] = useState(true);
 
   const { roomId } = useParams();
   const history = useHistory();
 
-  const toggleMusic = () => {
-    setMusicPlaying(!musicPlaying);
+  const toggleSound = () => {
+    setSoundOn(!isSoundOn);
     backgroundMusic.muted = !backgroundMusic.muted;
     buttonClickSound.muted = !buttonClickSound.muted;
     gameStartSound.muted = !gameStartSound.muted;
@@ -63,7 +63,7 @@ const Room = () => {
   return (
     <Wrapper>
       <SoundToggleWrapper>
-        <SoundToggle onClick={toggleMusic}>{musicPlaying ? 'sound on' : 'sound off'}</SoundToggle>
+        <SoundToggle onClick={toggleSound}>{isSoundOn ? 'sound on' : 'sound off'}</SoundToggle>
       </SoundToggleWrapper>
       <RoomWrapper>
         <GameArea buttonClickSound={buttonClickSound} />
