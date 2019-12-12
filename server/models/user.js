@@ -1,5 +1,5 @@
-import EVENT from '../constants/socket-event';
-import { isFunction } from '../util';
+import EVENT from "../constants/socket-event";
+import { isFunction } from "../util";
 
 /**
  * User Class
@@ -17,6 +17,11 @@ class User {
     this.nickname = socket.handshake.query.githubId;
     this.character = null;
     this.roomId = null;
+    this.guest = this.nickname === undefined;
+  }
+
+  isGuest() {
+    return this.guest;
   }
 
   getNickname() {
@@ -65,7 +70,7 @@ class User {
 
   onEnterRoom(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
+    this.socket.on(EVENT.ENTER_ROOM, roomId => {
       callback(roomId);
       this.roomId = roomId;
     });
@@ -73,7 +78,7 @@ class User {
 
   onCreateRoom(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.CREATE_ROOM, (roomName) => callback(roomName));
+    this.socket.on(EVENT.CREATE_ROOM, roomName => callback(roomName));
   }
 
   onLeaveRoom(callback) {
@@ -91,17 +96,17 @@ class User {
 
   onEndGame(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.END_GAME, (roomId) => callback(roomId));
+    this.socket.on(EVENT.END_GAME, roomId => callback(roomId));
   }
 
   onMove(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.MOVE, (direction) => callback(direction));
+    this.socket.on(EVENT.MOVE, direction => callback(direction));
   }
 
   onChatMessage(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.CHAT_MESSAGE, (message) => callback(message));
+    this.socket.on(EVENT.CHAT_MESSAGE, message => callback(message));
   }
 
   onDisconnecting(callback) {
