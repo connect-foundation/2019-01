@@ -26,10 +26,6 @@ const Lobby = () => {
   const history = useHistory();
   const roomInfos = new Map();
 
-  const makeUserGuest = () => {
-    setUserName('guest');
-  };
-
   const makeRoomInfoButton = ({
     // eslint-disable-next-line react/prop-types
     id, name, numOfUsers, isEnterable,
@@ -157,9 +153,7 @@ const Lobby = () => {
       <LobbyWrapper>
         <LobbyHeader>
           <LobbyNickname>hello, {userName}</LobbyNickname>
-          <GitHubLoginButton
-            makeUserGuest={makeUserGuest}
-            userName={userName} />
+          <GitHubLoginButton userName={userName} />
         </LobbyHeader>
         <LobbyBody>
           <CreateRoomButton onClick={openRoomCreateModal}>

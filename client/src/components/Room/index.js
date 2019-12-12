@@ -4,7 +4,6 @@ import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import { Wrapper } from './style';
 import socket from '../../modules/socket';
-import { ROOM } from '../../constants/room';
 
 const Room = () => {
   const { roomId } = useParams();
@@ -14,9 +13,7 @@ const Room = () => {
     if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
     socket.onEndGame(({ isOwner }) => {
-      if (isOwner) {
-        setTimeout(() => socket.emitEndGame(roomId), ROOM.WAITING_TIME_MS);
-      }
+      if (isOwner) socket.emitEndGame(roomId);
     });
     return () => {
       socket.emitLeaveRoom();

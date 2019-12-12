@@ -5,6 +5,7 @@ import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
 import LOBBY from '../constants/lobby';
+import ROOM from '../constants/room';
 /**
  * Controller class
  * @property {array} rooms
@@ -135,11 +136,13 @@ class Controller {
   }
 
   _letUsersKnowGameEnded(user, roomId) {
-    const room = lobby.getRoom(roomId);
+    setTimeout(() => {
+      const room = lobby.getRoom(roomId);
 
-    if (room !== undefined && room.isStarted() === false) {
-      lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
-    }
+      if (room !== undefined && room.isStarted() === false) {
+        lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
+      }
+    }, ROOM.WAITING_TIME_MS);
   }
 
   /**

@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import {
-  CHAT_AREA, FIELD, ROOM, DASHBOARD, QUIZ,
+  CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
 } from '../../../constants/room';
 
 const ChatAreaWrapper = styled.div`
     width: ${CHAT_AREA.WIDTH}px;
-    height: ${FIELD.getHeight()}px;
-    margin-top: ${DASHBOARD.HEIGHT + ROOM.MARGIN}px;
+    height: ${ROOM.getHeight()}px;
     box-sizing: border-box;
     padding: 1%;
     border: ${CHAT_AREA.BORDER};
@@ -22,6 +21,8 @@ const ChatHeader = styled.div`
     height: 8%;
     display: flex;
     justify-content: space-between;
+    box-sizing: border-box;
+    margin: ${ROOM_NAME.WRAPPER_MARGIN};
 `;
 
 const RoomInfo = styled.div`
@@ -90,10 +91,11 @@ const ExitButton = styled.button.attrs({
 const ChatLog = styled.div`
     width: 100%;
     max-width: 100%;
-    height: 80%;
+    height: 75%;
     overflow: auto;
     box-sizing: border-box;
-    padding: 3%;
+    padding: 0 3%;
+    margin: 8% 0;
 `;
 
 const ChatNotice = styled.div`

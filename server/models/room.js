@@ -129,6 +129,7 @@ class Room {
       question: this.currentQuiz.question,
       timeLimit: ROOM.TIME_LIMIT - this.currentTime,
       isOwner: this._isOwner(user),
+      roomName: this.name,
     });
     this.aliveUsers.set(user.getNickname(), user);
   }
@@ -338,26 +339,18 @@ class Room {
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
-    this.indexOfCharacters = this._getEmptyIndexMatrix();
-    this.users.forEach((user) => this._placeCharacter(user));
-
     const characterList = [];
+    this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => {
-      const [indexX, indexY] = this._getRandomEmptyIndex();
-      const character = user.getCharacter();
-      character.setIndexes(indexX, indexY);
-      this.indexOfCharacters[indexX][indexY] = user;
+      const [indexX, indexY] = this._placeCharacter(user);
       characterList.push({ nickname: user.getNickname(), indexX, indexY });
     });
 
     this.users.forEach((user) => {
-      setTimeout(
-        () => user.emitEndGame({
-          characterList,
-          isOwner: this._isOwner(user),
-        }),
-        ROOM.WAITING_TIME_MS,
-      );
+      setTimeout(() => user.emitEndGame({
+        characterList,
+        isOwner: this._isOwner(user),
+      }), ROOM.WAITING_TIME_MS);
     });
     this.isGameStarted = false;
 
@@ -367,12 +360,14 @@ class Room {
 
   /**
    * 유저의 캐릭터를 랜덤한 위치에 이동시키는 메서드
+   * @returns {Array.<number, number>}
    */
   _placeCharacter(user) {
     const [indexX, indexY] = this._getRandomEmptyIndex();
     const character = user.getCharacter();
     character.setIndexes(indexX, indexY);
     this.indexOfCharacters[indexX][indexY] = user;
+    return [indexX, indexY];
   }
 
   /**
