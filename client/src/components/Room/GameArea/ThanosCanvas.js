@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Thanos from '../../../modules/thanos';
 import { FIELD } from '../../../constants/room';
 
-const ThanosCanvas = ({ fieldX }) => {
+const ThanosCanvas = ({ fieldX, killCharacters }) => {
   const canvasRef = React.useRef();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const thanos = new Thanos(fieldX);
+    const thanos = new Thanos(fieldX, killCharacters);
     thanos.drawImage(ctx);
   }, []);
 
@@ -24,6 +24,7 @@ const ThanosCanvas = ({ fieldX }) => {
 
 ThanosCanvas.propTypes = {
   fieldX: PropTypes.number.isRequired,
+  killCharacters: PropTypes.func.isRequired,
 };
 
 export default ThanosCanvas;

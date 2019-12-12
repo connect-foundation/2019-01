@@ -91,20 +91,23 @@ const Field = () => {
     }, 3000);
   };
 
-  const appearThanos = ({ answer }) => {
-    setThanos(<ThanosCanvas fieldX={answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X} />);
+  const appearThanos = (data) => {
+    setThanos(<ThanosCanvas
+      killCharacters={() => killCharacters(data)}
+      fieldX={data.answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X} />);
   };
 
-  const disappearThanos = () => {
+  const disappearThanos = (data) => {
     setThanos('');
+    teleportCharacters(data);
   };
 
   useEffect(() => {
-    socket.onStartRound((data) => { teleportCharacters(data); disappearThanos(); });
+    socket.onStartRound(disappearThanos);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound((data) => { killCharacters(data); appearThanos(data); });
+    socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
 

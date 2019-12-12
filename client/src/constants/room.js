@@ -17,7 +17,7 @@ const FIELD = {
     IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
     WIDTH: 400,
     HEIGHT: 480,
-    TIME: 1000,
+    TIME: 2000,
   },
 };
 

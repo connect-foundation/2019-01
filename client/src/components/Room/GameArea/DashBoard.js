@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
-
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';

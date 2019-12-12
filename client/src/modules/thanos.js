@@ -2,10 +2,11 @@
 import { FIELD } from '../constants/room';
 
 class Thanos {
-  constructor(fieldXValue) {
+  constructor(fieldXValue, killCharacters) {
     this.ctx = null;
     this.img = null;
     this.fieldXValue = fieldXValue;
+    this.killCharacters = killCharacters;
   }
 
   drawImage(ctx) {
@@ -29,7 +30,10 @@ class Thanos {
     );
 
     if (sy >= FIELD.THANOS.HEIGHT) {
-      setTimeout(() => this._clear(sy), FIELD.THANOS.TIME);
+      setTimeout(() => {
+        this.killCharacters();
+        this._clear(sy);
+      }, FIELD.THANOS.TIME);
       return;
     }
 
