@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Thanos from '../../../modules/thanos';
+import { FIELD } from '../../../constants/room';
 
 const ThanosCanvas = ({ fieldX }) => {
   const canvasRef = React.useRef();
@@ -16,8 +17,8 @@ const ThanosCanvas = ({ fieldX }) => {
     <canvas
       ref={canvasRef}
       style={{ position: 'absolute' }}
-      width={800}
-      height={480} />
+      width={FIELD.WIDTH}
+      height={FIELD.HEIGHT} />
   );
 };
 

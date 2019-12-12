@@ -92,7 +92,7 @@ const Field = () => {
   };
 
   const appearThanos = ({ answer }) => {
-    setThanos(<ThanosCanvas fieldX={answer ? 400 : 0} />);
+    setThanos(<ThanosCanvas fieldX={answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X} />);
   };
 
   const disappearThanos = () => {

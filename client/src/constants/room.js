@@ -6,10 +6,19 @@ const TILE = {
 const FIELD = {
   ROW: 8,
   COLUMN: 16,
+  WIDTH: 800,
+  HEIGHT: 480,
+  TRUE_FIELD_X: 0,
+  FALSE_FIELD_X: 400,
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
-  THANOS: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
+  THANOS: {
+    IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
+    WIDTH: 400,
+    HEIGHT: 480,
+    TIME: 1000,
+  },
 };
 
 const CHARACTER = {

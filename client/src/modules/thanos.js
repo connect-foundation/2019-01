@@ -6,14 +6,12 @@ class Thanos {
     this.ctx = null;
     this.img = null;
     this.fieldXValue = fieldXValue;
-    this.imgUrl = FIELD.THANOS;
-    this.frameCount = 0;
   }
 
   drawImage(ctx) {
     this.ctx = ctx;
     this.img = new Image();
-    this.img.src = this.imgUrl;
+    this.img.src = FIELD.THANOS.IMG;
     this.img.onload = () => this._draw(0);
   }
 
@@ -22,16 +20,16 @@ class Thanos {
       this.img,
       0,
       0,
-      400,
+      FIELD.THANOS.WIDTH,
       sy,
       this.fieldXValue,
-      480 - sy,
-      400,
+      FIELD.THANOS.HEIGHT - sy,
+      FIELD.THANOS.WIDTH,
       sy,
     );
 
-    if (sy >= 480) {
-      setTimeout(() => this._clear(sy), 1000);
+    if (sy >= FIELD.THANOS.HEIGHT) {
+      setTimeout(() => this._clear(sy), FIELD.THANOS.TIME);
       return;
     }
 
@@ -44,8 +42,8 @@ class Thanos {
   _clear(sy) {
     this.ctx.clearRect(
       this.fieldXValue,
-      480 - sy,
-      400,
+      FIELD.THANOS.HEIGHT - sy,
+      FIELD.THANOS.WIDTH,
       sy,
     );
   }
