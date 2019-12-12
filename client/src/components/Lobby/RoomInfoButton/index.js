@@ -10,7 +10,7 @@ const RoomInfoButton = ({
   const history = useHistory();
 
   const clickHandler = () => {
-    if (enterable) history.push(`/room/${roomId}`);
+    if (enterable) history.replace(`/room/${roomId}`);
   };
 
   return (

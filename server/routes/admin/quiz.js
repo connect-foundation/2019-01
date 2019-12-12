@@ -28,17 +28,11 @@ router.post('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
   try {
-    const { id, action, value } = req.body;
-    const actionUpdateMap = {
-      category: quizDb.updateCategory,
-      level: quizDb.updateLevel,
-      question: quizDb.updateQuestion,
-      comment: quizDb.updateComment,
-      answer: quizDb.updateAnswer,
-    };
-    const updateFunction = actionUpdateMap[action];
-    if (updateFunction === undefined) throw new Error('non-exist action');
-    const queryResult = await updateFunction(id, value);
+    const { id, data } = req.body;
+    const {
+      category, level, question, comment, answer,
+    } = data;
+    const queryResult = await quizDb.updateQuiz(id, category, level, question, comment, answer);
     const result = isSuccessFul(queryResult);
     res.status(200).send({ result });
   } catch (error) {

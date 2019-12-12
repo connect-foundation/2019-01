@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {} from 'dotenv/config';
 import { useHistory } from 'react-router-dom';
 import {
@@ -14,8 +14,12 @@ const Login = () => {
   const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
 
   const enterLobby = () => {
-    history.push('/lobby');
+    history.replace('/lobby');
   };
+
+  useEffect(() => {
+    history.push('/');
+  }, []);
 
   return (
     <LoginPageWrapper>

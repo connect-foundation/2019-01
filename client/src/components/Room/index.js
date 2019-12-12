@@ -11,13 +11,16 @@ const Room = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (socket.isConnected() === false) history.push('/');
+    if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
     socket.onEndGame(({ isOwner }) => {
       if (isOwner) {
         setTimeout(() => socket.emitEndGame(roomId), ROOM.WAITING_TIME_MS);
       }
     });
+    return () => {
+      socket.emitLeaveRoom();
+    };
   }, []);
 
   return (
