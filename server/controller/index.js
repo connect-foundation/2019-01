@@ -4,7 +4,7 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
-import LOBBY from '../constants/lobby';
+import { LOBBY, KNOCK_MESSAGE } from '../constants/lobby';
 import { ROOM } from '../constants/room';
 /**
  * Controller class
@@ -46,16 +46,16 @@ class Controller {
     const room = lobby.getRoom(roomId);
 
     if (room.isEnterable() === false) {
-      user.emitKnockRoom({ isEnterable: false, roomId, message: '방에 들어갈 수 없습니다.' });
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.DENIED });
       return;
     }
 
     if (room.isUserEntered(user)) {
-      user.emitKnockRoom({ isEnterable: false, roomId, message: '이미 들어간 방입니다.' });
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.OVERLAP });
       return;
     }
 
-    user.emitKnockRoom({ isEnterable: true, roomId, message: '' });
+    user.emitKnockRoom({ isEnterable: true, roomId, message: KNOCK_MESSAGE.PASS });
   }
 
   /**

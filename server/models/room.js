@@ -198,20 +198,11 @@ class Room {
 
     let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
     switch (direction) {
-      case DIRECTION.LEFT:
-        newIndexX -= 1;
-        break;
-      case DIRECTION.RIGHT:
-        newIndexX += 1;
-        break;
-      case DIRECTION.UP:
-        newIndexY -= 1;
-        break;
-      case DIRECTION.DOWN:
-        newIndexY += 1;
-        break;
-      default:
-        return;
+      case DIRECTION.LEFT: newIndexX -= 1; break;
+      case DIRECTION.RIGHT: newIndexX += 1; break;
+      case DIRECTION.UP: newIndexY -= 1; break;
+      case DIRECTION.DOWN: newIndexY += 1; break;
+      default: return;
     }
 
     const canMove = this._canBeMoved(newIndexX, newIndexY);
@@ -420,7 +411,7 @@ class Room {
   _canBeMoved(newIndexX, newIndexY) {
     if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
     if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
-    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) { return false; }
+    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
     return true;
   }
 

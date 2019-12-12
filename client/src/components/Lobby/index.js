@@ -163,7 +163,9 @@ const Lobby = () => {
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
-      {isAlertOpen ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} /> : ''}
+      {isAlertOpen
+        ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} />
+        : ''}
     </>
   );
 };

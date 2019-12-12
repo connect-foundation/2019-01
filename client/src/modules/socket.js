@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-import socketio from "socket.io-client";
-import EVENT from "../constants/socket-event";
-import URL from "../constants/url";
+import socketio from 'socket.io-client';
+import EVENT from '../constants/socket-event';
+import URL from '../constants/url';
 
-const isFunction = callback => typeof callback === "function";
+const isFunction = (callback) => typeof callback === 'function';
 
 class SocketContainer {
   constructor() {
@@ -11,19 +11,18 @@ class SocketContainer {
   }
 
   connect(query) {
-    this.socket =
-      process.env.NODE_ENV === "production"
-        ? socketio({
-            path: "/socket.io",
-            transports: ["websocket"],
-            query,
-            reconnection: false
-          })
-        : socketio(URL.LOCAL_API_SERVER, {
-            transports: ["websocket"],
-            query,
-            reconnection: false
-          });
+    this.socket = process.env.NODE_ENV === 'production'
+      ? socketio({
+        path: '/socket.io',
+        transports: ['websocket'],
+        query,
+        reconnection: false,
+      })
+      : socketio(URL.LOCAL_API_SERVER, {
+        transports: ['websocket'],
+        query,
+        reconnection: false,
+      });
   }
 
   isConnected() {
@@ -78,7 +77,7 @@ class SocketContainer {
   _on(eventName, callback) {
     if (this.socket === undefined) return;
     if (isFunction(callback) === false) return;
-    this.socket.on(eventName, data => callback(data));
+    this.socket.on(eventName, (data) => callback(data));
   }
 
   onEnterLobby(callback) {
