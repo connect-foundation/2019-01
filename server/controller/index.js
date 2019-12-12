@@ -5,7 +5,7 @@ import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
 import LOBBY from '../constants/lobby';
-import ROOM from '../constants/room';
+import { ROOM } from '../constants/room';
 /**
  * Controller class
  * @property {array} rooms
