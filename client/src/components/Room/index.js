@@ -7,12 +7,13 @@ import {
 } from './style';
 import socket from '../../modules/socket';
 import URL from '../../constants/url';
-import { DASHBOARD } from '../../constants/room';
+import { ROOM } from '../../constants/room';
 
 const Room = () => {
   const [backgroundMusic] = useState(new Audio(URL.BACKGROUND_MUSIC));
   const [buttonClickSound] = useState(new Audio(URL.BUTTON_CLICK_SOUND));
   const [gameStartSound] = useState(new Audio(URL.GAME_START_SOUND));
+  const [gameEndSound] = useState(new Audio(URL.GAME_END_SOUND));
   const [musicPlaying, setMusicPlaying] = useState(true);
 
   const { roomId } = useParams();
@@ -23,25 +24,35 @@ const Room = () => {
     backgroundMusic.muted = !backgroundMusic.muted;
     buttonClickSound.muted = !buttonClickSound.muted;
     gameStartSound.muted = !gameStartSound.muted;
+    gameEndSound.muted = !gameEndSound.muted;
   };
 
-  const playSoundEffect = () => {
+  const playStartSound = () => {
     backgroundMusic.pause();
     gameStartSound.play();
   };
 
-  const replayBackgroundMusic = () => setTimeout(() => backgroundMusic.play(), DASHBOARD.SECOND_MS);
+  const playEndSound = () => {
+    backgroundMusic.pause();
+    gameEndSound.play();
+  };
+
+  const replayBackgroundMusic = () => setTimeout(
+    () => backgroundMusic.play(), ROOM.WAITING_SOUND_TIME_MS,
+  );
 
   useEffect(() => {
     backgroundMusic.autoplay = true;
     backgroundMusic.loop = true;
     gameStartSound.onended = replayBackgroundMusic;
+    gameEndSound.onended = replayBackgroundMusic;
 
     if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
-    socket.onStartGame(playSoundEffect);
+    socket.onStartGame(playStartSound);
     socket.onEndGame(({ isOwner }) => {
       if (isOwner) socket.emitEndGame(roomId);
+      playEndSound();
     });
     return () => {
       socket.emitLeaveRoom();

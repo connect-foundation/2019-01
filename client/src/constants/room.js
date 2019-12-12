@@ -111,6 +111,7 @@ export const ROOM = {
   BORDER_RADIUS_BIG: 12,
   FONT_FAMILY: 'DungGeunMo',
   BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
+  WAITING_SOUND_TIME_MS: 2000,
 };
 
 export const ROOM_NAME = {
