@@ -9,6 +9,7 @@
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
 		"prop-types": "^15.7.2",
+		"puppeteer": "^2.0.0",
 		"react": "^16.11.0",
 		"react-dom": "^16.11.0",
 		"react-router-dom": "^5.1.2",
