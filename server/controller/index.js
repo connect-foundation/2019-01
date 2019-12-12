@@ -87,8 +87,8 @@ class Controller {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
     const roomId = room.getId();
-    await room.startGame(user);
-    lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
+    const isStart = await room.startGame(user);
+    if (isStart) lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
   }
 
   /**

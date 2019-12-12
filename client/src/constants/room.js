@@ -9,6 +9,7 @@ const FIELD = {
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
+  THANOS: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
 };
 
 const CHARACTER = {

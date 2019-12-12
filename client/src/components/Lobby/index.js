@@ -23,10 +23,6 @@ const Lobby = () => {
   const history = useHistory();
   const roomInfos = new Map();
 
-  const makeUserGuest = () => {
-    setUserName('guest');
-  };
-
   const makeRoomInfoButton = ({
     // eslint-disable-next-line react/prop-types
     id, name, numOfUsers, isEnterable,
@@ -50,7 +46,7 @@ const Lobby = () => {
   };
 
   const enterCreatedRoom = (roomId) => {
-    history.push(`/room/${roomId}`);
+    history.replace(`/room/${roomId}`);
   };
 
   const updateCreatedRoom = (createdRoomInfo) => {
@@ -111,7 +107,7 @@ const Lobby = () => {
     if (socket.isConnected() === false) {
       setUserName(githubId === undefined ? 'guest' : githubId);
       socket.connect(githubId === undefined ? {} : { githubId });
-      socket.onDisconnect(() => history.push('/'));
+      socket.onDisconnect(() => history.replace('/'));
     }
 
     socket.onEnterLobby(updateCurrentRoomInfos);
@@ -122,11 +118,11 @@ const Lobby = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <LobbyWrapper>
         <LobbyHeader>
           <LobbyNickname>hello, {userName}</LobbyNickname>
-          <GitHubLoginButton makeUserGuest={makeUserGuest} userName={userName} />
+          <GitHubLoginButton userName={userName} />
         </LobbyHeader>
         <LobbyBody>
           <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
@@ -134,7 +130,7 @@ const Lobby = () => {
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
-    </div>
+    </>
   );
 };
 
