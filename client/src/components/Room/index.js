@@ -63,7 +63,7 @@ const Room = () => {
   return (
     <Wrapper>
       <SoundToggleWrapper>
-        <SoundToggle onClick={toggleSound}>{isSoundOn ? 'sound on' : 'sound off'}</SoundToggle>
+        <SoundToggle onClick={toggleSound}>{isSoundOn ? '🔊sound on' : '🔇sound off'}</SoundToggle>
       </SoundToggleWrapper>
       <RoomWrapper>
         <GameArea buttonClickSound={buttonClickSound} />
