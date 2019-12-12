@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   LoginButtonWrapper, GitHubIcon, LoginTextWrapper, GitHubPath,
 } from './style';
@@ -28,4 +29,9 @@ const GitHubLoginButton = ({ userName }) => (
       </LoginButtonWrapper>
     )
 );
+
+GitHubLoginButton.propTypes = {
+  userName: PropTypes.string.isRequired,
+};
+
 export default GitHubLoginButton;

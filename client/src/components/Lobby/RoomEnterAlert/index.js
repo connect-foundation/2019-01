@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { AlertWrapper, AlertMessage, AlertOkButton } from './style';
 
 const RoomEnterAlert = ({ message, closeAlert }) => (
@@ -9,9 +9,9 @@ const RoomEnterAlert = ({ message, closeAlert }) => (
   </AlertWrapper>
 );
 
-RoomEnterAlert.propTypes = propTypes.shape({
-  message: propTypes.string.isRequired,
-  closeAlert: propTypes.func.isRequired,
-}).isRequired;
+RoomEnterAlert.propTypes = {
+  message: PropTypes.string.isRequired,
+  closeAlert: PropTypes.func.isRequired,
+};
 
 export default RoomEnterAlert;

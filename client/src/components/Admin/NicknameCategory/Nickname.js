@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  NicknameTable, NicknameTh, NicknameThead, NicknameTr, NicknameTbody, NicknameButton, NicknameInput,
+  NicknameTable, NicknameTh, NicknameThead, NicknameTr,
+  NicknameTbody, NicknameButton, NicknameInput,
 } from './style';
 import fetchData from '../util';
 import NicknameRow from './Row';
@@ -51,8 +52,8 @@ const Nickname = ({ type }) => {
   );
 };
 
-NicknameRow.propTypes = PropTypes.shape({
+Nickname.propTypes = {
   type: PropTypes.string.isRequired,
-}).isRequired;
+};
 
 export default Nickname;
