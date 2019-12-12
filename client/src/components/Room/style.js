@@ -12,5 +12,4 @@ const Wrapper = styled.div`
     transform: translate(-50%, -50%);    
 `;
 
-// eslint-disable-next-line import/prefer-default-export
-export { Wrapper };
+export default Wrapper;

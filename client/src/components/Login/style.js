@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import LOGIN from '../../constants/login';
 import { ROOM } from '../../constants/room';
 
-const LoginPageWrapper = styled.div`
+export const LoginPageWrapper = styled.div`
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -10,7 +10,7 @@ const LoginPageWrapper = styled.div`
     min-height: ${LOGIN.BACKGROUND.MIN_H}px;
 `;
 
-const LoginPageBackground = styled.img`
+export const LoginPageBackground = styled.img`
     position: absolute;
     top:0;
     left: 0;
@@ -18,7 +18,7 @@ const LoginPageBackground = styled.img`
     height: 100%;
 `;
 
-const LoginButtonsWrapper = styled.div`
+export const LoginButtonsWrapper = styled.div`
     position: absolute;
     width: ${LOGIN.WRAPPER.WIDTH}px;
     height: ${LOGIN.WRAPPER.HEIGHT}px;
@@ -32,7 +32,7 @@ const LoginButtonsWrapper = styled.div`
     font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
 `;
 
-const LoginAnonyButton = styled.div`
+export const LoginAnonyButton = styled.div`
     :active {
         box-shadow: none;
     }
@@ -51,7 +51,7 @@ const LoginAnonyButton = styled.div`
     cursor: pointer;
 `;
 
-const LoginGitHubButton = styled(LoginAnonyButton)`
+export const LoginGitHubButton = styled(LoginAnonyButton)`
   display: flex;
   justify-content: center;
   padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
@@ -59,18 +59,13 @@ const LoginGitHubButton = styled(LoginAnonyButton)`
   color: black;
 `;
 
-const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
+export const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
   width: ${LOGIN.GITHUB_ICON.WIDTH}px;
   height: ${LOGIN.GITHUB_ICON.HEIGHT}px;
   shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
 `;
 
-const LoginGitHubText = styled.div`
+export const LoginGitHubText = styled.div`
   margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
   padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
 `;
-
-export {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton,
-  LoginAnonyButton, LoginGitHubText, LoginPageBackground,
-};

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
-import { Wrapper } from './style';
+import Wrapper from './style';
 import socket from '../../modules/socket';
 import URL from '../../constants/url';
 
