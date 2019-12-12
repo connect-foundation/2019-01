@@ -9,15 +9,12 @@ const RoomName = () => {
   const [width, setWidth] = useState(0);
   const [requestId, setRequestId] = useState(null);
 
-  const moveOnePixel = () => {
+  const move = () => {
     setPosition((prevPositon) => {
       if (prevPositon < -width) return ROOM_NAME.WRAPPER_WIDTH;
       return prevPositon - 1;
     });
-    setRequestId(window.requestAnimationFrame(moveOnePixel));
-  };
-  const move = () => {
-    setRequestId(window.requestAnimationFrame(moveOnePixel));
+    setRequestId(window.requestAnimationFrame(move));
   };
   const stop = () => {
     window.cancelAnimationFrame(requestId);
