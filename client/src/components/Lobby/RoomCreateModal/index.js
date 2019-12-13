@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   ModalWrapper, ModalHeader, ModalTitle, ModalCloseButton, ModalInputWrapper,
   ModalInput, ModalInputLength, ModalCreateRoomButton,
@@ -41,8 +41,8 @@ const RoomCreateModal = ({ setOpen }) => {
   );
 };
 
-RoomCreateModal.propTypes = propTypes.shape({
-  setOpen: propTypes.func.isRequired,
-}).isRequired;
+RoomCreateModal.propTypes = {
+  setOpen: PropTypes.func.isRequired,
+};
 
 export default RoomCreateModal;

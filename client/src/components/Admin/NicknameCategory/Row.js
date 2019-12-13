@@ -31,9 +31,10 @@ const Row = ({ id, type, nickname }) => {
   );
 };
 
-Row.propTypes = PropTypes.shape({
+Row.propTypes = {
   id: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
-}).isRequired;
+  nickname: PropTypes.string.isRequired,
+};
 
 export default Row;

@@ -22,7 +22,7 @@ class SocketContainer {
   }
 
   isConnected() {
-    return (this.socket !== undefined && this.socket.connected);
+    return this.socket !== undefined && this.socket.connected;
   }
 
   disconnect() {
@@ -48,6 +48,10 @@ class SocketContainer {
 
   emitEnterLobby() {
     this._emit(EVENT.ENTER_LOBBY, undefined, false);
+  }
+
+  emitKnockRoom(roomId) {
+    this._emit(EVENT.KNOCK_ROOM, roomId);
   }
 
   emitEnterRoom(roomId) {
@@ -86,6 +90,10 @@ class SocketContainer {
 
   onUpdateRoomInfo(callback) {
     this._on(EVENT.UPDATE_ROOM_INFO, callback);
+  }
+
+  onKnockRoom(callback) {
+    this._on(EVENT.KNOCK_ROOM, callback);
   }
 
   onEnterRoom(callback) {
