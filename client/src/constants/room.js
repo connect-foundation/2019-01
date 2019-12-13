@@ -1,9 +1,9 @@
-const TILE = {
+export const TILE = {
   WIDTH: 50,
   HEIGHT: 60,
 };
 
-const FIELD = {
+export const FIELD = {
   ROW: 8,
   COLUMN: 16,
   getWidth() { return TILE.WIDTH * this.COLUMN; },
@@ -12,7 +12,7 @@ const FIELD = {
   THANOS: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
 };
 
-const CHARACTER = {
+export const CHARACTER = {
   SIZE: 48,
   CROP_OFFSET: 4,
   getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
@@ -34,7 +34,7 @@ const CHARACTER = {
   },
 };
 
-const NICKNAME = {
+export const NICKNAME = {
   WIDTH: TILE.WIDTH * 1.5,
   HEIGHT: TILE.HEIGHT / 3,
   FONT: '13px nanoom',
@@ -45,7 +45,7 @@ const NICKNAME = {
   BG_COLOR: 'rgba(0, 0, 0, 0.6)',
 };
 
-const KEYCODE = {
+export const KEYCODE = {
   LEFT: 37,
   UP: 38,
   RIGHT: 39,
@@ -53,7 +53,7 @@ const KEYCODE = {
   ENTER: 13,
 };
 
-const DASHBOARD = {
+export const DASHBOARD = {
   WIDTH: FIELD.getWidth(),
   HEIGHT: TILE.HEIGHT * 2,
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
@@ -62,13 +62,13 @@ const DASHBOARD = {
   BORDER: '2px solid gray',
 };
 
-const QUIZ = {
+export const QUIZ = {
   WIDTH: 550,
   FONT_SIZE: 24,
   LEFT: 40,
 };
 
-const COUNTER = {
+export const COUNTER = {
   WIDTH: 80,
   PADDING: '10px 0',
   RIGHT: 40,
@@ -76,7 +76,7 @@ const COUNTER = {
   BORDER: '1px solid black',
 };
 
-const GAME_START_BUTTON = {
+export const GAME_START_BUTTON = {
   PADDING: '15px 35px',
   FONT_SIZE: 28,
   BACKGROUND_COLOR: 'gold',
@@ -84,7 +84,7 @@ const GAME_START_BUTTON = {
   BOX_SHADOW_CLICKED: '0px 2px 5px 0px',
 };
 
-const CHAT_AREA = {
+export const CHAT_AREA = {
   BG_COLOR: 'rgba(255, 255, 255, 0.2)',
   WIDTH: 280,
   FONT_SIZE: 15,
@@ -96,7 +96,13 @@ const CHAT_AREA = {
   BORDER: '1px solid lightslategrey',
 };
 
-const ROOM = {
+export const SOUND_TOGGLE = {
+  HEIGHT: 30,
+  FONT_SIZE: 20,
+  PADDING_RIGHT: 5,
+};
+
+export const ROOM = {
   MARGIN: 20,
   getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
   getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
@@ -105,9 +111,10 @@ const ROOM = {
   BORDER_RADIUS_BIG: 12,
   FONT_FAMILY: 'DungGeunMo',
   BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
+  WAITING_SOUND_TIME_MS: 2000,
 };
 
-const ROOM_NAME = {
+export const ROOM_NAME = {
   WIDTH: 1000,
   FONT_SIZE: 30,
   COLOR: 'dimgray',
@@ -122,9 +129,4 @@ const ROOM_NAME = {
     EMOJI: 30,
     OTHERS: 16,
   },
-};
-
-export {
-  TILE, FIELD, CHARACTER, KEYCODE, DASHBOARD, CHAT_AREA,
-  ROOM, QUIZ, COUNTER, GAME_START_BUTTON, NICKNAME, ROOM_NAME,
 };

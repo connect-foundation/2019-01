@@ -3,7 +3,7 @@ import {
   LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
 } from '../../constants/lobby';
 
-const LobbyWrapper = styled.div`
+export const LobbyWrapper = styled.div`
     position: absolute;
     width: ${LOBBY.WIDTH}px;
     height: ${LOBBY.HEIGHT}px;
@@ -18,7 +18,7 @@ const LobbyWrapper = styled.div`
     font-size: ${LOBBY.FONT_SIZE}px; 
 `;
 
-const LobbyHeader = styled.div`
+export const LobbyHeader = styled.div`
     display: flex;
     justify-content: space-between;
     height: ${HEADER.HEIGHT}px;
@@ -26,7 +26,7 @@ const LobbyHeader = styled.div`
     box-sizing: border-box;
 `;
 
-const LobbyBody = styled.div`
+export const LobbyBody = styled.div`
     height: ${BODY.HEIGHT}px;
     padding: ${BODY.PADDING};
     box-sizing: border-box;
@@ -46,11 +46,11 @@ const LobbyBody = styled.div`
     }
 `;
 
-const LobbyNickname = styled.div`
+export const LobbyNickname = styled.div`
     font-size: ${NICKNAME.FONT_SIZE}px;
 `;
 
-const CreateRoomButton = styled.div`
+export const CreateRoomButton = styled.div`
     :active {
         box-shadow: ${CREATE_ROOM_BUTTON.CLICKED_EFFECT};
     }
@@ -65,7 +65,7 @@ const CreateRoomButton = styled.div`
     ${BUTTON_EFFECT.HOVER}
 `;
 
-const RoomInfoWrapper = styled.div`
+export const RoomInfoWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     padding: ${ROOM_INFO.PADDING};
@@ -77,7 +77,3 @@ const RoomInfoWrapper = styled.div`
     color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.COLOR : ROOM_INFO.COLOR)};  
     cursor: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.CURSOR : ROOM_INFO.CURSOR)};
 `;
-
-export {
-  LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton, RoomInfoWrapper,
-};

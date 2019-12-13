@@ -3,7 +3,7 @@ import {
   DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON, ROOM,
 } from '../../../constants/room';
 
-const GameAreaWrapper = styled.div`
+export const GameAreaWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -12,7 +12,7 @@ const GameAreaWrapper = styled.div`
     box-sizing: border-box;
 `;
 
-const DashBoardWrapper = styled.div`
+export const DashBoardWrapper = styled.div`
     position: relative;
     width: ${DASHBOARD.WIDTH}px;
     height: ${DASHBOARD.HEIGHT}px;
@@ -22,7 +22,7 @@ const DashBoardWrapper = styled.div`
     background-size: 100% 100%;
 `;
 
-const QuizWrapper = styled.div`
+export const QuizWrapper = styled.div`
     position: absolute;
     width: ${QUIZ.WIDTH}px;
     top: 50%;
@@ -31,7 +31,7 @@ const QuizWrapper = styled.div`
     font-size: ${QUIZ.FONT_SIZE}px;
 `;
 
-const CounterWrapper = styled.div`
+export const CounterWrapper = styled.div`
     position: absolute;
     width: ${COUNTER.WIDTH}px;
     padding: ${COUNTER.PADDING};
@@ -45,7 +45,7 @@ const CounterWrapper = styled.div`
     font-size: ${COUNTER.FONT_SIZE}px;
 `;
 
-const GameStartButton = styled.div`
+export const GameStartButton = styled.div`
     :active {
         box-shadow: ${GAME_START_BUTTON.BOX_SHADOW_CLICKED};
     }
@@ -66,7 +66,7 @@ const GameStartButton = styled.div`
     cursor: pointer;
 `;
 
-const WaitingText = styled.div`
+export const WaitingText = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
@@ -74,15 +74,10 @@ const WaitingText = styled.div`
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
 
-const GameEndText = styled.div`
+export const GameEndText = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
-
-export {
-  GameAreaWrapper, DashBoardWrapper, QuizWrapper, CounterWrapper,
-  GameStartButton, WaitingText, GameEndText,
-};

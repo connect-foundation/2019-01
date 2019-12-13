@@ -4,7 +4,7 @@ import {
 } from '../../../constants/modal';
 import { BUTTON_EFFECT } from '../../../constants/lobby';
 
-const ModalWrapper = styled.div`
+export const ModalWrapper = styled.div`
     width: ${MODAL.WIDTH}px;
     position: absolute;
     top: 50%;
@@ -16,7 +16,7 @@ const ModalWrapper = styled.div`
     border-radius: ${MODAL.BORDER_RADIUS}px;
 `;
 
-const ModalHeader = styled.div`
+export const ModalHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -24,17 +24,17 @@ const ModalHeader = styled.div`
     margin-bottom: ${HEADER.MARGIN_BOTTOM}px;
 `;
 
-const ModalTitle = styled.div`
+export const ModalTitle = styled.div`
     font-size: ${TITLE.FONT_SIZE}px;
 `;
 
-const ModalCloseButton = styled.span`
+export const ModalCloseButton = styled.span`
     font-size: ${CLOSE_BUTTON.FONT_SIZE}px;
     cursor: pointer;
     ${BUTTON_EFFECT.HOVER}
 `;
 
-const ModalInputWrapper = styled.div`
+export const ModalInputWrapper = styled.div`
     width: 100%;
     padding: ${INPUT.WRAPPER.PADDING};
     margin-bottom: ${INPUT.WRAPPER.MARGIN_BOTTOM}px;
@@ -48,7 +48,7 @@ const ModalInputWrapper = styled.div`
     box-shadow: ${INPUT.WRAPPER.BOX_SHADOW};
 `;
 
-const ModalInput = styled.input.attrs({ autoFocus: true })`
+export const ModalInput = styled.input.attrs({ autoFocus: true })`
     flex: 1;
     border: 0;
     outline: none;
@@ -56,12 +56,12 @@ const ModalInput = styled.input.attrs({ autoFocus: true })`
     font-family: ${INPUT.FONT_FAMILY};
 `;
 
-const ModalInputLength = styled.div`
+export const ModalInputLength = styled.div`
     padding-left: ${INPUT.LENGTH.PADDING_LEFT}px;
     font-size: ${INPUT.LENGTH.FONT_SIZE}px;
 `;
 
-const ModalCreateRoomButton = styled.div`
+export const ModalCreateRoomButton = styled.div`
     width: ${CREATE_ROOM_BUTTON.WIDTH}px;
     padding: ${CREATE_ROOM_BUTTON.PADDING};
     margin: ${CREATE_ROOM_BUTTON.MARGIN};
@@ -76,8 +76,3 @@ const ModalCreateRoomButton = styled.div`
     ${BUTTON_EFFECT.ACTIVE}
     ${BUTTON_EFFECT.HOVER}
 `;
-
-export {
-  ModalWrapper, ModalHeader, ModalTitle, ModalCloseButton, ModalInputWrapper,
-  ModalInput, ModalInputLength, ModalCreateRoomButton,
-};

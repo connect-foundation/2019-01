@@ -132,6 +132,7 @@ const Lobby = () => {
     socket.onRoomIsCreated(updateCreatedRoom);
     socket.onUpdateRoomInfo(updateRoomInfo);
     socket.onKnockRoom(enterRoom);
+    socket.onDisconnect(() => history.replace('/'));
   }, []);
 
   return (
