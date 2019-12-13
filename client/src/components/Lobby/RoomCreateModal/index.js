@@ -40,8 +40,8 @@ const RoomCreateModal = ({ setOpen }) => {
   );
 };
 
-RoomCreateModal.propTypes = PropTypes.shape({
+RoomCreateModal.propTypes = {
   setOpen: PropTypes.func.isRequired,
-}).isRequired;
+};
 
 export default RoomCreateModal;

@@ -32,6 +32,8 @@ const GitHubLoginButton = ({ userName }) => (
     )
 );
 
-GitHubLoginButton.propTypes = PropTypes.string.isRequired;
+GitHubLoginButton.propTypes = {
+  userName: PropTypes.string.isRequired,
+};
 
 export default GitHubLoginButton;

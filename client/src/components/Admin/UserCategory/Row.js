@@ -35,8 +35,11 @@ const Row = ({ user }) => {
   );
 };
 
-Row.propTypes = PropTypes.shape({
-  user: PropTypes.Object,
-}).isRequired;
+Row.propTypes = {
+  user: PropTypes.shape({
+    is_admin: PropTypes.bool.isRequired,
+    github_id: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default Row;
