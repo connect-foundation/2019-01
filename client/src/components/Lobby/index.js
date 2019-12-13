@@ -65,9 +65,7 @@ const Lobby = () => {
 
   const updateCurrentRoomInfos = (currentRoomInfos) => {
     currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
-    setRoomInfoButtons(
-      currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)),
-    );
+    setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
   };
 
   const updateRoomInfo = ({ roomId, action }) => {
@@ -144,9 +142,7 @@ const Lobby = () => {
           <GitHubLoginButton userName={userName} />
         </LobbyHeader>
         <LobbyBody>
-          <CreateRoomButton onClick={openRoomCreateModal}>
-            + new Room();
-          </CreateRoomButton>
+          <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
           {roomInfoButtons}
         </LobbyBody>
       </LobbyWrapper>

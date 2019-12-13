@@ -111,10 +111,7 @@ class Room {
     const myCharacter = user.getCharacter();
     const characterList = this.makeCharacterList(myCharacter);
 
-    const newUser = {
-      ...characterList[characterList.length - 1],
-      isMine: false,
-    };
+    const newUser = { ...characterList[characterList.length - 1], isMine: false };
 
     this.users.forEach((_user) => {
       if (user === _user) return;
@@ -297,9 +294,10 @@ class Room {
   }
 
   _checkCharactersLocation(answerSide) {
-    const [dropStart, dropEnd] = answerSide
-      ? [FIELD.X_START, FIELD.X_END]
-      : [FIELD.O_START, FIELD.O_END];
+    const [dropStart, dropEnd] = (
+      answerSide
+        ? [FIELD.X_START, FIELD.X_END]
+        : [FIELD.O_START, FIELD.O_END]);
 
     const dropUsers = [];
 
@@ -307,10 +305,7 @@ class Room {
       for (let j = 0; j < ROOM.FIELD_ROW; j += 1) {
         const character = this.indexOfCharacters[i][j];
         if (character !== undefined) {
-          dropUsers.push({
-            nickname: character.getNickname(),
-            isOwner: this._isOwner(character),
-          });
+          dropUsers.push({ nickname: character.getNickname(), isOwner: this._isOwner(character) });
           this.indexOfCharacters[i][j] = undefined;
         }
       }
@@ -394,9 +389,7 @@ class Room {
    * @returns {Array.<Array.<number, number>>}
    */
   _getEmptyIndexMatrix() {
-    return Array(ROOM.FIELD_COLUMN)
-      .fill()
-      .map(() => Array(ROOM.FIELD_ROW));
+    return Array(ROOM.FIELD_COLUMN).fill().map(() => Array(ROOM.FIELD_ROW));
   }
 
   /**
@@ -417,8 +410,7 @@ class Room {
       this.aliveUsers.size > 1
       && this.aliveUsers.size <= ROOM.MAX_USER
       && this._isOwner(user)
-      && this.isGameStarted === false
-    );
+      && this.isGameStarted === false);
   }
 }
 
