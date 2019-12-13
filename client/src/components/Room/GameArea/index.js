@@ -12,7 +12,9 @@ const GameArea = ({ buttonClickSound }) => (
 );
 
 GameArea.propTypes = {
-  buttonClickSound: PropTypes.shape().isRequired,
+  buttonClickSound: PropTypes.shape({
+    play: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default GameArea;
