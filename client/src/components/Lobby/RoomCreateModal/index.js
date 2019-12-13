@@ -21,8 +21,9 @@ const RoomCreateModal = ({ setOpen }) => {
   };
   const closeHandler = () => setOpen(false);
   const createRoomHandler = () => {
-    if (roomName.length === 0 || roomName.length > ROOM_INFO.NAME_MAXLENGTH) return;
-    socket.emitCreateRoom(roomName);
+    const trimmedName = roomName.trim();
+    if (trimmedName.length === 0) setRoomName('');
+    else socket.emitCreateRoom(roomName);
   };
 
   return (
