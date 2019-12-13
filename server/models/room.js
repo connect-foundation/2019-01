@@ -51,9 +51,7 @@ class Room {
   }
 
   isEnterable() {
-    if (this.isGameStarted) return false;
-    if (this.users.size >= ROOM.MAX_USER) return false;
-    return true;
+    return this.isGameStarted === false && this.users.size < ROOM.MAX_USER;
   }
 
   isUserEntered(user) {
@@ -221,11 +219,7 @@ class Room {
       character.setDirection(direction);
       this.users.forEach((_user) => {
         _user.emitMove({
-          canMove,
-          nickname,
-          direction,
-          newIndexX,
-          newIndexY,
+          canMove, nickname, direction, newIndexX, newIndexY,
         });
       });
     }

@@ -11,18 +11,14 @@ class SocketContainer {
   }
 
   connect(query) {
-    this.socket = process.env.NODE_ENV === 'production'
-      ? socketio({
-        path: '/socket.io',
-        transports: ['websocket'],
-        query,
-        reconnection: false,
-      })
-      : socketio(URL.LOCAL_API_SERVER, {
-        transports: ['websocket'],
-        query,
-        reconnection: false,
-      });
+    this.socket = (
+      process.env.NODE_ENV === 'production'
+        ? socketio({
+          path: '/socket.io', transports: ['websocket'], query, reconnection: false,
+        })
+        : socketio(URL.LOCAL_API_SERVER, {
+          transports: ['websocket'], query, reconnection: false,
+        }));
   }
 
   isConnected() {

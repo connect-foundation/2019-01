@@ -77,40 +77,28 @@ const Lobby = () => {
     switch (action) {
       case LOBBY.ACTION.USER_ENTERED:
         roomInfos.set(id, {
-          id,
-          name,
-          numOfUsers: numOfUsers + 1,
-          isEnterable,
+          id, name, numOfUsers: numOfUsers + 1, isEnterable,
         });
         break;
       case LOBBY.ACTION.USER_LEAVED:
         roomInfos.set(id, {
-          id,
-          name,
-          numOfUsers: numOfUsers - 1,
-          isEnterable,
+          id, name, numOfUsers: numOfUsers - 1, isEnterable,
         });
         break;
       case LOBBY.ACTION.GAME_STARTED:
         roomInfos.set(id, {
-          id,
-          name,
-          numOfUsers,
-          isEnterable: false,
+          id, name, numOfUsers, isEnterable: false,
         });
         break;
       case LOBBY.ACTION.GAME_ENDED:
         roomInfos.set(id, {
-          id,
-          name,
-          numOfUsers,
-          isEnterable: true,
+          id, name, numOfUsers, isEnterable: true,
         });
         break;
       case LOBBY.ACTION.NO_USERS:
         roomInfos.delete(id);
         break;
-      default:
+      default: return;
     }
     setRoomInfoButtons(() => {
       const _roomInfoButtons = [];
