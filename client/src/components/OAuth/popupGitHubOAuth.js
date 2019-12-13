@@ -1,8 +1,10 @@
+import OAUTH from '../../constants/oauth';
+
 const isFunction = (callback) => typeof callback === 'function';
 
 const popupGitHubOAuth = (OAuthUrl, callback) => {
-  const width = 600;
-  const height = 800;
+  const width = OAUTH.POPUP.WIDTH;
+  const height = OAUTH.POPUP.HEIGHT;
   const { screen } = window;
   const left = screen.width ? screen.width - width / 2 : 0;
   const top = screen.height ? screen.height - height / 2 : 0;
@@ -16,7 +18,7 @@ const popupGitHubOAuth = (OAuthUrl, callback) => {
     if (isFunction(callback)) callback();
   };
 
-  timerId = setInterval(checkPopupClose, 100);
+  timerId = setInterval(checkPopupClose, OAUTH.CHECK_TIME);
 };
 
 export default popupGitHubOAuth;
