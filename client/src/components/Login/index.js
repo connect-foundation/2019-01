@@ -7,6 +7,7 @@ import {
 } from './style';
 import URL from '../../constants/url';
 import LOGIN from '../../constants/login';
+import popupGitHubOAuth from '../OAuth/popupGitHubOAuth';
 
 const Login = () => {
   const history = useHistory();
@@ -25,7 +26,7 @@ const Login = () => {
     <LoginPageWrapper>
       <LoginPageBackground src={LOGIN.BACKGROUND.URL} alt="background" />
       <LoginButtonsWrapper>
-        <LoginGitHubButton as="a" href={oauthUrl}>
+        <LoginGitHubButton onClick={() => popupGitHubOAuth(oauthUrl, enterLobby)}>
           <GitHubIcon>
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
             <path stroke={LOGIN.SVG.PATH.COLOR} d={LOGIN.SVG.PATH.INDEXES} />
