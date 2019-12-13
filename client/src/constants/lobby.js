@@ -13,6 +13,10 @@ const LOBBY = {
     GAME_ENDED: 'game_ended',
     NO_USERS: 'no_users',
   },
+  LOCATE_CENTER: `position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%,-50%);`,
 };
 
 const HEADER = {

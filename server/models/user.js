@@ -17,6 +17,11 @@ class User {
     this.nickname = socket.handshake.query.githubId;
     this.character = null;
     this.roomId = null;
+    this.guest = this.nickname === undefined;
+  }
+
+  isGuest() {
+    return this.guest;
   }
 
   getNickname() {
@@ -59,6 +64,14 @@ class User {
     if (isFunction(callback) === false) return;
     this.socket.on(EVENT.ENTER_LOBBY, () => {
       callback();
+      this.roomId = null;
+    });
+  }
+
+  onKnockRoom(callback) {
+    if (isFunction(callback) === false) return;
+    this.socket.on(EVENT.KNOCK_ROOM, (roomId) => {
+      callback(roomId);
       this.roomId = null;
     });
   }
@@ -123,6 +136,10 @@ class User {
 
   emitUpdateRoomInfo(data) {
     this.socket.emit(EVENT.UPDATE_ROOM_INFO, data);
+  }
+
+  emitKnockRoom(data) {
+    this.socket.emit(EVENT.KNOCK_ROOM, data);
   }
 
   emitEnterRoom(data) {
