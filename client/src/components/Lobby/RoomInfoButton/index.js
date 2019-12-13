@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { RoomInfoWrapper, RoomName, RoomCount } from './style';
 import { ROOM_INFO } from '../../../constants/lobby';
 
@@ -12,11 +12,11 @@ const RoomInfoButton = ({
   </RoomInfoWrapper>
 );
 
-RoomInfoButton.propTypes = propTypes.shape({
-  name: propTypes.string.isRequired,
-  numOfUsers: propTypes.number.isRequired,
-  enterable: propTypes.bool.isRequired,
-  onClick: propTypes.func.isRequired,
-}).isRequired;
+RoomInfoButton.propTypes = {
+  name: PropTypes.string.isRequired,
+  numOfUsers: PropTypes.number.isRequired,
+  enterable: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default RoomInfoButton;

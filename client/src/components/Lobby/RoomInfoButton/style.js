@@ -19,6 +19,7 @@ export const RoomInfoWrapper = styled.div`
 
 export const RoomName = styled.div`
     font-size: ${ROOM_INFO.FONT_SIZE}px;
+    white-space: pre;
 `;
 
 export const RoomCount = styled.div`

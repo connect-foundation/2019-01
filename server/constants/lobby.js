@@ -1,4 +1,4 @@
-const LOBBY = {
+export const LOBBY = {
   ACTION: {
     USER_ENTERED: 'user_entered',
     USER_LEAVED: 'user_leaved',
@@ -8,4 +8,8 @@ const LOBBY = {
   },
 };
 
-export default LOBBY;
+export const KNOCK_MESSAGE = {
+  OVERLAP: '이미 입장한 방입니다.',
+  DENIED: '방에 입장할 수 없습니다.',
+  PASS: '',
+};

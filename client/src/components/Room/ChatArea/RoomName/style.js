@@ -12,4 +12,5 @@ export const NameText = styled.div`
   width: ${ROOM_NAME.WIDTH}px;
   font-size: ${ROOM_NAME.FONT_SIZE}px;
   color: ${ROOM_NAME.COLOR};
+  white-space: pre;
 `;
