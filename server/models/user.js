@@ -162,10 +162,6 @@ class User {
     this.socket.emit(EVENT.END_ROUND, data);
   }
 
-  emitNotEndRound(data) {
-    this.socket.emit(EVENT.NOT_END_ROUND, data);
-  }
-
   emitEndGame(data) {
     this.socket.emit(EVENT.END_GAME, data);
   }
