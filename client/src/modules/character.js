@@ -15,6 +15,7 @@ class Character {
     this.nameTagY = null;
     this.chatBalloonX = null;
     this.chatBalloonY = null;
+    this.balloonLineNumber = null;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -196,16 +197,14 @@ class Character {
     this._clearChat();
   }
 
-  _drawRoundRect(startX, startY, width, height, radius, lineNumber) {
+  _drawRoundRect(startX, startY, width, lineHeight, radius) {
     let borderRadius = radius;
-    let _startY = startY;
-    const maxHeight = height * lineNumber + CHAT_BALLOON.MARGIN_BOTTOM;
+    const _startY = startY;
+    const maxHeight = lineHeight * this.balloonLineNumber + CHAT_BALLOON.PADDING_BOTTOM;
 
     if (width < 2 * borderRadius) borderRadius = width / 2;
-    if (height < 2 * borderRadius) borderRadius = height / 2;
-    if (lineNumber) {
-      _startY -= height * (lineNumber - 1) + CHAT_BALLOON.MARGIN_TOP;
-    }
+    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
+
     this.ctx.fillStyle = 'black';
     this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
     this.ctx.beginPath();
@@ -224,13 +223,15 @@ class Character {
   }
 
   _clearChat() {
-    const lineNumber = 5;
     this.ctx.clearRect(
-      this.chatBalloonX - 25 - CHAT_BALLOON.BORDER_WIDTH,
-      this.chatBalloonY - (CHAT_BALLOON.LINE_HEIGHT) * (lineNumber) - CHAT_BALLOON.BORDER_WIDTH * 2,
+      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
+      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
       CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
-      (CHAT_BALLOON.LINE_HEIGHT) * (lineNumber + 2) + CHAT_BALLOON.BORDER_WIDTH * 2,
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineNumber
+      + CHAT_BALLOON.BORDER_WIDTH * 2
+      + CHAT_BALLOON.TIP_HEIGHT,
     );
+    this.balloonLineNumber = null;
   }
 
   /**
@@ -254,26 +255,33 @@ class Character {
 
   _drawChat() {
     const parsedChat = this._parseChat(this.currentChat);
-    const balloonHeight = parsedChat.length;
+    this.balloonLineNumber = parsedChat.length;
 
-    this.chatBalloonX = (TILE.WIDTH * this.indexX) - ((NICKNAME.WIDTH - TILE.WIDTH) / 2);
-    this.chatBalloonY = TILE.HEIGHT * (this.indexY - 1) + 35;
+    this.chatBalloonX = (TILE.WIDTH * this.indexX) - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+    this.chatBalloonY = TILE.HEIGHT * this.indexY
+    - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
+    - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
 
-    this.ctx.font = NICKNAME.FONT;
-    this.ctx.textAlign = NICKNAME.ALIGN;
-    this.ctx.textBaseline = NICKNAME.BASELINE;
+    this._drawRoundRect(
+      this.chatBalloonX,
+      this.chatBalloonY,
+      CHAT_BALLOON.WIDTH,
+      CHAT_BALLOON.LINE_HEIGHT,
+      CHAT_BALLOON.BORDER_RADIUS,
+    );
+
+    this.ctx.font = CHAT_BALLOON.FONT;
+    this.ctx.textAlign = CHAT_BALLOON.ALIGN;
+    this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
     this.ctx.fillStyle = 'black';
 
-    this._drawRoundRect(this.chatBalloonX - 25, this.chatBalloonY, CHAT_BALLOON.WIDTH, CHAT_BALLOON.LINE_HEIGHT, 5, balloonHeight);
-
-    parsedChat.forEach((val, i, arr) => {
-      this.ctx.fillStyle = 'black';
-      const { length } = arr;
+    parsedChat.forEach((val, lineOrder) => {
       this.ctx.fillText(
         val,
-        this.chatBalloonX + NICKNAME.WIDTH / 2,
-        this.chatBalloonY + NICKNAME.HEIGHT / 2 + ((i - length + 1) * (CHAT_BALLOON.LINE_HEIGHT)),
-        NICKNAME.WIDTH + 48,
+        this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
+        this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
+        + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
+        + CHAT_BALLOON.PADDING_TOP,
       );
     });
   }

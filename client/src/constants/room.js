@@ -35,18 +35,20 @@ export const CHARACTER = {
 };
 
 export const CHAT_BALLOON = {
-  MAX_KR_CHAR_LEN: 10,
-  MARGIN_TOP: 3,
-  MARGIN_BOTTOM: 8,
-  TIP_WIDTH: 3,
-  TIP_HEIGHT: 5,
-  BORDER_WIDTH: 3,
-  BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.3)',
   WIDTH: TILE.WIDTH * 2.5,
   LINE_HEIGHT: 15,
+  PADDING_TOP: 3,
+  PADDING_BOTTOM: 3,
+  BORDER_WIDTH: 3,
   BORDER_RADIUS: 5,
-  CLEAR_TIME_MS: 3000,
   TEXT_WIDTH: 112.5,
+  TIP_WIDTH: 3,
+  TIP_HEIGHT: 5,
+  FONT: '13px nanoom',
+  ALIGN: 'center',
+  BASELINE: 'middle',
+  BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.3)',
+  CLEAR_TIME_MS: 2400,
 };
 
 export const NICKNAME = {
