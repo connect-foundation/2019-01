@@ -2,28 +2,25 @@
 import { FIELD } from '../constants/room';
 
 class Thanos {
-  constructor(fieldXValue, killCharacters) {
+  constructor() {
     this.ctx = null;
     this.img = null;
-    this.fieldXValue = fieldXValue;
-    this.killCharacters = killCharacters;
   }
 
   drawImage(ctx) {
     this.ctx = ctx;
     this.img = new Image();
     this.img.src = FIELD.THANOS.IMG;
-    this.img.onload = () => this._draw(0);
   }
 
-  _draw(sy) {
+  draw(sy, fieldXValue) {
     this.ctx.drawImage(
       this.img,
       0,
       0,
       FIELD.THANOS.WIDTH,
       sy,
-      this.fieldXValue,
+      fieldXValue,
       FIELD.THANOS.HEIGHT - sy,
       FIELD.THANOS.WIDTH,
       sy,
@@ -31,21 +28,20 @@ class Thanos {
 
     if (sy >= FIELD.THANOS.HEIGHT) {
       setTimeout(() => {
-        this.killCharacters();
-        this._clear(sy);
+        this._clear(sy, fieldXValue);
       }, FIELD.THANOS.TIME);
       return;
     }
 
-    window.requestAnimationFrame(() => {
-      this._clear(sy);
-      this._draw(sy + 10);
-    });
+    setTimeout(() => {
+      this._clear(sy, fieldXValue);
+      this.draw(sy + 10, fieldXValue);
+    }, 15);
   }
 
-  _clear(sy) {
+  _clear(sy, fieldXValue) {
     this.ctx.clearRect(
-      this.fieldXValue,
+      fieldXValue,
       FIELD.THANOS.HEIGHT - sy,
       FIELD.THANOS.WIDTH,
       sy,

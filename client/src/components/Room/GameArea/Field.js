@@ -5,13 +5,14 @@ import {
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
 import Canvas from './Canvas';
-import ThanosCanvas from './ThanosCanvas';
+import Thanos from '../../../modules/thanos';
 
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
-  const [thanos, setThanos] = useState('');
+  const thanosCanvasRef = React.useRef();
   let lastTimerId = null;
+  let thanos;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -92,18 +93,16 @@ const Field = () => {
   };
 
   const appearThanos = (data) => {
-    setThanos(<ThanosCanvas
-      killCharacters={() => killCharacters(data)}
-      fieldX={data.answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X} />);
+    thanos.draw(0, data.answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X);
+    killCharacters(data);
   };
 
-  const disappearThanos = (data) => {
-    setThanos('');
+  const disapprearThanos = (data) => {
     teleportCharacters(data);
   };
 
   useEffect(() => {
-    socket.onStartRound(disappearThanos);
+    socket.onStartRound(disapprearThanos);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
@@ -111,6 +110,10 @@ const Field = () => {
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
 
+    const canvas = thanosCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    thanos = new Thanos();
+    thanos.drawImage(ctx);
     return () => {
       clearTimeout(lastTimerId);
     };
@@ -153,7 +156,11 @@ const Field = () => {
         height: FIELD.getHeight(),
       }}>
       {getCanvasList(characters)}
-      {thanos}
+      <canvas
+        ref={thanosCanvasRef}
+        style={{ position: 'absolute' }}
+        width={FIELD.WIDTH}
+        height={FIELD.HEIGHT} />
     </div>
   );
 };
