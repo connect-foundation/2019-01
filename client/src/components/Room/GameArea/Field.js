@@ -89,6 +89,16 @@ const Field = () => {
     }, 3000);
   };
 
+  const chatCharacters = ({ nickname, message }) => {
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      const chatCharacter = newCharacters.get(nickname);
+      chatCharacter.currentChat = message;
+      chatCharacter.chat();
+      return newCharacters;
+    });
+  };
+
   useEffect(() => {
     socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
@@ -97,6 +107,7 @@ const Field = () => {
     socket.onEndRound(killCharacters);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
+    socket.onChatMessage(chatCharacters);
 
     return () => {
       clearTimeout(lastTimerId);
