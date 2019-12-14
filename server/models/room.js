@@ -183,7 +183,7 @@ class Room {
   }
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
-  moveCharacter(user, direction) {
+  moveCharacter(user, { direction, isSkill }, isLoop = false) {
     const character = user.getCharacter();
 
     if (character.isPlaced() === false) return;
@@ -200,7 +200,12 @@ class Room {
       default: return;
     }
 
-    const canMove = this._canBeMoved(newIndexX, newIndexY);
+    const { canMove, targetUser } = this._canBeMoved(newIndexX, newIndexY);
+    if (isSkill && targetUser !== undefined) {
+      this.moveCharacter(targetUser, { direction, isSkill: false }, true);
+      return;
+    }
+
     const canTurn = oldDirection !== direction;
 
     if (canMove) {
@@ -220,6 +225,8 @@ class Room {
         });
       });
     }
+
+    if (canMove && isLoop) this.moveCharacter(user, { direction, isSkill: false }, true);
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -396,10 +403,16 @@ class Room {
    * @returns {Boolean}
    */
   _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
-    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
-    return true;
+    let canMove = (
+      newIndexX >= 0
+      && newIndexX < ROOM.FIELD_COLUMN
+      && newIndexY >= 0
+      && newIndexY < ROOM.FIELD_ROW
+    );
+    const targetUser = canMove ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
+    canMove = canMove && targetUser === undefined;
+
+    return { canMove, targetUser };
   }
 
   /**
