@@ -149,6 +149,26 @@ class SocketContainer {
     this.socket.off(eventName);
   }
 
+  offEnterLobby() {
+    this._off(EVENT.ENTER_LOBBY);
+  }
+
+  offCreateRoom() {
+    this._off(EVENT.CREATE_ROOM);
+  }
+
+  offRoomIsCreated() {
+    this._off(EVENT.ROOM_IS_CREATED);
+  }
+
+  offUpdateRoomInfo() {
+    this._off(EVENT.UPDATE_ROOM_INFO);
+  }
+
+  offKnockRoom() {
+    this._off(EVENT.KNOCK_ROOM);
+  }
+
   offStartGame() {
     this._off(EVENT.START_GAME);
   }

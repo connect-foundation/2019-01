@@ -127,12 +127,19 @@ const Lobby = () => {
     }
 
     socket.onEnterLobby(updateCurrentRoomInfos);
-    socket.emitEnterLobby();
     socket.onCreateRoom(enterCreatedRoom);
     socket.onRoomIsCreated(updateCreatedRoom);
     socket.onUpdateRoomInfo(updateRoomInfo);
     socket.onKnockRoom(enterRoom);
-    socket.onDisconnect(() => history.replace('/'));
+    socket.emitEnterLobby();
+
+    return () => {
+      socket.offEnterLobby();
+      socket.offCreateRoom();
+      socket.offRoomIsCreated();
+      socket.offUpdateRoomInfo();
+      socket.offKnockRoom();
+    };
   }, []);
 
   return (
