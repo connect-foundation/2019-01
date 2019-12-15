@@ -110,6 +110,7 @@ const Lobby = () => {
       socket.connect(githubId === undefined ? {} : { githubId });
       socket.onDisconnect(() => history.replace('/'));
     }
+
     socket.onEnterLobby(updateCurrentRoomInfos);
     socket.emitEnterLobby();
     socket.onCreateRoom(enterCreatedRoom);
