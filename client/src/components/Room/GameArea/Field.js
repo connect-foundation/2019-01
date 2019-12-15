@@ -102,6 +102,11 @@ const Field = () => {
   };
 
   useEffect(() => {
+    const canvas = thanosCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    thanos = new Thanos();
+    thanos.drawImage(ctx);
+
     socket.onStartRound(disapprearThanos);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
@@ -110,10 +115,6 @@ const Field = () => {
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
 
-    const canvas = thanosCanvasRef.current;
-    const ctx = canvas.getContext('2d');
-    thanos = new Thanos();
-    thanos.drawImage(ctx);
     return () => {
       clearTimeout(lastTimerId);
     };
