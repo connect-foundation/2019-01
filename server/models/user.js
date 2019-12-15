@@ -109,7 +109,7 @@ class User {
 
   onMove(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.MOVE, (directionObj) => callback(directionObj));
+    this.socket.on(EVENT.MOVE, (options) => callback(options));
   }
 
   onChatMessage(callback) {

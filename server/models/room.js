@@ -28,6 +28,8 @@ class Room {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
     this.aliveUsers = new Map();
+    this.moveQueue = [];
+    this.isMoved = false;
   }
 
   async _fetchRandomNickname() {
@@ -183,10 +185,15 @@ class Room {
   }
 
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
-  moveCharacter(user, { direction, isSkill }, isLoop = false) {
+  moveCharacter(user, direction, isSkill = false, isLoop = false) {
     const character = user.getCharacter();
 
     if (character.isPlaced() === false) return;
+    if (this.isMoved) {
+      this.moveQueue.push([user, direction, isSkill, isLoop]);
+      return;
+    }
+    this.isMoved = true;
 
     const [oldIndexX, oldIndexY] = character.getIndexes();
     const oldDirection = character.getDirection();
@@ -201,11 +208,6 @@ class Room {
     }
 
     const { canMove, targetUser } = this._canBeMoved(newIndexX, newIndexY);
-    if (isSkill && targetUser !== undefined) {
-      this.moveCharacter(targetUser, { direction, isSkill: false }, true);
-      return;
-    }
-
     const canTurn = oldDirection !== direction;
 
     if (canMove) {
@@ -226,7 +228,16 @@ class Room {
       });
     }
 
-    if (canMove && isLoop) this.moveCharacter(user, { direction, isSkill: false }, true);
+    if (isSkill && targetUser !== undefined) {
+      this.moveQueue.push([targetUser, direction, false, true]);
+    } else if (canMove && isLoop) {
+      this.moveQueue.push([user, direction, isSkill, isLoop]);
+    }
+
+    this.isMoved = false;
+    if (this.moveQueue.length > 0) {
+      this.moveCharacter(...this.moveQueue.shift());
+    }
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)

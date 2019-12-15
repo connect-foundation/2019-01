@@ -118,10 +118,11 @@ class Controller {
    * @param {User} user
    * @param {*} direction
    */
-  _letUserMove(user, directionObj) {
+  _letUserMove(user, options) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
-    room.moveCharacter(user, directionObj);
+    const [direction, isSkill] = options;
+    room.moveCharacter(user, direction, isSkill);
   }
 
   /**
@@ -157,7 +158,7 @@ class Controller {
     });
     user.onStartGame(() => this._letUserStartGame(user));
     user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
-    user.onMove((directionObj) => this._letUserMove(user, directionObj));
+    user.onMove((options) => this._letUserMove(user, options));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
     user.onDisconnecting(() => {
