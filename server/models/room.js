@@ -192,10 +192,12 @@ class Room {
     const { nextUser } = this._canBeMoved(oldIndexX, oldIndexY, direction);
 
     if (nextUser === undefined) return;
-    this.moveQueue.push([user, direction, false]);
-    this.moveQueue.push([nextUser, direction, true]);
+    this.moveQueue.push({ user, direction, isLoop: false });
+    this.moveQueue.push({ user: nextUser, direction, isLoop: true });
     if (this.moveQueue.length > 0) {
-      this.moveCharacter(...this.moveQueue.shift());
+      // eslint-disable-next-line no-shadow
+      const { user, direction, isLoop } = this.moveQueue.shift();
+      this.moveCharacter(user, direction, isLoop);
     }
   }
 
@@ -205,7 +207,7 @@ class Room {
 
     if (character.isPlaced() === false) return;
     if (this.isMoving) {
-      this.moveQueue.push([user, direction, isLoop]);
+      this.moveQueue.push({ user, direction, isLoop });
       return;
     }
     this.isMoving = true;
@@ -233,12 +235,14 @@ class Room {
     }
 
     if (canMove && isLoop) {
-      this.moveQueue.push([user, direction, isLoop]);
+      this.moveQueue.push({ user, direction, isLoop });
     }
 
     this.isMoving = false;
     if (this.moveQueue.length > 0) {
-      this.moveCharacter(...this.moveQueue.shift());
+      // eslint-disable-next-line no-shadow
+      const { user, direction, isLoop } = this.moveQueue.shift();
+      this.moveCharacter(user, direction, isLoop);
     }
   }
 
@@ -423,12 +427,12 @@ class Room {
       };
     }
 
-    const inField = (
+    const isInField = (
       newIndexX >= 0 && newIndexX < ROOM.FIELD_COLUMN
       && newIndexY >= 0 && newIndexY < ROOM.FIELD_ROW
     );
-    const nextUser = inField ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
-    const canMove = inField && nextUser === undefined;
+    const nextUser = isInField ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
+    const canMove = isInField && nextUser === undefined;
 
     return {
       newIndexX, newIndexY, canMove, nextUser,
