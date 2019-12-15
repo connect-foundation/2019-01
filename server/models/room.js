@@ -333,10 +333,6 @@ class Room {
     return dropUsers;
   }
 
-  // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
-  // 현재 있어야하나, 고민 중...
-  _notEndRound() {}
-
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
     const characterList = [];

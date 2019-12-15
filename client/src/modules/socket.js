@@ -147,6 +147,71 @@ class SocketContainer {
   onDisconnect(callback) {
     this._on(EVENT.DISCONNECT, callback);
   }
+
+  _off(eventName) {
+    if (this.socket === undefined) return;
+    this.socket.off(eventName);
+  }
+
+  offEnterLobby() {
+    this._off(EVENT.ENTER_LOBBY);
+  }
+
+  offCreateRoom() {
+    this._off(EVENT.CREATE_ROOM);
+  }
+
+  offRoomIsCreated() {
+    this._off(EVENT.ROOM_IS_CREATED);
+  }
+
+  offUpdateRoomInfo() {
+    this._off(EVENT.UPDATE_ROOM_INFO);
+  }
+
+  offKnockRoom() {
+    this._off(EVENT.KNOCK_ROOM);
+  }
+
+  offStartGame() {
+    this._off(EVENT.START_GAME);
+  }
+
+  offEndGame() {
+    this._off(EVENT.END_GAME);
+  }
+
+  offStartRound() {
+    this._off(EVENT.START_ROUND);
+  }
+
+  offEndRound() {
+    this._off(EVENT.END_ROUND);
+  }
+
+  offLeaveUser() {
+    this._off(EVENT.LEAVE_USER);
+  }
+
+  offEnterRoom() {
+    this._off(EVENT.ENTER_ROOM);
+  }
+
+  offEnterNewUser() {
+    this._off(EVENT.ENTER_NEW_USER);
+  }
+
+  offMove() {
+    this._off(EVENT.MOVE);
+  }
+
+  offLeaveRoom() {
+    this._off(EVENT.LEAVE_ROOM);
+  }
+
+  offChatMessage() {
+    this._off(EVENT.CHAT_MESSAGE);
+  }
 }
 
 const socket = new SocketContainer();
