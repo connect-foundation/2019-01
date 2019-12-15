@@ -93,6 +93,7 @@ const Field = () => {
     setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       const chatCharacter = newCharacters.get(nickname);
+      if (chatCharacter.isAlive() === false) return newCharacters;
       chatCharacter.setCurrentChat(message);
       chatCharacter.chat();
       return newCharacters;
