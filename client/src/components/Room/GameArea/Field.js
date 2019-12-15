@@ -93,7 +93,7 @@ const Field = () => {
     setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
       const chatCharacter = newCharacters.get(nickname);
-      chatCharacter.currentChat = message;
+      chatCharacter.setCurrentChat(message);
       chatCharacter.chat();
       return newCharacters;
     });

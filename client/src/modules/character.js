@@ -46,6 +46,10 @@ class Character {
     return this.nickname;
   }
 
+  setCurrentChat(chatText) {
+    this.currentChat = chatText;
+  }
+
   drawImage(ctx) {
     this.ctx = ctx;
     this.img = new Image();
