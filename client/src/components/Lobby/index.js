@@ -120,8 +120,9 @@ const Lobby = () => {
   useEffect(() => {
     const githubId = getNicknameFromJwt();
 
+    setUserName(githubId === undefined ? 'guest' : githubId);
+
     if (socket.isConnected() === false) {
-      setUserName(githubId === undefined ? 'guest' : githubId);
       socket.connect(githubId === undefined ? {} : { githubId });
       socket.onDisconnect(() => history.replace('/'));
     }
