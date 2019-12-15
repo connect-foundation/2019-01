@@ -33,10 +33,10 @@ class Thanos {
       return;
     }
 
-    setTimeout(() => {
-      this._clear(sy, fieldXValue);
-      this.draw(sy + 10, fieldXValue);
-    }, 15);
+    window.requestAnimationFrame(() => {
+      this._clear(sy);
+      this.draw(sy + FIELD.THANOS.HEIGHT_TERM);
+    });
   }
 
   _clear(sy, fieldXValue) {

@@ -18,6 +18,7 @@ const FIELD = {
     WIDTH: 400,
     HEIGHT: 480,
     TIME: 2000,
+    HEIGHT_TERM: 10,
   },
 };
 
