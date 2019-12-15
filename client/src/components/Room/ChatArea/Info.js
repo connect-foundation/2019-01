@@ -70,6 +70,14 @@ const Info = () => {
     socket.onLeaveRoom(enterLobby);
 
     return () => {
+      socket.offStartGame();
+      socket.offEndGame();
+      socket.offEnterRoom();
+      socket.offEnterNewUser();
+      socket.offLeaveUser();
+      socket.offEndRound();
+      socket.offStartRound();
+      socket.offLeaveRoom();
       clearTimeout(lastTimerId);
     };
   }, []);
