@@ -119,7 +119,9 @@ const Field = () => {
 
       const direction = directionMap[event.keyCode];
       const isSkill = event.shiftKey;
-      if (direction !== undefined) socket.emitMove([direction, isSkill]);
+      if (direction === undefined) return;
+      if (isSkill) socket.emitUseSkill(direction);
+      else socket.emitMove(direction);
     };
 
     window.onkeydown = keydownEventHandler;

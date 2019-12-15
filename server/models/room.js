@@ -29,7 +29,7 @@ class Room {
     this.nicknameList = [];
     this.aliveUsers = new Map();
     this.moveQueue = [];
-    this.isMoved = false;
+    this.isMoving = false;
   }
 
   async _fetchRandomNickname() {
@@ -184,31 +184,34 @@ class Room {
     return true;
   }
 
+  useSkill(user, direction) {
+    const character = user.getCharacter();
+    if (character.isPlaced() === false) return;
+
+    const [oldIndexX, oldIndexY] = character.getIndexes();
+    const { nextUser } = this._canBeMoved(oldIndexX, oldIndexY, direction);
+
+    if (nextUser === undefined) return;
+    this.moveQueue.push([nextUser, direction, true]);
+    if (this.moveQueue.length > 0) {
+      this.moveCharacter(...this.moveQueue.shift());
+    }
+  }
+
   // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
-  moveCharacter(user, direction, isSkill = false, isLoop = false) {
+  moveCharacter(user, direction, isLoop = false) {
     const character = user.getCharacter();
 
     if (character.isPlaced() === false) return;
-    if (this.isMoved) {
-      this.moveQueue.push([user, direction, isSkill, isLoop]);
+    if (this.isMoving) {
+      this.moveQueue.push([user, direction, isLoop]);
       return;
     }
-    this.isMoved = true;
+    this.isMoving = true;
 
     const [oldIndexX, oldIndexY] = character.getIndexes();
-    const oldDirection = character.getDirection();
-
-    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
-    switch (direction) {
-      case DIRECTION.LEFT: newIndexX -= 1; break;
-      case DIRECTION.RIGHT: newIndexX += 1; break;
-      case DIRECTION.UP: newIndexY -= 1; break;
-      case DIRECTION.DOWN: newIndexY += 1; break;
-      default: return;
-    }
-
-    const { canMove, targetUser } = this._canBeMoved(newIndexX, newIndexY);
-    const canTurn = oldDirection !== direction;
+    const { newIndexX, newIndexY, canMove } = this._canBeMoved(oldIndexX, oldIndexY, direction);
+    const canTurn = direction !== character.getDirection();
 
     if (canMove) {
       character.setIndexes(newIndexX, newIndexY);
@@ -228,13 +231,11 @@ class Room {
       });
     }
 
-    if (isSkill && targetUser !== undefined) {
-      this.moveQueue.push([targetUser, direction, false, true]);
-    } else if (canMove && isLoop) {
-      this.moveQueue.push([user, direction, isSkill, isLoop]);
+    if (canMove && isLoop) {
+      this.moveQueue.push([user, direction, isLoop]);
     }
 
-    this.isMoved = false;
+    this.isMoving = false;
     if (this.moveQueue.length > 0) {
       this.moveCharacter(...this.moveQueue.shift());
     }
@@ -413,17 +414,28 @@ class Room {
   /**
    * @returns {Boolean}
    */
-  _canBeMoved(newIndexX, newIndexY) {
-    let canMove = (
-      newIndexX >= 0
-      && newIndexX < ROOM.FIELD_COLUMN
-      && newIndexY >= 0
-      && newIndexY < ROOM.FIELD_ROW
-    );
-    const targetUser = canMove ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
-    canMove = canMove && targetUser === undefined;
+  _canBeMoved(oldIndexX, oldIndexY, direction) {
+    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
+    switch (direction) {
+      case DIRECTION.LEFT: newIndexX -= 1; break;
+      case DIRECTION.RIGHT: newIndexX += 1; break;
+      case DIRECTION.UP: newIndexY -= 1; break;
+      case DIRECTION.DOWN: newIndexY += 1; break;
+      default: return {
+        newIndexX, newIndexY, canMove: false, occupiedUser: undefined,
+      };
+    }
 
-    return { canMove, targetUser };
+    const inField = (
+      newIndexX >= 0 && newIndexX < ROOM.FIELD_COLUMN
+      && newIndexY >= 0 && newIndexY < ROOM.FIELD_ROW
+    );
+    const nextUser = inField ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
+    const canMove = inField && nextUser === undefined;
+
+    return {
+      newIndexX, newIndexY, canMove, nextUser,
+    };
   }
 
   /**
