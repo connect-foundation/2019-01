@@ -11,11 +11,11 @@ class Character {
     this.imgUrl = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
-    this.nameTagX = null;
-    this.nameTagY = null;
-    this.chatBalloonX = null;
-    this.chatBalloonY = null;
-    this.balloonLineNumber = null;
+    this.nameTagX = 0;
+    this.nameTagY = 0;
+    this.chatBalloonX = 0;
+    this.chatBalloonY = 0;
+    this.balloonLineNumber = 0;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -238,16 +238,21 @@ class Character {
     this.balloonLineNumber = null;
   }
 
+  _measureText(chatText) {
+    const { width } = this.ctx.measureText(chatText);
+    return width;
+  }
+
   /**
    * @param {string} chatText
    * @return {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
    */
   _parseChat(chatText) {
-    const chatTextWidth = this.ctx.measureText(chatText).width;
+    const chatTextWidth = this._measureText(chatText);
     if (chatTextWidth <= CHAT_BALLOON.TEXT_WIDTH) return [chatText];
     return chatText.split('').reduce((accumulator, curr) => {
       const accu = accumulator;
-      if (this.ctx.measureText(accu[accu.length - 1][0] + curr).width > CHAT_BALLOON.TEXT_WIDTH) {
+      if (this._measureText(accu[accu.length - 1][0] + curr) > CHAT_BALLOON.TEXT_WIDTH) {
         accu.push([curr]);
         return accu;
       }
@@ -261,7 +266,9 @@ class Character {
     const parsedChat = this._parseChat(this.currentChat);
     this.balloonLineNumber = parsedChat.length;
 
-    this.chatBalloonX = (TILE.WIDTH * this.indexX) - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+    this.chatBalloonX = (TILE.WIDTH * this.indexX)
+    - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+
     this.chatBalloonY = TILE.HEIGHT * this.indexY
     - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
     - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
