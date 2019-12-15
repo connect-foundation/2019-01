@@ -99,17 +99,13 @@ const Field = () => {
     killCharacters(data);
   };
 
-  const disapprearThanos = (data) => {
-    teleportCharacters(data);
-  };
-
   useEffect(() => {
     const canvas = thanosCanvasRef.current;
     const ctx = canvas.getContext('2d');
     thanos = new Thanos();
     thanos.drawImage(ctx);
 
-    socket.onStartRound(disapprearThanos);
+    socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
