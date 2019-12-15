@@ -192,6 +192,7 @@ class Room {
     const { nextUser } = this._canBeMoved(oldIndexX, oldIndexY, direction);
 
     if (nextUser === undefined) return;
+    this.moveQueue.push([user, direction, false]);
     this.moveQueue.push([nextUser, direction, true]);
     if (this.moveQueue.length > 0) {
       this.moveCharacter(...this.moveQueue.shift());
