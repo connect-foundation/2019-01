@@ -46,6 +46,10 @@ class SocketContainer {
     this._emit(EVENT.MOVE, direction);
   }
 
+  emitUseSkill(direction) {
+    this._emit(EVENT.USE_SKILL, direction);
+  }
+
   emitEnterLobby() {
     this._emit(EVENT.ENTER_LOBBY, undefined, false);
   }
