@@ -100,6 +100,17 @@ const Field = () => {
     killCharacters(data);
   };
 
+  const chatCharacters = ({ nickname, message }) => {
+    setCharacters((prevCharacters) => {
+      const newCharacters = new Map(prevCharacters);
+      const chatCharacter = newCharacters.get(nickname);
+      if (chatCharacter.isAlive() === false) return newCharacters;
+      chatCharacter.setCurrentChat(message);
+      chatCharacter.chat();
+      return newCharacters;
+    });
+  };
+
   useEffect(() => {
     const canvas = thanosCanvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -112,6 +123,7 @@ const Field = () => {
     socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
+    socket.onChatMessage(chatCharacters);
 
     return () => {
       socket.offStartRound();
@@ -121,6 +133,7 @@ const Field = () => {
       socket.offEndRound();
       socket.offLeaveUser();
       socket.offEndGame();
+      socket.offChatMessage();
       clearTimeout(lastTimerId);
     };
   }, []);
