@@ -14,7 +14,7 @@ class SocketContainer {
     this.socket = (
       process.env.NODE_ENV === 'production'
         ? socketio({
-          path: '/socket.io', transports: ['websocket'], query, reconnection: false,
+          path: '/socket.io', transports: ['websocket'], query, reconnection: false, secure: true,
         })
         : socketio(URL.LOCAL_API_SERVER, {
           transports: ['websocket'], query, reconnection: false,
@@ -44,6 +44,10 @@ class SocketContainer {
 
   emitMove(direction) {
     this._emit(EVENT.MOVE, direction);
+  }
+
+  emitUseSkill(direction) {
+    this._emit(EVENT.USE_SKILL, direction);
   }
 
   emitEnterLobby() {
