@@ -14,7 +14,7 @@ class SocketContainer {
     this.socket = (
       process.env.NODE_ENV === 'production'
         ? socketio({
-          path: '/socket.io', transports: ['websocket'], query, reconnection: false,
+          path: '/socket.io', transports: ['websocket'], query, reconnection: false, secure: true,
         })
         : socketio(URL.LOCAL_API_SERVER, {
           transports: ['websocket'], query, reconnection: false,
@@ -22,7 +22,7 @@ class SocketContainer {
   }
 
   isConnected() {
-    return (this.socket !== undefined && this.socket.connected);
+    return this.socket !== undefined && this.socket.connected;
   }
 
   disconnect() {
@@ -46,8 +46,16 @@ class SocketContainer {
     this._emit(EVENT.MOVE, direction);
   }
 
+  emitUseSkill(direction) {
+    this._emit(EVENT.USE_SKILL, direction);
+  }
+
   emitEnterLobby() {
     this._emit(EVENT.ENTER_LOBBY, undefined, false);
+  }
+
+  emitKnockRoom(roomId) {
+    this._emit(EVENT.KNOCK_ROOM, roomId);
   }
 
   emitEnterRoom(roomId) {
@@ -86,6 +94,10 @@ class SocketContainer {
 
   onUpdateRoomInfo(callback) {
     this._on(EVENT.UPDATE_ROOM_INFO, callback);
+  }
+
+  onKnockRoom(callback) {
+    this._on(EVENT.KNOCK_ROOM, callback);
   }
 
   onEnterRoom(callback) {
@@ -134,6 +146,71 @@ class SocketContainer {
 
   onDisconnect(callback) {
     this._on(EVENT.DISCONNECT, callback);
+  }
+
+  _off(eventName) {
+    if (this.socket === undefined) return;
+    this.socket.off(eventName);
+  }
+
+  offEnterLobby() {
+    this._off(EVENT.ENTER_LOBBY);
+  }
+
+  offCreateRoom() {
+    this._off(EVENT.CREATE_ROOM);
+  }
+
+  offRoomIsCreated() {
+    this._off(EVENT.ROOM_IS_CREATED);
+  }
+
+  offUpdateRoomInfo() {
+    this._off(EVENT.UPDATE_ROOM_INFO);
+  }
+
+  offKnockRoom() {
+    this._off(EVENT.KNOCK_ROOM);
+  }
+
+  offStartGame() {
+    this._off(EVENT.START_GAME);
+  }
+
+  offEndGame() {
+    this._off(EVENT.END_GAME);
+  }
+
+  offStartRound() {
+    this._off(EVENT.START_ROUND);
+  }
+
+  offEndRound() {
+    this._off(EVENT.END_ROUND);
+  }
+
+  offLeaveUser() {
+    this._off(EVENT.LEAVE_USER);
+  }
+
+  offEnterRoom() {
+    this._off(EVENT.ENTER_ROOM);
+  }
+
+  offEnterNewUser() {
+    this._off(EVENT.ENTER_NEW_USER);
+  }
+
+  offMove() {
+    this._off(EVENT.MOVE);
+  }
+
+  offLeaveRoom() {
+    this._off(EVENT.LEAVE_ROOM);
+  }
+
+  offChatMessage() {
+    this._off(EVENT.CHAT_MESSAGE);
   }
 }
 

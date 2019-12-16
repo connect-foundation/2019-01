@@ -35,7 +35,9 @@ const RoomName = () => {
 
   useEffect(() => {
     socket.onEnterRoom(setup);
+
     return () => {
+      socket.offEnterRoom();
       window.cancelAnimationFrame(requestId);
     };
   }, []);

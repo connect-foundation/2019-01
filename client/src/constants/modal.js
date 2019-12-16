@@ -1,4 +1,4 @@
-const MODAL = {
+export const MODAL = {
   WIDTH: 500,
   BACKGROUND_COLOR: '#F2F1DA',
   PADDING: '20px',
@@ -6,20 +6,20 @@ const MODAL = {
   BORDER_RADIUS: 8,
 };
 
-const HEADER = {
+export const HEADER = {
   MARGIN_BOTTOM: 30,
 };
 
-const TITLE = {
+export const TITLE = {
   FONT_SIZE: 26,
 };
 
-const CLOSE_BUTTON = {
+export const CLOSE_BUTTON = {
   PADDING: '5px 0 0 5px',
   FONT_SIZE: 18,
 };
 
-const INPUT = {
+export const INPUT = {
   FONT_SIZE: 20,
   FONT_FAMILY: 'DungGeunMo',
   WRAPPER: {
@@ -36,7 +36,7 @@ const INPUT = {
   },
 };
 
-const CREATE_ROOM_BUTTON = {
+export const CREATE_ROOM_BUTTON = {
   WIDTH: 200,
   PADDING: '10px',
   MARGIN: '0 auto 10px',
@@ -45,8 +45,4 @@ const CREATE_ROOM_BUTTON = {
   BORDER_RADIUS: 8,
   BOX_SHADOW: '2px 2px 0px dimgrey',
   BACKGROUND_COLOR: 'rgba(255,255,255,0.5)',
-};
-
-export {
-  MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
 };

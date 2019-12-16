@@ -5,9 +5,13 @@ import socket from '../../../modules/socket';
 
 const Input = () => {
   const [message, setMessage] = useState('');
+  const inputRef = React.useRef();
 
   const sendMessage = () => {
-    if (message === '') return;
+    if (message === '') {
+      inputRef.current.blur();
+      return;
+    }
     socket.emitChatMessage(message);
     setMessage('');
   };
@@ -31,6 +35,7 @@ const Input = () => {
   return (
     <ChatInput>
       <InputBox
+        ref={inputRef}
         value={message}
         onChange={updateMessage}
         onKeyUp={sendMessageWithEnter} />

@@ -8,6 +8,7 @@ import socket from '../../modules/socket';
 import RoomInfoButton from './RoomInfoButton';
 import GitHubLoginButton from './GitHubLoginButton';
 import RoomCreateModal from './RoomCreateModal';
+import RoomEnterAlert from './RoomEnterAlert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
@@ -20,20 +21,25 @@ const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
   const [roomInfoButtons, setRoomInfoButtons] = useState([]);
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const history = useHistory();
   const roomInfos = new Map();
 
   const makeRoomInfoButton = ({
     // eslint-disable-next-line react/prop-types
     id, name, numOfUsers, isEnterable,
-  }) => (
-    <RoomInfoButton
-      key={id}
-      roomId={id}
-      name={name}
-      numOfUsers={numOfUsers}
-      enterable={isEnterable} />
-  );
+  }) => {
+    const onClick = () => socket.emitKnockRoom(id);
+    return (
+      <RoomInfoButton
+        key={id}
+        name={name}
+        numOfUsers={numOfUsers}
+        enterable={isEnterable}
+        onClick={onClick} />
+    );
+  };
 
   const openRoomCreateModal = () => setModalOpen(true);
 
@@ -90,7 +96,7 @@ const Lobby = () => {
       case LOBBY.ACTION.NO_USERS:
         roomInfos.delete(id);
         break;
-      default:
+      default: return;
     }
     setRoomInfoButtons(() => {
       const _roomInfoButtons = [];
@@ -101,20 +107,40 @@ const Lobby = () => {
     });
   };
 
+  const enterRoom = ({ isEnterable, roomId, message }) => {
+    if (isEnterable) {
+      history.push(`/room/${roomId}`);
+      return;
+    }
+
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
   useEffect(() => {
     const githubId = getNicknameFromJwt();
 
+    setUserName(githubId === undefined ? 'guest' : githubId);
+
     if (socket.isConnected() === false) {
-      setUserName(githubId === undefined ? 'guest' : githubId);
       socket.connect(githubId === undefined ? {} : { githubId });
       socket.onDisconnect(() => history.replace('/'));
     }
 
     socket.onEnterLobby(updateCurrentRoomInfos);
-    socket.emitEnterLobby();
     socket.onCreateRoom(enterCreatedRoom);
     socket.onRoomIsCreated(updateCreatedRoom);
     socket.onUpdateRoomInfo(updateRoomInfo);
+    socket.onKnockRoom(enterRoom);
+    socket.emitEnterLobby();
+
+    return () => {
+      socket.offEnterLobby();
+      socket.offCreateRoom();
+      socket.offRoomIsCreated();
+      socket.offUpdateRoomInfo();
+      socket.offKnockRoom();
+    };
   }, []);
 
   return (
@@ -130,6 +156,9 @@ const Lobby = () => {
         </LobbyBody>
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
+      {isAlertOpen
+        ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} />
+        : ''}
     </>
   );
 };

@@ -114,6 +114,13 @@ const Field = () => {
     socket.onEndGame(updateCharacters);
 
     return () => {
+      socket.offStartRound();
+      socket.offEnterRoom();
+      socket.offEnterNewUser();
+      socket.offMove();
+      socket.offEndRound();
+      socket.offLeaveUser();
+      socket.offEndGame();
       clearTimeout(lastTimerId);
     };
   }, []);
@@ -133,7 +140,10 @@ const Field = () => {
       };
 
       const direction = directionMap[event.keyCode];
-      if (direction !== undefined) socket.emitMove(direction);
+      const isSkill = event.shiftKey;
+      if (direction === undefined) return;
+      if (isSkill) socket.emitUseSkill(direction);
+      else socket.emitMove(direction);
     };
 
     window.onkeydown = keydownEventHandler;
