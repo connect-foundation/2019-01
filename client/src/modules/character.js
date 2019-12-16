@@ -95,6 +95,7 @@ class Character {
     this.chatTimeoutId = setTimeout(() => {
       this.currentChat = '';
       this._clearChat();
+      clearTimeout(this.chatTimeoutId);
     }, CHAT_BALLOON.CLEAR_TIME_MS);
   }
 
@@ -232,8 +233,8 @@ class Character {
       this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
       CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
       CHAT_BALLOON.LINE_HEIGHT * this.balloonLineNumber
-      + CHAT_BALLOON.BORDER_WIDTH * 2
-      + CHAT_BALLOON.TIP_HEIGHT,
+        + CHAT_BALLOON.BORDER_WIDTH * 2
+        + CHAT_BALLOON.TIP_HEIGHT,
     );
     this.balloonLineNumber = null;
   }
@@ -267,11 +268,11 @@ class Character {
     this.balloonLineNumber = parsedChat.length;
 
     this.chatBalloonX = (TILE.WIDTH * this.indexX)
-    - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+      - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
 
     this.chatBalloonY = TILE.HEIGHT * this.indexY
-    - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
-    - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
+      - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
+      - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
 
     this._drawRoundRect(
       this.chatBalloonX,
@@ -291,8 +292,8 @@ class Character {
         val,
         this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
         this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
-        + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
-        + CHAT_BALLOON.PADDING_TOP,
+          + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
+          + CHAT_BALLOON.PADDING_TOP,
       );
     });
   }

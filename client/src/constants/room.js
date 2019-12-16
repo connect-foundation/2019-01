@@ -59,7 +59,7 @@ export const CHAT_BALLOON = {
   ALIGN: 'center',
   BASELINE: 'middle',
   BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.3)',
-  CLEAR_TIME_MS: 2400,
+  CLEAR_TIME_MS: 3000,
 };
 
 export const NICKNAME = {
