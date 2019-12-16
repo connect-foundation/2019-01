@@ -13,44 +13,10 @@ const Info = () => {
   const history = useHistory();
   let lastTimerId = null;
 
-  const initPlayer = ({ characterList }) => setNumOfPlayer(characterList.length);
-
-  const addPlayer = () => setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer + 1);
-
-  const subUser = ({ characterList }) => {
-    const { isAlive } = characterList[0];
-    if (isAlive) {
-      setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer - 1);
-      return;
-    }
-    setNumOfViewer((prevNumOfViewer) => prevNumOfViewer - 1);
-  };
-
-  const updateDropUser = ({ characterList }) => {
-    const numOfDropUsers = characterList.length;
-    setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer - numOfDropUsers);
-    setNumOfViewer((prevNumOfViewer) => prevNumOfViewer + numOfDropUsers);
-  };
-
-  const updateAliveUser = ({ characterList }) => {
-    const numOfAliveUsers = characterList.length;
-    setNumOfPlayer((prevNumOfPlayer) => {
-      if (prevNumOfPlayer !== numOfAliveUsers) {
-        setNumOfViewer((prevNumOfViewer) => prevNumOfViewer - numOfAliveUsers);
-      }
-      return numOfAliveUsers;
-    });
-  };
-
-  const updateUser = ({ characterList }) => {
-    lastTimerId = setTimeout(() => {
-      setNumOfPlayer(characterList.length);
-      setNumOfViewer(0);
-    }, ROOM.WAITING_TIME_MS);
-  };
-
   const inactiveExitButton = () => setGameStarted(true);
-  const activeExitButton = () => setTimeout(() => setGameStarted(false), ROOM.WAITING_TIME_MS);
+  const activeExitButton = () => {
+    lastTimerId = setTimeout(() => setGameStarted(false), ROOM.WAITING_TIME_MS);
+  };
   const exitRoom = () => {
     if (isGameStarted) return;
     socket.emitLeaveRoom();
@@ -58,25 +24,21 @@ const Info = () => {
 
   const enterLobby = () => history.replace('/lobby');
 
+  const updatePlayerNum = (data) => {
+    setNumOfPlayer(data.numOfPlayer);
+    setNumOfViewer(data.numOfViewer);
+  };
+
   useEffect(() => {
+    socket.onUpdatePlayerNum(updatePlayerNum);
     socket.onStartGame(inactiveExitButton);
     socket.onEndGame(activeExitButton);
-    socket.onEnterRoom(initPlayer);
-    socket.onEnterNewUser(addPlayer);
-    socket.onLeaveUser(subUser);
-    socket.onEndRound(updateDropUser);
-    socket.onStartRound(updateAliveUser);
-    socket.onEndGame(updateUser);
     socket.onLeaveRoom(enterLobby);
 
     return () => {
+      socket.offUpdatePlayerNum();
       socket.offStartGame();
       socket.offEndGame();
-      socket.offEnterRoom();
-      socket.offEnterNewUser();
-      socket.offLeaveUser();
-      socket.offEndRound();
-      socket.offStartRound();
       socket.offLeaveRoom();
       clearTimeout(lastTimerId);
     };
