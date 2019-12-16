@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
-
 import PropTypes from 'prop-types';
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,

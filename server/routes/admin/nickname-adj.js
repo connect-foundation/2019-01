@@ -29,7 +29,6 @@ router.put('/', async (req, res, next) => {
     const { id, adj } = req.body;
     const queryResult = await nicknameDb.renameAdj(id, adj);
     const result = isSuccessFul(queryResult);
-
     res.status(200).send({ result });
   } catch (error) {
     next(error);
