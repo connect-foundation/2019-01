@@ -144,6 +144,10 @@ class SocketContainer {
     this._on(EVENT.CHAT_MESSAGE, callback);
   }
 
+  onGoToLobby(callback) {
+    this._on(EVENT.GO_TO_LOBBY, callback);
+  }
+
   onDisconnect(callback) {
     this._on(EVENT.DISCONNECT, callback);
   }
@@ -211,6 +215,10 @@ class SocketContainer {
 
   offChatMessage() {
     this._off(EVENT.CHAT_MESSAGE);
+  }
+
+  offGoToLobby() {
+    this._off(EVENT.GO_TO_LOBBY);
   }
 }
 

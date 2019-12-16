@@ -186,6 +186,10 @@ class User {
   emitLeaveRoom() {
     this.socket.emit(EVENT.LEAVE_ROOM);
   }
+
+  emitGoToLobby() {
+    this.socket.emit(EVENT.GO_TO_LOBBY);
+  }
 }
 
 export default User;

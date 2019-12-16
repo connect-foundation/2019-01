@@ -2,13 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import {} from 'dotenv/config';
 import cookie from 'cookie';
 import socket from '../../modules/socket';
 import RoomInfoButton from './RoomInfoButton';
 import GitHubLoginButton from './GitHubLoginButton';
 import RoomCreateModal from './RoomCreateModal';
-import RoomEnterAlert from './RoomEnterAlert';
+import Alert from '../Alert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
@@ -52,7 +51,7 @@ const Lobby = () => {
   };
 
   const enterCreatedRoom = (roomId) => {
-    history.replace(`/room/${roomId}`);
+    history.push(`/room/${roomId}`);
   };
 
   const updateCreatedRoom = (createdRoomInfo) => {
@@ -157,7 +156,7 @@ const Lobby = () => {
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
       {isAlertOpen
-        ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} />
+        ? <Alert message={alertMessage} closeCallback={() => setAlertOpen(false)} />
         : ''}
     </>
   );

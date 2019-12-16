@@ -56,7 +56,7 @@ const Info = () => {
     socket.emitLeaveRoom();
   };
 
-  const enterLobby = () => history.replace('/lobby');
+  const goToLobby = () => history.goBack();
 
   useEffect(() => {
     socket.onStartGame(inactiveExitButton);
@@ -67,7 +67,7 @@ const Info = () => {
     socket.onEndRound(updateDropUser);
     socket.onStartRound(updateAliveUser);
     socket.onEndGame(updateUser);
-    socket.onLeaveRoom(enterLobby);
+    socket.onLeaveRoom(goToLobby);
 
     return () => {
       socket.offStartGame();

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import {} from 'dotenv/config';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginPageBackground,
@@ -11,16 +10,8 @@ import popupGitHubOAuth from '../OAuth/popupGitHubOAuth';
 
 const Login = () => {
   const history = useHistory();
-
   const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
-
-  const enterLobby = () => {
-    history.replace('/lobby');
-  };
-
-  useEffect(() => {
-    history.push('/');
-  }, []);
+  const enterLobby = () => history.push('/lobby');
 
   return (
     <LoginPageWrapper>

@@ -18,6 +18,7 @@ const EVENT = {
   DISCONNECT: 'disconnect',
   FETCH_QUIZLIST: 'get_quiz_list',
   UPDATE_ROOM_INFO: 'update_room_info',
+  GO_TO_LOBBY: 'go_to_lobby',
 };
 
 export default EVENT;

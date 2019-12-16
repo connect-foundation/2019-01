@@ -97,10 +97,12 @@ class Room {
    * @param {User} user
    */
   async enterUser(user) {
-    if (this.isGameStarted === false) {
-      this._placeCharacter(user);
+    if (this.isGameStarted) {
+      user.emitGoToLobby();
+      return;
     }
 
+    this._placeCharacter(user);
     if (this.nicknameList.length === 0) {
       await this._fetchRandomNickname();
     }
