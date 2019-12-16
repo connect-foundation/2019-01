@@ -9,7 +9,16 @@ export const FIELD = {
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
-  THANOS: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
+};
+
+export const THANOS = {
+  IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
+  TIME_MS: 2000,
+  HEIGHT_TERM: 10,
+  TRUE_X: 0,
+  FALSE_X: FIELD.getWidth() / 2,
+  WIDTH: FIELD.getWidth() / 2,
+  HEIGHT: FIELD.getHeight(),
 };
 
 export const CHARACTER = {

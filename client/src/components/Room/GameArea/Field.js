@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CHARACTER, FIELD, KEYCODE,
+  CHARACTER, FIELD, KEYCODE, ROOM, THANOS,
 } from '../../../constants/room';
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
 import Canvas from './Canvas';
+import Thanos from '../../../modules/thanos';
 
 const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
+  const thanosCanvasRef = React.useRef();
+  const thanos = new Thanos();
   let lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
@@ -86,7 +89,15 @@ const Field = () => {
   const updateCharacters = ({ characterList }) => {
     lastTimerId = setTimeout(() => {
       teleportCharacters({ characterList });
-    }, 3000);
+    }, ROOM.WAITING_TIME_MS);
+  };
+
+  const appearThanos = (data) => {
+    if (document.hidden === false) {
+      thanos.setFieldXValue(data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
+      thanos.draw(0);
+    }
+    killCharacters(data);
   };
 
   const chatCharacters = ({ nickname, message }) => {
@@ -101,11 +112,15 @@ const Field = () => {
   };
 
   useEffect(() => {
+    const canvas = thanosCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    thanos.injectCtx(ctx);
+
     socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
     socket.onMove(moveCharacter);
-    socket.onEndRound(killCharacters);
+    socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
     socket.onChatMessage(chatCharacters);
@@ -163,6 +178,11 @@ const Field = () => {
         height: FIELD.getHeight(),
       }}>
       {getCanvasList(characters)}
+      <canvas
+        ref={thanosCanvasRef}
+        style={{ position: 'absolute' }}
+        width={FIELD.getWidth()}
+        height={FIELD.getHeight()} />
     </div>
   );
 };
