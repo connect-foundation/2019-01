@@ -54,6 +54,11 @@ class Room {
     return this.isGameStarted === false && this.users.size < ROOM.MAX_USER;
   }
 
+  isUserEntered(user) {
+    if (user.isGuest()) return false;
+    return this.users.has(user.getNickname());
+  }
+
   isStarted() {
     return this.isGameStarted;
   }
@@ -90,8 +95,6 @@ class Room {
    * @param {User} user
    */
   async enterUser(user) {
-    this.users.set(user.getId(), user);
-
     if (this.isGameStarted === false) {
       this._placeCharacter(user);
     }
@@ -100,9 +103,10 @@ class Room {
       await this._fetchRandomNickname();
     }
 
-    if (user.getNickname() === undefined) {
+    if (user.isGuest()) {
       user.setNickname(this.nicknameList.shift());
     }
+    this.users.set(user.getNickname(), user);
 
     const myCharacter = user.getCharacter();
     const characterList = this.makeCharacterList(myCharacter);
@@ -152,7 +156,7 @@ class Room {
     }
     this.nicknameList.push(user.getNickname());
 
-    this.users.delete(user.getId());
+    this.users.delete(user.getNickname());
     const nickname = user.getNickname();
     const isAlive = this.aliveUsers.has(nickname);
     const characterList = [{ nickname, isAlive }];
@@ -309,10 +313,6 @@ class Room {
     return dropUsers;
   }
 
-  // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
-  // 현재 있어야하나, 고민 중...
-  _notEndRound() {}
-
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
     const characterList = [];
@@ -350,8 +350,8 @@ class Room {
    * @returns {Boolean}
    */
   _isOwner(user) {
-    const ownerId = this.users.keys().next().value;
-    return ownerId === user.getId();
+    const ownerNickname = this.users.keys().next().value;
+    return ownerNickname === user.getNickname();
   }
 
   /**
@@ -375,8 +375,8 @@ class Room {
     let indexX;
     let indexY;
     do {
-      indexX = Math.floor(Math.random() * (ROOM.FIELD_COLUMN));
-      indexY = Math.floor(Math.random() * (ROOM.FIELD_ROW));
+      indexX = Math.floor(Math.random() * ROOM.FIELD_COLUMN);
+      indexY = Math.floor(Math.random() * ROOM.FIELD_ROW);
     } while (this.indexOfCharacters[indexX][indexY]);
     return [indexX, indexY];
   }

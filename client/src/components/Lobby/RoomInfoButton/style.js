@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ROOM_INFO, BUTTON_EFFECT } from '../../../constants/lobby';
 
-const RoomInfoWrapper = styled.div`
+export const RoomInfoWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,12 +17,11 @@ const RoomInfoWrapper = styled.div`
     ${(props) => (props.enterable ? BUTTON_EFFECT.HOVER : '')}
 `;
 
-const RoomName = styled.div`
+export const RoomName = styled.div`
     font-size: ${ROOM_INFO.FONT_SIZE}px;
+    white-space: pre;
 `;
 
-const RoomCount = styled.div`
+export const RoomCount = styled.div`
     font-size: ${ROOM_INFO.FONT_SIZE}px;
 `;
-
-export { RoomInfoWrapper, RoomName, RoomCount };

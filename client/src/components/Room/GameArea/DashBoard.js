@@ -1,5 +1,7 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
+
+import PropTypes from 'prop-types';
 import {
   DashBoardWrapper, QuizWrapper, CounterWrapper, GameStartButton, WaitingText, GameEndText,
 } from './style';
@@ -10,7 +12,7 @@ const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 
-const DashBoard = () => {
+const DashBoard = ({ buttonClickSound }) => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
   const [isGameEnded, setGameEnded] = useState(false);
@@ -33,6 +35,7 @@ const DashBoard = () => {
   };
 
   const startGame = () => {
+    buttonClickSound.play();
     socket.emitStartGame();
   };
 
@@ -126,6 +129,12 @@ const DashBoard = () => {
     socket.onStartGame(readyGame);
 
     return () => {
+      socket.offEnterRoom();
+      socket.offLeaveUser();
+      socket.offStartRound();
+      socket.offEndRound();
+      socket.offEndGame();
+      socket.offStartGame();
       clearTimeout(lastTimerId);
     };
   }, []);
@@ -136,6 +145,12 @@ const DashBoard = () => {
       <DashBoardContents />
     </DashBoardWrapper>
   );
+};
+
+DashBoard.propTypes = {
+  buttonClickSound: PropTypes.shape({
+    play: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default DashBoard;

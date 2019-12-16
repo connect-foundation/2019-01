@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   ModalWrapper, ModalHeader, ModalTitle, ModalCloseButton, ModalInputWrapper,
   ModalInput, ModalInputLength, ModalCreateRoomButton,
@@ -21,8 +21,9 @@ const RoomCreateModal = ({ setOpen }) => {
   };
   const closeHandler = () => setOpen(false);
   const createRoomHandler = () => {
-    if (roomName.length === 0 || roomName.length > ROOM_INFO.NAME_MAXLENGTH) return;
-    socket.emitCreateRoom(roomName);
+    const trimmedName = roomName.trim();
+    if (trimmedName.length === 0) setRoomName('');
+    else socket.emitCreateRoom(roomName);
   };
 
   return (
@@ -40,8 +41,8 @@ const RoomCreateModal = ({ setOpen }) => {
   );
 };
 
-RoomCreateModal.propTypes = propTypes.shape({
-  setOpen: propTypes.func.isRequired,
-}).isRequired;
+RoomCreateModal.propTypes = {
+  setOpen: PropTypes.func.isRequired,
+};
 
 export default RoomCreateModal;
