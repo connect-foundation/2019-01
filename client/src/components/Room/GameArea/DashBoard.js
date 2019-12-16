@@ -7,8 +7,8 @@ import {
 } from './style';
 import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../modules/socket';
+import { changeNumberToTwoDigitString } from '../../../util';
 
-const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 

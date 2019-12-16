@@ -2,8 +2,7 @@
 import socketio from 'socket.io-client';
 import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
-
-const isFunction = (callback) => typeof callback === 'function';
+import { isFunction } from '../util';
 
 class SocketContainer {
   constructor() {
