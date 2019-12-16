@@ -118,6 +118,7 @@ const Field = () => {
       socket.offEndRound();
       socket.offLeaveUser();
       socket.offEndGame();
+      socket.offChatMessage();
       clearTimeout(lastTimerId);
     };
   }, []);

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 import {
@@ -203,7 +204,6 @@ class Character {
 
   _drawRoundRect(startX, startY, width, lineHeight, radius) {
     let borderRadius = radius;
-    const _startY = startY;
     const maxHeight = lineHeight * this.balloonLineNumber + CHAT_BALLOON.PADDING_BOTTOM;
 
     if (width < 2 * borderRadius) borderRadius = width / 2;
@@ -212,14 +212,14 @@ class Character {
     this.ctx.fillStyle = 'black';
     this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
     this.ctx.beginPath();
-    this.ctx.moveTo(startX + borderRadius, _startY);
-    this.ctx.arcTo(startX + width, _startY, startX + width, _startY + maxHeight, borderRadius);
-    this.ctx.arcTo(startX + width, _startY + maxHeight, startX, _startY + maxHeight, borderRadius);
-    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, _startY + maxHeight);
-    this.ctx.lineTo(startX + width / 2, _startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
-    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, _startY + maxHeight);
-    this.ctx.arcTo(startX, _startY + maxHeight, startX, _startY, borderRadius);
-    this.ctx.arcTo(startX, _startY, startX + width, _startY, borderRadius);
+    this.ctx.moveTo(startX + borderRadius, startY);
+    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
+    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
+    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
+    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
+    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
     this.ctx.closePath();
     this.ctx.stroke();
     this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
@@ -248,17 +248,17 @@ class Character {
    * @return {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
    */
   _parseChat(chatText) {
-    const chatTextWidth = this._measureText(chatText);
-    if (chatTextWidth <= CHAT_BALLOON.TEXT_WIDTH) return [chatText];
-    return chatText.split('').reduce((accumulator, curr) => {
-      const accu = accumulator;
-      if (this._measureText(accu[accu.length - 1][0] + curr) > CHAT_BALLOON.TEXT_WIDTH) {
-        accu.push([curr]);
-        return accu;
+    if (this._measureText(chatText) <= CHAT_BALLOON.getTextWidth()) return [chatText];
+    return chatText.split('').reduce((parsedChat, char) => {
+      const lastIndex = parsedChat.length - 1;
+      const [lastSentence] = parsedChat[lastIndex];
+      if (this._measureText(lastSentence + char) > CHAT_BALLOON.getTextWidth()) {
+        parsedChat = [...parsedChat, [char]];
+        return parsedChat;
       }
 
-      accu[accu.length - 1][0] += curr;
-      return accu;
+      parsedChat[lastIndex] = [lastSentence + char];
+      return parsedChat;
     }, [['']]);
   }
 
