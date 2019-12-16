@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { FIELD } from '../constants/room';
+import { THANOS } from '../constants/room';
 
 class Thanos {
   constructor() {
@@ -7,10 +7,10 @@ class Thanos {
     this.img = null;
   }
 
-  drawImage(ctx) {
+  injectCtx(ctx) {
     this.ctx = ctx;
     this.img = new Image();
-    this.img.src = FIELD.THANOS.IMG;
+    this.img.src = THANOS.IMG;
   }
 
   draw(sy, fieldXValue) {
@@ -18,32 +18,36 @@ class Thanos {
       this.img,
       0,
       0,
-      FIELD.THANOS.WIDTH,
+      THANOS.WIDTH,
       sy,
       fieldXValue,
-      FIELD.THANOS.HEIGHT - sy,
-      FIELD.THANOS.WIDTH,
+      THANOS.HEIGHT - sy,
+      THANOS.WIDTH,
       sy,
     );
 
-    if (sy >= FIELD.THANOS.HEIGHT) {
-      setTimeout(() => {
-        this._clear(sy, fieldXValue);
-      }, FIELD.THANOS.TIME);
+    if (sy >= THANOS.HEIGHT) {
+      this._stopAndWait(sy, fieldXValue);
       return;
     }
 
     window.requestAnimationFrame(() => {
-      this._clear(sy);
-      this.draw(sy + FIELD.THANOS.HEIGHT_TERM);
+      this._clear(sy, fieldXValue);
+      this.draw(sy + THANOS.HEIGHT_TERM, fieldXValue);
     });
+  }
+
+  _stopAndWait(sy, fieldXValue) {
+    setTimeout(() => {
+      this._clear(sy, fieldXValue);
+    }, THANOS.TIME_MS);
   }
 
   _clear(sy, fieldXValue) {
     this.ctx.clearRect(
       fieldXValue,
-      FIELD.THANOS.HEIGHT - sy,
-      FIELD.THANOS.WIDTH,
+      THANOS.HEIGHT - sy,
+      THANOS.WIDTH,
       sy,
     );
   }

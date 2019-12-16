@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CHARACTER, FIELD, KEYCODE,
+  CHARACTER, FIELD, KEYCODE, ROOM, THANOS,
 } from '../../../constants/room';
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
@@ -11,8 +11,8 @@ const Field = () => {
   const [characters, setCharacters] = useState(new Map());
   const [myCharacter, setMyCharacter] = useState(null);
   const thanosCanvasRef = React.useRef();
+  const thanos = new Thanos();
   let lastTimerId = null;
-  let thanos;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -89,12 +89,12 @@ const Field = () => {
   const updateCharacters = ({ characterList }) => {
     lastTimerId = setTimeout(() => {
       teleportCharacters({ characterList });
-    }, 3000);
+    }, ROOM.WAITING_TIME_MS);
   };
 
   const appearThanos = (data) => {
     if (document.hidden === false) {
-      thanos.draw(0, data.answer ? FIELD.FALSE_FIELD_X : FIELD.TRUE_FIELD_X);
+      thanos.draw(0, data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
     }
     killCharacters(data);
   };
@@ -102,8 +102,7 @@ const Field = () => {
   useEffect(() => {
     const canvas = thanosCanvasRef.current;
     const ctx = canvas.getContext('2d');
-    thanos = new Thanos();
-    thanos.drawImage(ctx);
+    thanos.injectCtx(ctx);
 
     socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
@@ -114,6 +113,13 @@ const Field = () => {
     socket.onEndGame(updateCharacters);
 
     return () => {
+      socket.offStartRound();
+      socket.offEnterRoom();
+      socket.offEnterNewUser();
+      socket.offMove();
+      socket.offEndRound();
+      socket.offLeaveUser();
+      socket.offEndGame();
       clearTimeout(lastTimerId);
     };
   }, []);
@@ -158,8 +164,8 @@ const Field = () => {
       <canvas
         ref={thanosCanvasRef}
         style={{ position: 'absolute' }}
-        width={FIELD.WIDTH}
-        height={FIELD.HEIGHT} />
+        width={FIELD.getWidth()}
+        height={FIELD.getHeight()} />
     </div>
   );
 };
