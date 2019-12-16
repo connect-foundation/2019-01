@@ -5,6 +5,7 @@ class Thanos {
   constructor() {
     this.ctx = null;
     this.img = null;
+    this.thanosTimeoutId = null;
   }
 
   injectCtx(ctx) {
@@ -38,8 +39,9 @@ class Thanos {
   }
 
   _stopAndWait(sy, fieldXValue) {
-    setTimeout(() => {
+    this.thanosTimeoutId = setTimeout(() => {
       this._clear(sy, fieldXValue);
+      clearTimeout(this.thanosTimeoutId);
     }, THANOS.TIME_MS);
   }
 
