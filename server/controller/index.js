@@ -127,6 +127,17 @@ class Controller {
   /**
    *
    * @param {User} user
+   * @param {*} direction
+   */
+  _letUserUseSkill(user, direction) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    room.useSkill(user, direction);
+  }
+
+  /**
+   *
+   * @param {User} user
    * @param {string} message
    */
   _letUserChat(user, message) {
@@ -158,6 +169,7 @@ class Controller {
     user.onStartGame(() => this._letUserStartGame(user));
     user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
+    user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
     user.onDisconnecting(() => {

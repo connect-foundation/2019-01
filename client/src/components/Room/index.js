@@ -41,6 +41,10 @@ const Room = () => {
     () => backgroundMusic.play(), ROOM.WAITING_SOUND_TIME_MS,
   );
 
+  const notifyEndGame = ({ isOwner }) => {
+    if (isOwner) socket.emitEndGame(roomId);
+  };
+
   useEffect(() => {
     backgroundMusic.autoplay = true;
     backgroundMusic.loop = true;
@@ -50,13 +54,13 @@ const Room = () => {
     if (socket.isConnected() === false) history.replace('/');
     socket.emitEnterRoom(roomId);
     socket.onStartGame(playStartSound);
-    socket.onEndGame(({ isOwner }) => {
-      if (isOwner) socket.emitEndGame(roomId);
-      playEndSound();
-    });
+    socket.onEndGame(playEndSound);
+    socket.onEndGame(notifyEndGame);
     return () => {
-      socket.emitLeaveRoom();
       backgroundMusic.pause();
+      socket.offStartGame();
+      socket.offEndGame();
+      socket.emitLeaveRoom();
     };
   }, []);
 

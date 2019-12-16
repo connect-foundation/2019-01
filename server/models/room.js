@@ -28,6 +28,8 @@ class Room {
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.nicknameList = [];
     this.aliveUsers = new Map();
+    this.moveQueue = [];
+    this.isMoving = false;
   }
 
   async _fetchRandomNickname() {
@@ -182,26 +184,37 @@ class Room {
     return true;
   }
 
-  // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
-  moveCharacter(user, direction) {
+  useSkill(user, direction) {
     const character = user.getCharacter();
-
     if (character.isPlaced() === false) return;
 
     const [oldIndexX, oldIndexY] = character.getIndexes();
-    const oldDirection = character.getDirection();
+    const { nextUser } = this._canBeMoved(oldIndexX, oldIndexY, direction);
 
-    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
-    switch (direction) {
-      case DIRECTION.LEFT: newIndexX -= 1; break;
-      case DIRECTION.RIGHT: newIndexX += 1; break;
-      case DIRECTION.UP: newIndexY -= 1; break;
-      case DIRECTION.DOWN: newIndexY += 1; break;
-      default: return;
+    if (nextUser === undefined) return;
+    this.moveQueue.push({ user, direction, isLoop: false });
+    this.moveQueue.push({ user: nextUser, direction, isLoop: true });
+    if (this.moveQueue.length > 0) {
+      // eslint-disable-next-line no-shadow
+      const { user, direction, isLoop } = this.moveQueue.shift();
+      this.moveCharacter(user, direction, isLoop);
     }
+  }
 
-    const canMove = this._canBeMoved(newIndexX, newIndexY);
-    const canTurn = oldDirection !== direction;
+  // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
+  moveCharacter(user, direction, isLoop = false) {
+    const character = user.getCharacter();
+
+    if (character.isPlaced() === false) return;
+    if (this.isMoving) {
+      this.moveQueue.push({ user, direction, isLoop });
+      return;
+    }
+    this.isMoving = true;
+
+    const [oldIndexX, oldIndexY] = character.getIndexes();
+    const { newIndexX, newIndexY, canMove } = this._canBeMoved(oldIndexX, oldIndexY, direction);
+    const canTurn = direction !== character.getDirection();
 
     if (canMove) {
       character.setIndexes(newIndexX, newIndexY);
@@ -219,6 +232,17 @@ class Room {
           canMove, nickname, direction, newIndexX, newIndexY,
         });
       });
+    }
+
+    if (canMove && isLoop) {
+      this.moveQueue.push({ user, direction, isLoop });
+    }
+
+    this.isMoving = false;
+    if (this.moveQueue.length > 0) {
+      // eslint-disable-next-line no-shadow
+      const { user, direction, isLoop } = this.moveQueue.shift();
+      this.moveCharacter(user, direction, isLoop);
     }
   }
 
@@ -313,10 +337,6 @@ class Room {
     return dropUsers;
   }
 
-  // emit: not_end_round / 모든 유저 / 정답, 재도전 안내
-  // 현재 있어야하나, 고민 중...
-  _notEndRound() {}
-
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
     const characterList = [];
@@ -395,11 +415,28 @@ class Room {
   /**
    * @returns {Boolean}
    */
-  _canBeMoved(newIndexX, newIndexY) {
-    if (newIndexX < 0 || newIndexX >= ROOM.FIELD_COLUMN) return false;
-    if (newIndexY < 0 || newIndexY >= ROOM.FIELD_ROW) return false;
-    if (this.indexOfCharacters[newIndexX][newIndexY] !== undefined) return false;
-    return true;
+  _canBeMoved(oldIndexX, oldIndexY, direction) {
+    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
+    switch (direction) {
+      case DIRECTION.LEFT: newIndexX -= 1; break;
+      case DIRECTION.RIGHT: newIndexX += 1; break;
+      case DIRECTION.UP: newIndexY -= 1; break;
+      case DIRECTION.DOWN: newIndexY += 1; break;
+      default: return {
+        newIndexX, newIndexY, canMove: false, occupiedUser: undefined,
+      };
+    }
+
+    const isInField = (
+      newIndexX >= 0 && newIndexX < ROOM.FIELD_COLUMN
+      && newIndexY >= 0 && newIndexY < ROOM.FIELD_ROW
+    );
+    const nextUser = isInField ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
+    const canMove = isInField && nextUser === undefined;
+
+    return {
+      newIndexX, newIndexY, canMove, nextUser,
+    };
   }
 
   /**

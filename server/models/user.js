@@ -112,6 +112,11 @@ class User {
     this.socket.on(EVENT.MOVE, (direction) => callback(direction));
   }
 
+  onUseSkill(callback) {
+    if (isFunction(callback) === false) return;
+    this.socket.on(EVENT.USE_SKILL, (direction) => callback(direction));
+  }
+
   onChatMessage(callback) {
     if (isFunction(callback) === false) return;
     this.socket.on(EVENT.CHAT_MESSAGE, (message) => callback(message));
@@ -160,10 +165,6 @@ class User {
 
   emitEndRound(data) {
     this.socket.emit(EVENT.END_ROUND, data);
-  }
-
-  emitNotEndRound(data) {
-    this.socket.emit(EVENT.NOT_END_ROUND, data);
   }
 
   emitEndGame(data) {

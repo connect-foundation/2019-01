@@ -129,6 +129,12 @@ const DashBoard = ({ buttonClickSound }) => {
     socket.onStartGame(readyGame);
 
     return () => {
+      socket.offEnterRoom();
+      socket.offLeaveUser();
+      socket.offStartRound();
+      socket.offEndRound();
+      socket.offEndGame();
+      socket.offStartGame();
       clearTimeout(lastTimerId);
     };
   }, []);

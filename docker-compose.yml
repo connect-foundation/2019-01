@@ -13,11 +13,13 @@ services:
             context: ./client
             dockerfile: ../docker/client.Dockerfile
         ports:
-            - "80:80"
+            - "443:443"
         depends_on:
             - server
         networks:
             - backend
+        volumes:
+            - /var/www/boolean-avengers:/var/www/boolean-avengers
 
     db:
         build:
