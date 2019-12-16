@@ -5,6 +5,7 @@ class Thanos {
   constructor() {
     this.ctx = null;
     this.img = null;
+    this.fieldXValue = 0;
     this.thanosTimeoutId = null;
   }
 
@@ -14,40 +15,44 @@ class Thanos {
     this.img.src = THANOS.IMG;
   }
 
-  draw(sy, fieldXValue) {
+  setFieldXValue(fieldXValue) {
+    this.fieldXValue = fieldXValue;
+  }
+
+  draw(sy) {
     this.ctx.drawImage(
       this.img,
       0,
       0,
       THANOS.WIDTH,
       sy,
-      fieldXValue,
+      this.fieldXValue,
       THANOS.HEIGHT - sy,
       THANOS.WIDTH,
       sy,
     );
 
     if (sy >= THANOS.HEIGHT) {
-      this._stopAndWait(sy, fieldXValue);
+      this._stopAndWait(sy);
       return;
     }
 
     window.requestAnimationFrame(() => {
-      this._clear(sy, fieldXValue);
-      this.draw(sy + THANOS.HEIGHT_TERM, fieldXValue);
+      this._clear(sy);
+      this.draw(sy + THANOS.HEIGHT_TERM);
     });
   }
 
-  _stopAndWait(sy, fieldXValue) {
+  _stopAndWait(sy) {
     this.thanosTimeoutId = setTimeout(() => {
-      this._clear(sy, fieldXValue);
+      this._clear(sy);
       clearTimeout(this.thanosTimeoutId);
     }, THANOS.TIME_MS);
   }
 
-  _clear(sy, fieldXValue) {
+  _clear(sy) {
     this.ctx.clearRect(
-      fieldXValue,
+      this.fieldXValue,
       THANOS.HEIGHT - sy,
       THANOS.WIDTH,
       sy,

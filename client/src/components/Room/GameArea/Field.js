@@ -94,7 +94,8 @@ const Field = () => {
 
   const appearThanos = (data) => {
     if (document.hidden === false) {
-      thanos.draw(0, data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
+      thanos.setFieldXValue(data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
+      thanos.draw(0);
     }
     killCharacters(data);
   };
