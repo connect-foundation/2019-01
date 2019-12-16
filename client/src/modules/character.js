@@ -1,5 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
-import { CHARACTER, TILE, NICKNAME } from '../constants/room';
+import {
+  CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
+} from '../constants/room';
 
 class Character {
   constructor(imgUrl, indexX, indexY, nickname, isMine) {
@@ -8,14 +12,19 @@ class Character {
     this.imgUrl = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
-    this.nameTagX = null;
-    this.nameTagY = null;
+    this.nameTagX = 0;
+    this.nameTagY = 0;
+    this.chatBalloonX = 0;
+    this.chatBalloonY = 0;
+    this.balloonLineNumber = 0;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
     this.frameCount = 0;
     this.requestId = null;
+    this.chatTimeoutId = null;
     this.nickname = nickname;
+    this.currentChat = '';
     this.mine = isMine;
     this.moveQueue = [];
     this.alive = true;
@@ -36,6 +45,10 @@ class Character {
 
   getNickname() {
     return this.nickname;
+  }
+
+  setCurrentChat(chatText) {
+    this.currentChat = chatText;
   }
 
   drawImage(ctx) {
@@ -75,6 +88,17 @@ class Character {
     this._draw();
   }
 
+  chat() {
+    if (this.chatTimeoutId !== null) clearTimeout(this.chatTimeoutId);
+    this._clearChat();
+    this._drawChat();
+    this.chatTimeoutId = setTimeout(() => {
+      this.currentChat = '';
+      this._clearChat();
+      clearTimeout(this.chatTimeoutId);
+    }, CHAT_BALLOON.CLEAR_TIME_MS);
+  }
+
   _draw() {
     /*
      * HTML canvas drawImage() Method :
@@ -95,6 +119,7 @@ class Character {
     );
 
     this._drawNickname();
+    if (this.currentChat) this._drawChat(this.currentChat);
   }
 
   _walk() {
@@ -174,6 +199,103 @@ class Character {
       NICKNAME.WIDTH + 1,
       NICKNAME.HEIGHT,
     );
+
+    this._clearChat();
+  }
+
+  _drawRoundRect(startX, startY, width, lineHeight, radius) {
+    let borderRadius = radius;
+    const maxHeight = lineHeight * this.balloonLineNumber + CHAT_BALLOON.PADDING_BOTTOM;
+
+    if (width < 2 * borderRadius) borderRadius = width / 2;
+    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
+
+    this.ctx.fillStyle = 'black';
+    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
+    this.ctx.beginPath();
+    this.ctx.moveTo(startX + borderRadius, startY);
+    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
+    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
+    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
+    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
+    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
+    this.ctx.closePath();
+    this.ctx.stroke();
+    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
+    this.ctx.fill();
+  }
+
+  _clearChat() {
+    this.ctx.clearRect(
+      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
+      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
+      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineNumber
+        + CHAT_BALLOON.BORDER_WIDTH * 2
+        + CHAT_BALLOON.TIP_HEIGHT,
+    );
+    this.balloonLineNumber = null;
+  }
+
+  _measureText(chatText) {
+    const { width } = this.ctx.measureText(chatText);
+    return width;
+  }
+
+  /**
+   * @param {string} chatText
+   * @return {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
+   */
+  _parseChat(chatText) {
+    if (this._measureText(chatText) <= CHAT_BALLOON.getTextWidth()) return [chatText];
+    return chatText.split('').reduce((parsedChat, char) => {
+      const lastIndex = parsedChat.length - 1;
+      const [lastSentence] = parsedChat[lastIndex];
+      if (this._measureText(lastSentence + char) > CHAT_BALLOON.getTextWidth()) {
+        parsedChat = [...parsedChat, [char]];
+        return parsedChat;
+      }
+
+      parsedChat[lastIndex] = [lastSentence + char];
+      return parsedChat;
+    }, [['']]);
+  }
+
+  _drawChat() {
+    const parsedChat = this._parseChat(this.currentChat);
+    this.balloonLineNumber = parsedChat.length;
+
+    this.chatBalloonX = (TILE.WIDTH * this.indexX)
+      - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+
+    this.chatBalloonY = TILE.HEIGHT * this.indexY
+      - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
+      - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
+
+    this._drawRoundRect(
+      this.chatBalloonX,
+      this.chatBalloonY,
+      CHAT_BALLOON.WIDTH,
+      CHAT_BALLOON.LINE_HEIGHT,
+      CHAT_BALLOON.BORDER_RADIUS,
+    );
+
+    this.ctx.font = CHAT_BALLOON.FONT;
+    this.ctx.textAlign = CHAT_BALLOON.ALIGN;
+    this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
+    this.ctx.fillStyle = 'black';
+
+    parsedChat.forEach((val, lineOrder) => {
+      this.ctx.fillText(
+        val,
+        this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
+        this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
+          + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
+          + CHAT_BALLOON.PADDING_TOP,
+      );
+    });
   }
 
   _drawNickname() {
