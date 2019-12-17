@@ -42,8 +42,8 @@ class SocketContainer {
     this._emit(EVENT.START_GAME);
   }
 
-  emitReadyRoom() {
-    this._emit(EVENT.READY_ROOM);
+  emitReadyRoom(roomId) {
+    this._emit(EVENT.READY_ROOM, roomId);
   }
 
   emitMove(direction) {
