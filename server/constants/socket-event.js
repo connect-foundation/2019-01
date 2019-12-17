@@ -18,6 +18,7 @@ const EVENT = {
   CHAT_MESSAGE: 'chat_message',
   DISCONNECT: 'disconnecting',
   UPDATE_ROOM_INFO: 'update_room_info',
+  UPDATE_PLAYER_NUM: 'update_player_num',
 };
 
 export default EVENT;

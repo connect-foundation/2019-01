@@ -190,6 +190,10 @@ class User {
   emitLeaveRoom() {
     this.socket.emit(EVENT.LEAVE_ROOM);
   }
+
+  emitUpdatePlayerNum(data) {
+    this.socket.emit(EVENT.UPDATE_PLAYER_NUM, data);
+  }
 }
 
 export default User;
