@@ -8,6 +8,12 @@ const _measureText = (chatText, ctx) => {
   return width;
 };
 
+/**
+ *
+ * @param {string} chatText
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
+ */
 export const parseChat = (chatText, ctx) => {
   if (_measureText(chatText, ctx) <= CHAT_BALLOON.getTextWidth()) return [chatText];
 
