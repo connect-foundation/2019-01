@@ -42,6 +42,10 @@ class SocketContainer {
     this._emit(EVENT.START_GAME);
   }
 
+  emitReadyRoom(roomId) {
+    this._emit(EVENT.READY_ROOM, roomId);
+  }
+
   emitMove(direction) {
     this._emit(EVENT.MOVE, direction);
   }
@@ -68,10 +72,6 @@ class SocketContainer {
 
   emitChatMessage(message) {
     this._emit(EVENT.CHAT_MESSAGE, message);
-  }
-
-  emitEndGame(roomId) {
-    this._emit(EVENT.END_GAME, roomId);
   }
 
   _on(eventName, callback) {
@@ -122,6 +122,10 @@ class SocketContainer {
 
   onEndGame(callback) {
     this._on(EVENT.END_GAME, callback);
+  }
+
+  onResetGame(callback) {
+    this._on(EVENT.RESET_GAME, callback);
   }
 
   onQuizList(callback) {
@@ -183,6 +187,10 @@ class SocketContainer {
 
   offEndGame() {
     this._off(EVENT.END_GAME);
+  }
+
+  offResetGame() {
+    this._off(EVENT.RESET_GAME);
   }
 
   offStartRound() {

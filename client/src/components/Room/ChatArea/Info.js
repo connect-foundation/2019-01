@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ROOM, CHAT_AREA } from '../../../constants/room';
+import { CHAT_AREA } from '../../../constants/room';
 import {
   ChatHeader, RoomInfo, ExitButton, PlayerInfo, Emoji,
 } from './style';
@@ -11,12 +11,9 @@ const Info = () => {
   const [numOfPlayer, setNumOfPlayer] = useState(0);
   const [numOfViewer, setNumOfViewer] = useState(0);
   const history = useHistory();
-  let lastTimerId = null;
 
   const inactiveExitButton = () => setGameStarted(true);
-  const activeExitButton = () => {
-    lastTimerId = setTimeout(() => setGameStarted(false), ROOM.WAITING_TIME_MS);
-  };
+  const activeExitButton = () => setGameStarted(false);
   const exitRoom = () => {
     if (isGameStarted) return;
     socket.emitLeaveRoom();
@@ -32,15 +29,14 @@ const Info = () => {
   useEffect(() => {
     socket.onUpdatePlayerNum(updatePlayerNum);
     socket.onStartGame(inactiveExitButton);
-    socket.onEndGame(activeExitButton);
+    socket.onResetGame(activeExitButton);
     socket.onLeaveRoom(enterLobby);
 
     return () => {
       socket.offUpdatePlayerNum();
       socket.offStartGame();
-      socket.offEndGame();
+      socket.offResetGame();
       socket.offLeaveRoom();
-      clearTimeout(lastTimerId);
     };
   }, []);
 

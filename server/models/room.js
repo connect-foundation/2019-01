@@ -274,9 +274,10 @@ class Room {
   /**
    * round를 시작하게 합니다.
    */
-  async _startRound() {
+  _startRound() {
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     const characterList = [];
 
@@ -296,6 +297,7 @@ class Room {
         characterList,
       });
     });
+    this.isMoving = false;
 
     this._countTime();
     this._broadcastPlayerNum();
@@ -352,25 +354,30 @@ class Room {
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame() {
+    this.users.forEach((user) => user.emitEndGame());
+    setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
+  }
+
+  _resetGame() {
     const characterList = [];
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => {
       const [indexX, indexY] = this._placeCharacter(user);
       characterList.push({ nickname: user.getNickname(), indexX, indexY });
     });
-
     this.users.forEach((user) => {
-      user.emitEndGame({
+      user.emitResetGame({
         characterList,
         isOwner: this._isOwner(user),
       });
     });
+    this.isMoving = false;
     this.isGameStarted = false;
-
     this.aliveUsers.clear();
     this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
 
-    setTimeout(() => this._broadcastPlayerNum(), ROOM.WAITING_TIME_MS);
+    this._broadcastPlayerNum();
   }
 
   /**
