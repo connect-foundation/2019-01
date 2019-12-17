@@ -60,6 +60,7 @@ const Room = () => {
       backgroundMusic.pause();
       socket.offStartGame();
       socket.offEndGame();
+      socket.offResetGame();
       socket.emitLeaveRoom();
     };
   }, []);

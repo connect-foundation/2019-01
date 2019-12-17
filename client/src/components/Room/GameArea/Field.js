@@ -31,12 +31,10 @@ const Field = () => {
   const moveCharacter = ({
     canMove, nickname, direction, newIndexX, newIndexY,
   }) => {
-    console.log(`server, nickname: ${nickname}, x:${newIndexX}, y:${newIndexY}`);
     const moveMatchedCharacter = (character) => {
       if (character === undefined) return;
       if (canMove) {
         character.move(direction, newIndexX, newIndexY);
-        console.log(`client, x:${character.indexX}, y:${character.indexY}`);
         return;
       }
       character.turn(direction);
