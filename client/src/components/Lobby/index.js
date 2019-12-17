@@ -118,9 +118,11 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const githubId = getNicknameFromJwt();
+    const githubId = socket.isGuest() ? undefined : getNicknameFromJwt();
 
-    setUserName(githubId === undefined ? 'guest' : githubId);
+    if (githubId !== undefined) {
+      setUserName(githubId);
+    }
 
     if (socket.isConnected() === false) {
       socket.connect(githubId === undefined ? {} : { githubId });
