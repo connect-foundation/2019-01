@@ -327,13 +327,14 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    if (this.aliveUsers.size - dropUsers.length !== 0) {
+    const isSomeoneAlive = (this.aliveUsers.size - dropUsers.length) !== 0;
+    if (isSomeoneAlive) {
       dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
     }
     this._broadcastPlayerNum();
 
     if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
-      setTimeout(() => this._endGame(), ROOM.WAITING_TIME_MS);
+      setTimeout(() => this._endGame(isSomeoneAlive), ROOM.WAITING_TIME_MS);
       return;
     }
 
