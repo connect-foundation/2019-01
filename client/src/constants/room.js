@@ -9,7 +9,16 @@ export const FIELD = {
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
-  THANOS: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/Thanos_new.png',
+};
+
+export const THANOS = {
+  IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
+  TIME_MS: 2000,
+  HEIGHT_TERM: 10,
+  TRUE_X: 0,
+  FALSE_X: FIELD.getWidth() / 2,
+  WIDTH: FIELD.getWidth() / 2,
+  HEIGHT: FIELD.getHeight(),
 };
 
 export const CHARACTER = {
@@ -32,6 +41,25 @@ export const CHARACTER = {
     MOVE2: 2,
     LOOP: [0, 2, 0, 1],
   },
+};
+
+export const CHAT_BALLOON = {
+  WIDTH: TILE.WIDTH * 2.5,
+  LINE_HEIGHT: 15,
+  PADDING_TOP: 3,
+  PADDING_BOTTOM: 3,
+  PADDING_LEFT: 5,
+  PADDING_RIGHT: 5,
+  BORDER_WIDTH: 3,
+  BORDER_RADIUS: 5,
+  getTextWidth() { return this.WIDTH - this.PADDING_LEFT - this.PADDING_RIGHT; },
+  TIP_WIDTH: 3,
+  TIP_HEIGHT: 5,
+  FONT: '13px nanoom',
+  ALIGN: 'center',
+  BASELINE: 'middle',
+  BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.3)',
+  CLEAR_TIME_MS: 3000,
 };
 
 export const NICKNAME = {
