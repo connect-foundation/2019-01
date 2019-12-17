@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
+import { parseChat } from '../util';
 import {
   CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
 } from '../constants/room';
@@ -243,32 +244,8 @@ class Character {
     this.balloonLineNumber = null;
   }
 
-  _measureText(chatText) {
-    const { width } = this.ctx.measureText(chatText);
-    return width;
-  }
-
-  /**
-   * @param {string} chatText
-   * @return {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
-   */
-  _parseChat(chatText) {
-    if (this._measureText(chatText) <= CHAT_BALLOON.getTextWidth()) return [chatText];
-    return chatText.split('').reduce((parsedChat, char) => {
-      const lastIndex = parsedChat.length - 1;
-      const [lastSentence] = parsedChat[lastIndex];
-      if (this._measureText(lastSentence + char) > CHAT_BALLOON.getTextWidth()) {
-        parsedChat = [...parsedChat, [char]];
-        return parsedChat;
-      }
-
-      parsedChat[lastIndex] = [lastSentence + char];
-      return parsedChat;
-    }, [['']]);
-  }
-
   _drawChat() {
-    const parsedChat = this._parseChat(this.currentChat);
+    const parsedChat = parseChat(this.currentChat, this.ctx);
     this.balloonLineNumber = parsedChat.length;
 
     this.chatBalloonX = (TILE.WIDTH * this.indexX)

@@ -88,6 +88,10 @@ export const ExitButton = styled.button.attrs({
     box-shadow: ${(props) => (props.isGameStarted ? 'none' : CHAT_AREA.BOX_SHADOW)};
 `;
 
+export const ChatCanvas = styled.canvas`
+    display: none;
+`;
+
 export const ChatLog = styled.div`
     width: 100%;
     max-width: 100%;

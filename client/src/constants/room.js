@@ -55,6 +55,7 @@ export const CHAT_BALLOON = {
   getTextWidth() { return this.WIDTH - this.PADDING_LEFT - this.PADDING_RIGHT; },
   TIP_WIDTH: 3,
   TIP_HEIGHT: 5,
+  MAX_LINE_COUNT: 5,
   FONT: '13px nanoom',
   ALIGN: 'center',
   BASELINE: 'middle',
