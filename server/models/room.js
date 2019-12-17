@@ -286,6 +286,7 @@ class Room {
 
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     const characterList = [];
 
@@ -305,6 +306,7 @@ class Room {
         characterList,
       });
     });
+    this.isMoving = false;
 
     this._countTime();
     this._broadcastPlayerNum();
@@ -381,14 +383,13 @@ class Room {
   }
 
   _resetGame() {
-    this.isMoving = true;
     const characterList = [];
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => {
       const [indexX, indexY] = this._placeCharacter(user);
       characterList.push({ nickname: user.getNickname(), indexX, indexY });
     });
-
     this.users.forEach((user) => {
       user.emitResetGame({
         characterList,
@@ -397,7 +398,6 @@ class Room {
     });
     this.isMoving = false;
     this.isGameStarted = false;
-
     this.aliveUsers.clear();
     this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
 

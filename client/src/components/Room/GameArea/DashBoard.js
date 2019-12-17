@@ -112,13 +112,13 @@ const DashBoard = ({ buttonClickSound }) => {
         </div>
       )
   );
+
   const readyGame = () => {
     setGameStarted(true);
     setCounter(ROOM.WAITING_TIME_MS / DASHBOARD.SECOND_MS);
     setNotice('게임이 곧 시작됩니다.');
     startCounter();
   };
-
 
   useEffect(() => {
     socket.onEnterRoom(enterRoom);
@@ -134,6 +134,7 @@ const DashBoard = ({ buttonClickSound }) => {
       socket.offLeaveUser();
       socket.offStartRound();
       socket.offEndRound();
+      socket.offResetGame();
       socket.offEndGame();
       socket.offResetGame();
       socket.offStartGame();
