@@ -60,10 +60,16 @@ class Lobby {
     this.rooms.delete(roomId);
   }
 
-  updateRoomInfo(roomId, action, user) {
-    this.users.forEach((_user) => {
-      if (_user === user) return;
-      _user.emitUpdateRoomInfo({ roomId, action, user });
+  updateRoomInfo(roomId) {
+    const room = this.getRoom(roomId);
+    const roomInfo = {
+      id: roomId,
+      name: room.getName(),
+      numOfUsers: room.getNumOfUsers(),
+      isEnterable: room.isEnterable(),
+    };
+    this.users.forEach((user) => {
+      user.emitUpdateRoomInfo({ roomId, roomInfo });
     });
   }
 }

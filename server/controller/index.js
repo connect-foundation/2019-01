@@ -71,7 +71,7 @@ class Controller {
     await this._assignCharacter(user);
     lobby.leaveUser(user.getId());
     await room.enterUser(user);
-    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_ENTERED);
+    lobby.updateRoomInfo(roomId);
   }
 
   /**
@@ -93,12 +93,11 @@ class Controller {
     const room = lobby.getRoom(user.getRoomId());
     const roomId = room.getId();
     room.leaveUser(user);
+    lobby.updateRoomInfo(roomId);
+
     if (room.getNumOfUsers() === 0) {
-      lobby.updateRoomInfo(roomId, LOBBY.ACTION.NO_USERS);
       lobby.deleteRoom(roomId);
-      return;
     }
-    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_LEAVED);
   }
 
   /**
@@ -110,7 +109,7 @@ class Controller {
     const room = lobby.getRoom(user.getRoomId());
     const roomId = room.getId();
     const isStart = await room.startGame(user);
-    if (isStart) lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
+    if (isStart) lobby.updateRoomInfo(roomId);
   }
 
   /**
@@ -151,7 +150,7 @@ class Controller {
       const room = lobby.getRoom(roomId);
 
       if (room !== undefined && room.isStarted() === false) {
-        lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
+        lobby.updateRoomInfo(roomId);
       }
     }, ROOM.WAITING_TIME_MS);
   }
