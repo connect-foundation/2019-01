@@ -17,7 +17,7 @@ class Character {
     this.nameTagY = 0;
     this.chatBalloonX = 0;
     this.chatBalloonY = 0;
-    this.balloonLineNumber = 0;
+    this.balloonLineCount = 0;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -210,7 +210,7 @@ class Character {
 
   _drawRoundRect(startX, startY, width, lineHeight, radius) {
     let borderRadius = radius;
-    const maxHeight = lineHeight * this.balloonLineNumber + CHAT_BALLOON.PADDING_BOTTOM;
+    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
 
     if (width < 2 * borderRadius) borderRadius = width / 2;
     if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
@@ -237,22 +237,22 @@ class Character {
       this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
       this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
       CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
-      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineNumber
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
         + CHAT_BALLOON.BORDER_WIDTH * 2
         + CHAT_BALLOON.TIP_HEIGHT,
     );
-    this.balloonLineNumber = null;
+    this.balloonLineCount = 0;
   }
 
   _drawChat() {
     const parsedChat = parseChat(this.currentChat, this.ctx);
-    this.balloonLineNumber = parsedChat.length;
+    this.balloonLineCount = parsedChat.length;
 
     this.chatBalloonX = (TILE.WIDTH * this.indexX)
       - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
 
     this.chatBalloonY = TILE.HEIGHT * this.indexY
-      - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
+      - this.balloonLineCount * CHAT_BALLOON.LINE_HEIGHT
       - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
 
     this._drawRoundRect(
