@@ -152,6 +152,10 @@ class SocketContainer {
     this._on(EVENT.DISCONNECT, callback);
   }
 
+  onUpdatePlayerNum(callback) {
+    this._on(EVENT.UPDATE_PLAYER_NUM, callback);
+  }
+
   _off(eventName) {
     if (this.socket === undefined) return;
     this.socket.off(eventName);
@@ -219,6 +223,10 @@ class SocketContainer {
 
   offChatMessage() {
     this._off(EVENT.CHAT_MESSAGE);
+  }
+
+  offUpdatePlayerNum() {
+    this._off(EVENT.UPDATE_PLAYER_NUM);
   }
 }
 
