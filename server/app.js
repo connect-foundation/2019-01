@@ -3,6 +3,7 @@ import express from 'express';
 import logger from 'morgan';
 import socketio from 'socket.io';
 import cookieParser from 'cookie-parser';
+import {} from 'dotenv/config';
 import cors from 'cors';
 import indexRouter from './routes/index';
 import loginRouter from './routes/login';
