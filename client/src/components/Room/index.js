@@ -42,7 +42,7 @@ const Room = () => {
   );
 
   const notifyEndGame = ({ isOwner }) => {
-    if (isOwner) socket.emitEndGame(roomId);
+    if (isOwner) socket.emitReadyRoom(roomId);
   };
 
   useEffect(() => {
@@ -55,11 +55,12 @@ const Room = () => {
     socket.emitEnterRoom(roomId);
     socket.onStartGame(playStartSound);
     socket.onEndGame(playEndSound);
-    socket.onEndGame(notifyEndGame);
+    socket.onResetGame(notifyEndGame);
     return () => {
       backgroundMusic.pause();
       socket.offStartGame();
       socket.offEndGame();
+      socket.offResetGame();
       socket.emitLeaveRoom();
     };
   }, []);

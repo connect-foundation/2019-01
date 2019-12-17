@@ -51,6 +51,10 @@ class Character {
     this.currentChat = chatText;
   }
 
+  clearMoveQueue() {
+    this.moveQueue = [];
+  }
+
   drawImage(ctx) {
     this.ctx = ctx;
     this.img = new Image();

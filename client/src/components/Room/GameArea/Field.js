@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CHARACTER, FIELD, KEYCODE, ROOM, THANOS,
+  CHARACTER, FIELD, KEYCODE, THANOS,
 } from '../../../constants/room';
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
@@ -12,7 +12,6 @@ const Field = () => {
   const [myCharacter, setMyCharacter] = useState(null);
   const thanosCanvasRef = React.useRef();
   const thanos = new Thanos();
-  let lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -80,16 +79,11 @@ const Field = () => {
         if (character === undefined) return;
 
         if (character.isAlive() === false) character.setAlive(true);
+        character.clearMoveQueue();
         character.teleport(indexX, indexY);
       });
       return newCharacters;
     });
-  };
-
-  const updateCharacters = ({ characterList }) => {
-    lastTimerId = setTimeout(() => {
-      teleportCharacters({ characterList });
-    }, ROOM.WAITING_TIME_MS);
   };
 
   const appearThanos = (data) => {
@@ -122,7 +116,7 @@ const Field = () => {
     socket.onMove(moveCharacter);
     socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
-    socket.onEndGame(updateCharacters);
+    socket.onResetGame(teleportCharacters);
     socket.onChatMessage(chatCharacters);
 
     return () => {
@@ -132,9 +126,8 @@ const Field = () => {
       socket.offMove();
       socket.offEndRound();
       socket.offLeaveUser();
-      socket.offEndGame();
+      socket.offResetGame();
       socket.offChatMessage();
-      clearTimeout(lastTimerId);
     };
   }, []);
 
