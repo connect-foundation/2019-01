@@ -4,8 +4,8 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
-import LOBBY from '../constants/lobby';
-import ROOM from '../constants/room';
+import { LOBBY, KNOCK_MESSAGE } from '../constants/lobby';
+import { ROOM } from '../constants/room';
 /**
  * Controller class
  * @property {array} rooms
@@ -39,7 +39,29 @@ class Controller {
   /**
    *
    * @param {User} user
-   * @param {number} roomId
+   * @param {string} roomId
+   */
+  _letUserKnockRoom(user, roomId) {
+    if (user.isInLobby() === false) return;
+    const room = lobby.getRoom(roomId);
+
+    if (room.isEnterable() === false) {
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.DENIED });
+      return;
+    }
+
+    if (room.isUserEntered(user)) {
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.OVERLAP });
+      return;
+    }
+
+    user.emitKnockRoom({ isEnterable: true, roomId, message: KNOCK_MESSAGE.PASS });
+  }
+
+  /**
+   *
+   * @param {User} user
+   * @param {string} roomId
    *
    * @fires Controller#enter_room
    */
@@ -105,6 +127,17 @@ class Controller {
   /**
    *
    * @param {User} user
+   * @param {*} direction
+   */
+  _letUserUseSkill(user, direction) {
+    if (user.isInLobby()) return;
+    const room = lobby.getRoom(user.getRoomId());
+    room.useSkill(user, direction);
+  }
+
+  /**
+   *
+   * @param {User} user
    * @param {string} message
    */
   _letUserChat(user, message) {
@@ -129,12 +162,14 @@ class Controller {
    */
   _bindEvent(user) {
     user.onCreateRoom((roomName) => this._letUserCreateRoom(user, roomName));
+    user.onKnockRoom((roomId) => this._letUserKnockRoom(user, roomId));
     user.onEnterRoom(async (roomId) => {
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));
     user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
+    user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
     user.onDisconnecting(() => {

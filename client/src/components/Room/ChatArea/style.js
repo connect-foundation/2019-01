@@ -3,7 +3,7 @@ import {
   CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
 } from '../../../constants/room';
 
-const ChatAreaWrapper = styled.div`
+export const ChatAreaWrapper = styled.div`
     width: ${CHAT_AREA.WIDTH}px;
     height: ${ROOM.getHeight()}px;
     box-sizing: border-box;
@@ -16,7 +16,7 @@ const ChatAreaWrapper = styled.div`
     justify-content: space-between;
 `;
 
-const ChatHeader = styled.div`
+export const ChatHeader = styled.div`
     width: 100%;
     height: 8%;
     display: flex;
@@ -25,14 +25,14 @@ const ChatHeader = styled.div`
     margin: ${ROOM_NAME.WRAPPER_MARGIN};
 `;
 
-const RoomInfo = styled.div`
+export const RoomInfo = styled.div`
     width: 50%;
     height: 100%;
     display: flex;
     justify-content: space-between;
 `;
 
-const PlayerInfo = styled.div`
+export const PlayerInfo = styled.div`
     width: 45%;
     height: 100%;
     display: flex;
@@ -41,7 +41,7 @@ const PlayerInfo = styled.div`
     font-size: ${QUIZ.FONT_SIZE}px;
 `;
 
-const Emoji = styled.div.attrs((props) => ({
+export const Emoji = styled.div.attrs((props) => ({
   style: { backgroundImage: `url(${props.url})` },
 }))`
     background-size: 100% 100%;
@@ -76,7 +76,7 @@ const buttonStyle = `
     font-family: ${ROOM.FONT_FAMILY};
 `;
 
-const ExitButton = styled.button.attrs({
+export const ExitButton = styled.button.attrs({
   disabled: (props) => (props.isGameStarted ? 'disabled' : ''),
 })`
     width: 25%;
@@ -88,7 +88,7 @@ const ExitButton = styled.button.attrs({
     box-shadow: ${(props) => (props.isGameStarted ? 'none' : CHAT_AREA.BOX_SHADOW)};
 `;
 
-const ChatLog = styled.div`
+export const ChatLog = styled.div`
     width: 100%;
     max-width: 100%;
     height: 75%;
@@ -98,36 +98,36 @@ const ChatLog = styled.div`
     margin: 8% 0;
 `;
 
-const ChatNotice = styled.div`
+export const ChatNotice = styled.div`
     text-align: center;
     color: coral;
     font-weight: bold;
     margin-bottom: 10%;
 `;
 
-const Chat = styled.div`
+export const Chat = styled.div`
     width: 100%;
     margin-bottom: 1%;
 `;
 
-const ChatNinkname = styled.span`
+export const ChatNinkname = styled.span`
     font-weight: bold;
 `;
 
-const ChatMessage = styled.span`
+export const ChatMessage = styled.span`
     max-width: 100%;
     word-wrap: break-word;
     line-height: ${QUIZ.FONT_SIZE}px;
 `;
 
-const ChatInput = styled.div`
+export const ChatInput = styled.div`
     display: flex;
     width: 100%;
     height: 8%;
     justify-content: space-between;
 `;
 
-const InputBox = styled.input.attrs({
+export const InputBox = styled.input.attrs({
   type: 'text',
   maxLength: CHAT_AREA.MAX_MESSAGE_LENGTH,
 })`
@@ -145,14 +145,8 @@ const InputBox = styled.input.attrs({
     };
 `;
 
-const SendButton = styled.button`
+export const SendButton = styled.button`
     width: 25%;
     height: 100%;
     ${buttonStyle}
 `;
-
-export {
-  ChatAreaWrapper, ChatHeader, RoomInfo, ExitButton,
-  ChatLog, ChatInput, InputBox, SendButton, PlayerInfo,
-  Emoji, Chat, ChatNinkname, ChatMessage, ChatNotice,
-};

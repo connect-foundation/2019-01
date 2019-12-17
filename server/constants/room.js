@@ -1,4 +1,4 @@
-const ROOM = {
+export const ROOM = {
   FIELD_ROW: 8,
   FIELD_COLUMN: 16,
   SECOND: 1000, // 1s
@@ -9,18 +9,16 @@ const ROOM = {
   READY_TIME_MS: 4000,
 };
 
-const DIRECTION = {
+export const DIRECTION = {
   DOWN: 0,
   LEFT: 1,
   RIGHT: 2,
   UP: 3,
 };
 
-const FIELD = {
+export const FIELD = {
   O_START: 0,
   O_END: ROOM.FIELD_COLUMN / 2,
   X_START: ROOM.FIELD_COLUMN / 2,
   X_END: ROOM.FIELD_COLUMN,
 };
-
-export { ROOM, DIRECTION, FIELD };

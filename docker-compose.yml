@@ -13,16 +13,15 @@ services:
             context: ./client
             dockerfile: ../docker/client.Dockerfile
         ports:
-            - "80:80"
+            - "443:443"
         depends_on:
             - server
         networks:
             - backend
+        volumes:
+            - /var/www/boolean-avengers:/var/www/boolean-avengers
 
     db:
-        # container 이름은 nginx 설정(.conf)에서 사용할수도 있지만
-        # mysql은 사용하지 않는 상태이고, 겹치는 이름이 있으면 실행이 안되므로
-        # 지정해주지 않기로함
         build:
             context: ./mysql
             dockerfile: ../docker/mysql.Dockerfile
@@ -37,6 +36,8 @@ services:
             - "3306:3306"
         networks:
             - backend
+        volumes:
+            - mysql_data:/var/lib/mysql
 
 networks:
     backend:
@@ -45,3 +46,6 @@ networks:
 secrets:
     mysql_secret:
         file: secret
+
+volumes:
+    mysql_data:
