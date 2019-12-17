@@ -8,6 +8,15 @@ const isFunction = (callback) => typeof callback === 'function';
 class SocketContainer {
   constructor() {
     this.socket = undefined;
+    this.guest = false;
+  }
+
+  setGuest(guest) {
+    this.guest = guest;
+  }
+
+  isGuest() {
+    return this.guest;
   }
 
   connect(query) {
