@@ -65,6 +65,14 @@ class Room {
     return this.isGameStarted;
   }
 
+  _broadcastPlayerNum() {
+    const data = {
+      numOfPlayer: this.aliveUsers.size,
+      numOfViewer: this.users.size - this.aliveUsers.size,
+    };
+    this.users.forEach((user) => user.emitUpdatePlayerNum(data));
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
@@ -129,6 +137,8 @@ class Room {
       roomName: this.name,
     });
     this.aliveUsers.set(user.getNickname(), user);
+
+    this._broadcastPlayerNum();
   }
 
   makeCharacterList(myCharacter) {
@@ -168,6 +178,7 @@ class Room {
     });
     this.aliveUsers.delete(nickname);
     user.emitLeaveRoom();
+    this._broadcastPlayerNum();
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -287,6 +298,7 @@ class Room {
     });
 
     this._countTime();
+    this._broadcastPlayerNum();
   }
 
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
@@ -307,9 +319,10 @@ class Room {
     if (this.aliveUsers.size - dropUsers.length !== 0) {
       dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
     }
+    this._broadcastPlayerNum();
 
     if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
-      this._endGame();
+      setTimeout(() => this._endGame(), ROOM.WAITING_TIME_MS);
       return;
     }
 
@@ -347,15 +360,17 @@ class Room {
     });
 
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame({
+      user.emitEndGame({
         characterList,
         isOwner: this._isOwner(user),
-      }), ROOM.WAITING_TIME_MS);
+      });
     });
     this.isGameStarted = false;
 
     this.aliveUsers.clear();
     this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
+
+    setTimeout(() => this._broadcastPlayerNum(), ROOM.WAITING_TIME_MS);
   }
 
   /**
