@@ -8,7 +8,7 @@ import socket from '../../../modules/socket';
 
 const Input = () => {
   const [message, setMessage] = useState('');
-  const [ctx, setCtx] = useState(null);
+  const [updateMessage, setUpdateMessage] = useState(() => {});
   const inputRef = React.useRef();
   const canvasRef = React.useRef();
 
@@ -28,21 +28,20 @@ const Input = () => {
     }
   };
 
-  const updateMessage = (event) => {
-    const messageText = event.target.value;
-    const messageLineCount = parseChat(messageText, ctx).length;
-    const newMessage = (
-      messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
-      || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT
-        ? messageText.slice(0, messageText.length - 1)
-        : messageText
-    );
-    setMessage(newMessage);
-  };
-
   useEffect(() => {
     const chatCanvas = canvasRef.current;
-    setCtx(chatCanvas.getContext('2d'));
+    const ctx = chatCanvas.getContext('2d');
+    setUpdateMessage(() => (event) => {
+      const messageText = event.target.value;
+      const messageLineCount = parseChat(messageText, ctx).length;
+      const newMessage = (
+        messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
+          || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT
+          ? messageText.slice(0, messageText.length - 1)
+          : messageText
+      );
+      setMessage(newMessage);
+    });
   }, []);
 
   return (
