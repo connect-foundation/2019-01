@@ -4,7 +4,6 @@
 import {
   CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
 } from '../constants/room';
-import Thanos from './thanos';
 
 class Character {
   constructor(imgUrl, indexX, indexY, nickname, isMine) {
