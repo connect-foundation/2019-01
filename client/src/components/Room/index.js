@@ -55,7 +55,7 @@ const Room = () => {
     socket.emitEnterRoom(roomId);
     socket.onStartGame(playStartSound);
     socket.onEndGame(playEndSound);
-    socket.onEndGame(notifyEndGame);
+    socket.onResetGame(notifyEndGame);
     return () => {
       backgroundMusic.pause();
       socket.offStartGame();

@@ -12,7 +12,7 @@ const Field = () => {
   const [myCharacter, setMyCharacter] = useState(null);
   const thanosCanvasRef = React.useRef();
   const thanos = new Thanos();
-  let lastTimerId = null;
+  const lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -87,9 +87,7 @@ const Field = () => {
   };
 
   const updateCharacters = ({ characterList }) => {
-    lastTimerId = setTimeout(() => {
-      teleportCharacters({ characterList });
-    }, ROOM.WAITING_TIME_MS);
+    teleportCharacters({ characterList });
   };
 
   const appearThanos = (data) => {
@@ -123,6 +121,7 @@ const Field = () => {
     socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
     socket.onEndGame(updateCharacters);
+    socket.onResetGame(updateCharacters);
     socket.onChatMessage(chatCharacters);
 
     return () => {
@@ -132,7 +131,7 @@ const Field = () => {
       socket.offMove();
       socket.offEndRound();
       socket.offLeaveUser();
-      socket.offEndGame();
+      socket.offResetGame();
       socket.offChatMessage();
       clearTimeout(lastTimerId);
     };

@@ -12,6 +12,7 @@ const EVENT = {
   START_ROUND: 'start_round',
   END_ROUND: 'end_round',
   END_GAME: 'end_game',
+  RESET_GAME: 'reset_game',
   MOVE: 'move',
   USE_SKILL: 'use_skill',
   CHAT_MESSAGE: 'chat_message',

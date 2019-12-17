@@ -64,11 +64,12 @@ const DashBoard = ({ buttonClickSound }) => {
   const endGame = () => {
     setGameEnded(true);
     setNotice('↓↓↓↓   우승   ↓↓↓↓');
-    lastTimerId = setTimeout(() => {
-      setGameEnded(false);
-      setGameStarted(false);
-      setCounter('--');
-    }, ROOM.WAITING_TIME_MS);
+  };
+
+  const resetGame = () => {
+    setGameEnded(false);
+    setGameStarted(false);
+    setCounter('--');
   };
 
   const enterRoom = ({
@@ -125,6 +126,7 @@ const DashBoard = ({ buttonClickSound }) => {
     socket.onStartRound(startRound);
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
+    socket.onResetGame(resetGame);
     socket.onStartGame(readyGame);
 
     return () => {
@@ -133,6 +135,7 @@ const DashBoard = ({ buttonClickSound }) => {
       socket.offStartRound();
       socket.offEndRound();
       socket.offEndGame();
+      socket.offResetGame();
       socket.offStartGame();
       clearTimeout(lastTimerId);
     };

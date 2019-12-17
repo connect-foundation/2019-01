@@ -263,7 +263,16 @@ class Room {
   /**
    * round를 시작하게 합니다.
    */
-  async _startRound() {
+  _startRound() {
+    if (this.aliveUsers.size === 0) {
+      this.aliveUsers = new Map(this.users);
+    }
+
+    if (this.aliveUsers.size === 1) {
+      this._endGame(false);
+      return;
+    }
+
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
@@ -309,7 +318,7 @@ class Room {
     }
 
     if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
-      this._endGame();
+      setTimeout(() => this._endGame(), ROOM.WAITING_TIME_MS);
       return;
     }
 
@@ -338,7 +347,26 @@ class Room {
   }
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
-  _endGame() {
+  _endGame(isNormalEnd = true) {
+    const characterList = [];
+
+    if (isNormalEnd === false) {
+      this.isMoving = true;
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.aliveUsers.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+      this.isMoving = false;
+    }
+
+    this.users.forEach((user) => user.emitEndGame({ characterList }));
+
+    setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
+  }
+
+  _resetGame() {
+    this.isMoving = true;
     const characterList = [];
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => {
@@ -347,11 +375,12 @@ class Room {
     });
 
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame({
+      user.emitResetGame({
         characterList,
         isOwner: this._isOwner(user),
-      }), ROOM.WAITING_TIME_MS);
+      });
     });
+    this.isMoving = false;
     this.isGameStarted = false;
 
     this.aliveUsers.clear();

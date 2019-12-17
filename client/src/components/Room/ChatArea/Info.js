@@ -58,18 +58,18 @@ const Info = () => {
 
   const enterLobby = () => history.replace('/lobby');
 
-  useEffect(() => {
-    socket.onStartGame(inactiveExitButton);
-    socket.onEndGame(activeExitButton);
-    socket.onEnterRoom(initPlayer);
-    socket.onEnterNewUser(addPlayer);
-    socket.onLeaveUser(subUser);
-    socket.onEndRound(updateDropUser);
-    socket.onStartRound(updateAliveUser);
-    socket.onEndGame(updateUser);
-    socket.onLeaveRoom(enterLobby);
+  useEffect(() =>
+  // socket.onStartGame(inactiveExitButton);
+  // socket.onEndGame(activeExitButton);
+  // socket.onEnterRoom(initPlayer);
+  // socket.onEnterNewUser(addPlayer);
+  // socket.onLeaveUser(subUser);
+  // socket.onEndRound(updateDropUser);
+  // socket.onStartRound(updateAliveUser);
+  // socket.onEndGame(updateUser);
+  // socket.onLeaveRoom(enterLobby);
 
-    return () => {
+    () => {
       socket.offStartGame();
       socket.offEndGame();
       socket.offEnterRoom();
@@ -79,8 +79,8 @@ const Info = () => {
       socket.offStartRound();
       socket.offLeaveRoom();
       clearTimeout(lastTimerId);
-    };
-  }, []);
+    },
+  []);
 
   return (
     <ChatHeader>

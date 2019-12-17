@@ -124,6 +124,10 @@ class SocketContainer {
     this._on(EVENT.END_GAME, callback);
   }
 
+  onResetGame(callback) {
+    this._on(EVENT.RESET_GAME, callback);
+  }
+
   onQuizList(callback) {
     this._on(EVENT.FETCH_QUIZLIST, callback);
   }
@@ -179,6 +183,10 @@ class SocketContainer {
 
   offEndGame() {
     this._off(EVENT.END_GAME);
+  }
+
+  offResetGame() {
+    this._off(EVENT.RESET_GAME);
   }
 
   offStartRound() {

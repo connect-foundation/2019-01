@@ -171,6 +171,10 @@ class User {
     this.socket.emit(EVENT.END_GAME, data);
   }
 
+  emitResetGame(data) {
+    this.socket.emit(EVENT.RESET_GAME, data);
+  }
+
   emitMove(data) {
     this.socket.emit(EVENT.MOVE, data);
   }
