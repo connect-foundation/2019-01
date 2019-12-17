@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CHARACTER, FIELD, KEYCODE, ROOM, THANOS,
+  CHARACTER, FIELD, KEYCODE, THANOS,
 } from '../../../constants/room';
 import Character from '../../../modules/character';
 import socket from '../../../modules/socket';
@@ -12,7 +12,7 @@ const Field = () => {
   const [myCharacter, setMyCharacter] = useState(null);
   const thanosCanvasRef = React.useRef();
   const thanos = new Thanos();
-  let lastTimerId = null;
+  const lastTimerId = null;
 
   const addCharacters = ({ characterList }) => {
     setCharacters((prevCharacters) => {
@@ -31,10 +31,12 @@ const Field = () => {
   const moveCharacter = ({
     canMove, nickname, direction, newIndexX, newIndexY,
   }) => {
+    console.log(`server, nickname: ${nickname}, x:${newIndexX}, y:${newIndexY}`);
     const moveMatchedCharacter = (character) => {
       if (character === undefined) return;
       if (canMove) {
         character.move(direction, newIndexX, newIndexY);
+        console.log(`client, x:${character.indexX}, y:${character.indexY}`);
         return;
       }
       character.turn(direction);
@@ -86,11 +88,7 @@ const Field = () => {
     });
   };
 
-  const updateCharacters = ({ characterList }) => {
-    lastTimerId = setTimeout(() => {
-      teleportCharacters({ characterList });
-    }, ROOM.WAITING_TIME_MS);
-  };
+  const updateCharacters = ({ characterList }) => teleportCharacters({ characterList });
 
   const appearThanos = (data) => {
     if (document.hidden === false) {
@@ -122,7 +120,7 @@ const Field = () => {
     socket.onMove(moveCharacter);
     socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
-    socket.onEndGame(updateCharacters);
+    socket.onResetGame(updateCharacters);
     socket.onChatMessage(chatCharacters);
 
     return () => {
@@ -132,7 +130,7 @@ const Field = () => {
       socket.offMove();
       socket.offEndRound();
       socket.offLeaveUser();
-      socket.offEndGame();
+      socket.offResetGame();
       socket.offChatMessage();
       clearTimeout(lastTimerId);
     };
