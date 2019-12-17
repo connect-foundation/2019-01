@@ -42,6 +42,10 @@ class SocketContainer {
     this._emit(EVENT.START_GAME);
   }
 
+  emitReadyRoom() {
+    this._emit(EVENT.READY_ROOM);
+  }
+
   emitMove(direction) {
     this._emit(EVENT.MOVE, direction);
   }
@@ -68,10 +72,6 @@ class SocketContainer {
 
   emitChatMessage(message) {
     this._emit(EVENT.CHAT_MESSAGE, message);
-  }
-
-  emitEndGame(roomId) {
-    this._emit(EVENT.END_GAME, roomId);
   }
 
   _on(eventName, callback) {

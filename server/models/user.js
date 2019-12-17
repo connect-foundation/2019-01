@@ -102,9 +102,9 @@ class User {
     this.socket.on(EVENT.START_GAME, () => callback());
   }
 
-  onEndGame(callback) {
+  onReadyRoom(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.END_GAME, (roomId) => callback(roomId));
+    this.socket.on(EVENT.READY_ROOM, (roomId) => callback(roomId));
   }
 
   onMove(callback) {

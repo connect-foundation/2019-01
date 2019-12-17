@@ -42,7 +42,7 @@ const Room = () => {
   );
 
   const notifyEndGame = ({ isOwner }) => {
-    if (isOwner) socket.emitEndGame(roomId);
+    if (isOwner) socket.emitReadyRoom(roomId);
   };
 
   useEffect(() => {

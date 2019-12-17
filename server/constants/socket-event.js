@@ -8,6 +8,7 @@ const EVENT = {
   ENTER_NEW_USER: 'enter_new_user',
   LEAVE_ROOM: 'leave_room',
   LEAVE_USER: 'leave_user',
+  READY_ROOM: 'ready_room',
   START_GAME: 'start_game',
   START_ROUND: 'start_round',
   END_ROUND: 'end_round',

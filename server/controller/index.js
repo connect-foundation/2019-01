@@ -164,7 +164,7 @@ class Controller {
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));
-    user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
+    user.onReadyRoom((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
