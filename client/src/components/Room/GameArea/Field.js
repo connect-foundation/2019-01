@@ -131,6 +131,7 @@ const Field = () => {
       socket.offMove();
       socket.offEndRound();
       socket.offLeaveUser();
+      socket.offEndGame();
       socket.offResetGame();
       socket.offChatMessage();
       clearTimeout(lastTimerId);

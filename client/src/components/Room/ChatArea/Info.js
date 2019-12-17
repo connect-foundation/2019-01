@@ -35,7 +35,7 @@ const Info = () => {
     return () => {
       socket.offUpdatePlayerNum();
       socket.offStartGame();
-      socket.offEndGame();
+      socket.offResetGame();
       socket.offLeaveRoom();
     };
   }, []);
