@@ -12,7 +12,6 @@ import RoomEnterAlert from './RoomEnterAlert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
-import { LOBBY } from '../../constants/lobby';
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;

@@ -4,7 +4,7 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
-import { LOBBY, KNOCK_MESSAGE } from '../constants/lobby';
+import { KNOCK_MESSAGE } from '../constants/lobby';
 /**
  * Controller class
  * @property {array} rooms
