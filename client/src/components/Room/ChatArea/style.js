@@ -66,9 +66,11 @@ const buttonStyle = styled.button`
     ${setBorderAndRadius(CHAT_AREA)}
 `;
 
-export const ExitButton = styled(buttonStyle).attrs({
-  disabled: (props) => (props.isGameStarted ? 'disabled' : ''),
-})`
+export const ExitButton = styled(buttonStyle).attrs((props) => ({
+  disabled: props.isGameStarted ? 'disabled' : '',
+}))`
+    width: 25%;
+    height: 100%;
     color: ${(props) => (props.isGameStarted ? 'gray' : 'black')};
     cursor: ${(props) => (props.isGameStarted ? 'default' : 'pointer')};
     background-image: ${(props) => (props.isGameStarted ? ROOM.BUTTON_HOVER_EFFECT : 'none')};

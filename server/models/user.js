@@ -191,6 +191,10 @@ class User {
     this.socket.emit(EVENT.LEAVE_ROOM);
   }
 
+  emitGoToLobby() {
+    this.socket.emit(EVENT.GO_TO_LOBBY);
+  }
+
   emitUpdatePlayerNum(data) {
     this.socket.emit(EVENT.UPDATE_PLAYER_NUM, data);
   }
