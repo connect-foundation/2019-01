@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
 } from '../../../constants/modal';
-import { BUTTON_EFFECT } from '../../../constants/lobby';
+import { BUTTON_EFFECT } from '../../Style/Lobby/constants';
 
 export const ModalWrapper = styled.div`
     width: ${MODAL.WIDTH}px;

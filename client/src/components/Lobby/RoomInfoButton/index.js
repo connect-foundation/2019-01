@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { RoomInfoWrapper, RoomName, RoomCount } from './style';
-import { ROOM_INFO } from '../../../constants/lobby';
+import ROOM_INFO from '../../../constants/lobby';
 
 const RoomInfoButton = ({
   name, numOfUsers, enterable, onClick,

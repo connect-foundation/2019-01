@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ROOM_INFO, BUTTON_EFFECT } from '../../../constants/lobby';
+import { ROOM_INFO, BUTTON_EFFECT } from '../../Style/Lobby/constants';
 
 export const RoomInfoWrapper = styled.div`
     display: flex;
