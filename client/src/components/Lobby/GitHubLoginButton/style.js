@@ -3,8 +3,6 @@ import { setSize, setBorderAndRadius } from '../../Style/util';
 import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../Style/Lobby/constants';
 
 export const LoginButtonWrapper = styled.div`
-    width: ${LOGIN_BUTTON.WIDTH}px;
-    height: ${LOGIN_BUTTON.HEIGHT}px;
     padding: ${LOGIN_BUTTON.PADDING};
     background-color: ${LOGIN_BUTTON.BACKGROUND_COLOR};
     text-align: center;
@@ -15,6 +13,7 @@ export const LoginButtonWrapper = styled.div`
     cursor: pointer;
     ${BUTTON_EFFECT.HOVER}
     ${BUTTON_EFFECT.ACTIVE}
+    ${setSize(LOGIN_BUTTON)}
     ${setBorderAndRadius(LOGIN_BUTTON)}
 `;
 

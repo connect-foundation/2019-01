@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
 } from '../../Style/Modal/constants';
-import { setBorderAndRadius } from '../../Style/util';
+import { setBorderAndRadius, setFlex } from '../../Style/util';
 import { BUTTON_EFFECT } from '../../Style/Lobby/constants';
 
 export const ModalWrapper = styled.div`
@@ -17,11 +17,10 @@ export const ModalWrapper = styled.div`
 `;
 
 export const ModalHeader = styled.div`
-    display: flex;
     width: 100%;
-    justify-content: space-between;
     align-items: baseline;
     margin-bottom: ${HEADER.MARGIN_BOTTOM}px;
+    ${setFlex('row', 'space-between')}
 `;
 
 export const ModalTitle = styled.div`
@@ -35,15 +34,14 @@ export const ModalCloseButton = styled.span`
 `;
 
 export const ModalInputWrapper = styled.div`
-    display: flex;
     width: 100%;
+    align-items: baseline;
+    box-sizing: border-box;
     padding: ${INPUT.WRAPPER.PADDING};
     margin-bottom: ${INPUT.WRAPPER.MARGIN_BOTTOM}px;
-    box-sizing: border-box;
-    align-items: baseline;
-    justify-content: space-between;
     box-shadow: ${INPUT.WRAPPER.BOX_SHADOW};
     background-color: ${INPUT.WRAPPER.BACKGROUND_COLOR};
+    ${setFlex('row', 'space-between')}
     ${setBorderAndRadius(INPUT.WRAPPER)}
 `;
 
