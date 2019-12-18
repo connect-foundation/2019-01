@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
-} from '../../../constants/modal';
+} from '../../Style/Modal/constants';
 import { setBorderAndRadius } from '../../Style/util';
 import { BUTTON_EFFECT } from '../../Style/Lobby/constants';
 
