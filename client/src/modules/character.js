@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
+import { parseChat } from '../util';
 import {
   CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
 } from '../constants/room';
@@ -16,7 +17,7 @@ class Character {
     this.nameTagY = 0;
     this.chatBalloonX = 0;
     this.chatBalloonY = 0;
-    this.balloonLineNumber = 0;
+    this.balloonLineCount = 0;
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -49,6 +50,10 @@ class Character {
 
   setCurrentChat(chatText) {
     this.currentChat = chatText;
+  }
+
+  clearMoveQueue() {
+    this.moveQueue = [];
   }
 
   drawImage(ctx) {
@@ -205,7 +210,7 @@ class Character {
 
   _drawRoundRect(startX, startY, width, lineHeight, radius) {
     let borderRadius = radius;
-    const maxHeight = lineHeight * this.balloonLineNumber + CHAT_BALLOON.PADDING_BOTTOM;
+    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
 
     if (width < 2 * borderRadius) borderRadius = width / 2;
     if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
@@ -232,46 +237,22 @@ class Character {
       this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
       this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
       CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
-      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineNumber
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
         + CHAT_BALLOON.BORDER_WIDTH * 2
         + CHAT_BALLOON.TIP_HEIGHT,
     );
-    this.balloonLineNumber = null;
-  }
-
-  _measureText(chatText) {
-    const { width } = this.ctx.measureText(chatText);
-    return width;
-  }
-
-  /**
-   * @param {string} chatText
-   * @return {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
-   */
-  _parseChat(chatText) {
-    if (this._measureText(chatText) <= CHAT_BALLOON.getTextWidth()) return [chatText];
-    return chatText.split('').reduce((parsedChat, char) => {
-      const lastIndex = parsedChat.length - 1;
-      const [lastSentence] = parsedChat[lastIndex];
-      if (this._measureText(lastSentence + char) > CHAT_BALLOON.getTextWidth()) {
-        parsedChat = [...parsedChat, [char]];
-        return parsedChat;
-      }
-
-      parsedChat[lastIndex] = [lastSentence + char];
-      return parsedChat;
-    }, [['']]);
+    this.balloonLineCount = 0;
   }
 
   _drawChat() {
-    const parsedChat = this._parseChat(this.currentChat);
-    this.balloonLineNumber = parsedChat.length;
+    const parsedChat = parseChat(this.currentChat, this.ctx);
+    this.balloonLineCount = parsedChat.length;
 
     this.chatBalloonX = (TILE.WIDTH * this.indexX)
       - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
 
     this.chatBalloonY = TILE.HEIGHT * this.indexY
-      - this.balloonLineNumber * CHAT_BALLOON.LINE_HEIGHT
+      - this.balloonLineCount * CHAT_BALLOON.LINE_HEIGHT
       - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
 
     this._drawRoundRect(

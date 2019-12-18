@@ -4,6 +4,7 @@ import {} from 'dotenv/config';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
+import {} from 'dotenv/config';
 import Login from './components/Login';
 import Lobby from './components/Lobby';
 import Room from './components/Room';

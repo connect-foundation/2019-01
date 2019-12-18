@@ -6,8 +6,8 @@ import {
 } from './style';
 import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../modules/socket';
+import { changeNumberToTwoDigitString } from '../../../util';
 
-const changeNumberToTwoDigitString = (num) => num.toString().padStart(2, '0');
 const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 
@@ -64,11 +64,12 @@ const DashBoard = ({ buttonClickSound }) => {
   const endGame = () => {
     setGameEnded(true);
     setNotice('↓↓↓↓   우승   ↓↓↓↓');
-    lastTimerId = setTimeout(() => {
-      setGameEnded(false);
-      setGameStarted(false);
-      setCounter('--');
-    }, ROOM.WAITING_TIME_MS);
+  };
+
+  const resetGame = () => {
+    setGameEnded(false);
+    setGameStarted(false);
+    setCounter('--');
   };
 
   const enterRoom = ({
@@ -111,6 +112,7 @@ const DashBoard = ({ buttonClickSound }) => {
         </div>
       )
   );
+
   const readyGame = () => {
     setGameStarted(true);
     setCounter(ROOM.WAITING_TIME_MS / DASHBOARD.SECOND_MS);
@@ -118,13 +120,13 @@ const DashBoard = ({ buttonClickSound }) => {
     startCounter();
   };
 
-
   useEffect(() => {
     socket.onEnterRoom(enterRoom);
     socket.onLeaveUser(leaveUser);
     socket.onStartRound(startRound);
     socket.onEndRound(endRound);
     socket.onEndGame(endGame);
+    socket.onResetGame(resetGame);
     socket.onStartGame(readyGame);
 
     return () => {
@@ -132,7 +134,9 @@ const DashBoard = ({ buttonClickSound }) => {
       socket.offLeaveUser();
       socket.offStartRound();
       socket.offEndRound();
+      socket.offResetGame();
       socket.offEndGame();
+      socket.offResetGame();
       socket.offStartGame();
       clearTimeout(lastTimerId);
     };

@@ -2,12 +2,20 @@
 import socketio from 'socket.io-client';
 import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
-
-const isFunction = (callback) => typeof callback === 'function';
+import { isFunction } from '../util';
 
 class SocketContainer {
   constructor() {
     this.socket = undefined;
+    this.guest = false;
+  }
+
+  setGuest(guest) {
+    this.guest = guest;
+  }
+
+  isGuest() {
+    return this.guest;
   }
 
   connect(query) {
@@ -42,6 +50,10 @@ class SocketContainer {
     this._emit(EVENT.START_GAME);
   }
 
+  emitReadyRoom(roomId) {
+    this._emit(EVENT.READY_ROOM, roomId);
+  }
+
   emitMove(direction) {
     this._emit(EVENT.MOVE, direction);
   }
@@ -68,10 +80,6 @@ class SocketContainer {
 
   emitChatMessage(message) {
     this._emit(EVENT.CHAT_MESSAGE, message);
-  }
-
-  emitEndGame(roomId) {
-    this._emit(EVENT.END_GAME, roomId);
   }
 
   _on(eventName, callback) {
@@ -124,6 +132,10 @@ class SocketContainer {
     this._on(EVENT.END_GAME, callback);
   }
 
+  onResetGame(callback) {
+    this._on(EVENT.RESET_GAME, callback);
+  }
+
   onQuizList(callback) {
     this._on(EVENT.FETCH_QUIZLIST, callback);
   }
@@ -144,8 +156,16 @@ class SocketContainer {
     this._on(EVENT.CHAT_MESSAGE, callback);
   }
 
+  onGoToLobby(callback) {
+    this._on(EVENT.GO_TO_LOBBY, callback);
+  }
+
   onDisconnect(callback) {
     this._on(EVENT.DISCONNECT, callback);
+  }
+
+  onUpdatePlayerNum(callback) {
+    this._on(EVENT.UPDATE_PLAYER_NUM, callback);
   }
 
   _off(eventName) {
@@ -181,6 +201,10 @@ class SocketContainer {
     this._off(EVENT.END_GAME);
   }
 
+  offResetGame() {
+    this._off(EVENT.RESET_GAME);
+  }
+
   offStartRound() {
     this._off(EVENT.START_ROUND);
   }
@@ -211,6 +235,14 @@ class SocketContainer {
 
   offChatMessage() {
     this._off(EVENT.CHAT_MESSAGE);
+  }
+
+  offGoToLobby() {
+    this._off(EVENT.GO_TO_LOBBY);
+  }
+
+  offUpdatePlayerNum() {
+    this._off(EVENT.UPDATE_PLAYER_NUM);
   }
 }
 

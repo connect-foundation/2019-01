@@ -5,6 +5,7 @@ const EVENT = {
   ROOM_IS_CREATED: 'room_is_created',
   KNOCK_ROOM: 'knock_room',
   ENTER_ROOM: 'enter_room',
+  READY_ROOM: 'ready_room',
   ENTER_NEW_USER: 'enter_new_user',
   LEAVE_ROOM: 'leave_room',
   LEAVE_USER: 'leave_user',
@@ -12,12 +13,15 @@ const EVENT = {
   START_ROUND: 'start_round',
   END_ROUND: 'end_round',
   END_GAME: 'end_game',
+  RESET_GAME: 'reset_game',
   MOVE: 'move',
   USE_SKILL: 'use_skill',
   CHAT_MESSAGE: 'chat_message',
   DISCONNECT: 'disconnect',
   FETCH_QUIZLIST: 'get_quiz_list',
   UPDATE_ROOM_INFO: 'update_room_info',
+  GO_TO_LOBBY: 'go_to_lobby',
+  UPDATE_PLAYER_NUM: 'update_player_num',
 };
 
 export default EVENT;

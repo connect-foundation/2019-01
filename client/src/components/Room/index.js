@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
+import Alert from '../Alert';
 import {
   Wrapper, RoomWrapper, SoundToggleWrapper, SoundToggle,
 } from './style';
@@ -15,6 +16,7 @@ const Room = () => {
   const [gameStartSound] = useState(new Audio(URL.GAME_START_SOUND));
   const [gameEndSound] = useState(new Audio(URL.GAME_END_SOUND));
   const [isSoundOn, setSoundOn] = useState(true);
+  const [isValidRoom, setIsValidRoom] = useState(true);
 
   const { roomId } = useParams();
   const history = useHistory();
@@ -42,8 +44,10 @@ const Room = () => {
   );
 
   const notifyEndGame = ({ isOwner }) => {
-    if (isOwner) socket.emitEndGame(roomId);
+    if (isOwner) socket.emitReadyRoom(roomId);
   };
+
+  const goToLobby = () => history.goBack();
 
   useEffect(() => {
     backgroundMusic.autoplay = true;
@@ -55,25 +59,32 @@ const Room = () => {
     socket.emitEnterRoom(roomId);
     socket.onStartGame(playStartSound);
     socket.onEndGame(playEndSound);
-    socket.onEndGame(notifyEndGame);
+    socket.onGoToLobby(() => setIsValidRoom(false));
+    socket.onResetGame(notifyEndGame);
+
     return () => {
       backgroundMusic.pause();
       socket.offStartGame();
       socket.offEndGame();
+      socket.offGoToLobby();
+      socket.offResetGame();
       socket.emitLeaveRoom();
     };
   }, []);
 
   return (
-    <Wrapper>
-      <SoundToggleWrapper>
-        <SoundToggle onClick={toggleSound}>{isSoundOn ? '🔊sound on' : '🔇sound off'}</SoundToggle>
-      </SoundToggleWrapper>
-      <RoomWrapper>
-        <GameArea buttonClickSound={buttonClickSound} />
-        <ChatArea />
-      </RoomWrapper>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <SoundToggleWrapper>
+          <SoundToggle onClick={toggleSound}>{isSoundOn ? '🔊sound on' : '🔇sound off'}</SoundToggle>
+        </SoundToggleWrapper>
+        <RoomWrapper>
+          <GameArea buttonClickSound={buttonClickSound} />
+          <ChatArea />
+        </RoomWrapper>
+      </Wrapper>
+      {isValidRoom ? '' : <Alert message="잘못된 경로로 들어왔습니다." closeCallback={goToLobby} />}
+    </>
   );
 };
 

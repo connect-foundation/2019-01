@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AlertWrapper, AlertMessage, AlertOkButton } from './style';
 
-const RoomEnterAlert = ({ message, closeAlert }) => (
+const Alert = ({ message, closeCallback }) => (
   <AlertWrapper>
     <AlertMessage>{message}</AlertMessage>
-    <AlertOkButton onClick={closeAlert}>ok</AlertOkButton>
+    <AlertOkButton onClick={closeCallback}>ok</AlertOkButton>
   </AlertWrapper>
 );
 
-RoomEnterAlert.propTypes = {
+Alert.propTypes = {
   message: PropTypes.string.isRequired,
-  closeAlert: PropTypes.func.isRequired,
+  closeCallback: PropTypes.func.isRequired,
 };
 
-export default RoomEnterAlert;
+export default Alert;

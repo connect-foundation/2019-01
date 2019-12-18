@@ -6,13 +6,6 @@ export const LOBBY = {
   BORDER: '2px solid lightslategrey',
   BORDER_RADIUS: 8,
   FONT_SIZE: 30,
-  ACTION: {
-    USER_ENTERED: 'user_entered',
-    USER_LEAVED: 'user_leaved',
-    GAME_STARTED: 'game_started',
-    GAME_ENDED: 'game_ended',
-    NO_USERS: 'no_users',
-  },
   LOCATE_CENTER: `position: absolute;
                   top: 50%;
                   left: 50%;
