@@ -85,6 +85,7 @@ export const KEYCODE = {
 export const DASHBOARD = {
   WIDTH: FIELD.getWidth(),
   HEIGHT: TILE.HEIGHT * 2,
+  BORDER_RADIUS: 12,
   BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
   SECOND: 1,
   SECOND_MS: 1000,
@@ -102,6 +103,7 @@ export const COUNTER = {
   PADDING: '10px 0',
   RIGHT: 40,
   FONT_SIZE: 28,
+  BORDER_RADIUS: 8,
   BORDER: '1px solid black',
 };
 
