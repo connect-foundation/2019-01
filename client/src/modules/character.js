@@ -18,6 +18,7 @@ class Character {
     this.chatBalloonX = 0;
     this.chatBalloonY = 0;
     this.balloonLineCount = 0;
+    this.parsedChat = [];
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -96,10 +97,14 @@ class Character {
   chat() {
     if (this.chatTimeoutId !== null) clearTimeout(this.chatTimeoutId);
     this._clearChat();
+    this.parsedChat = parseChat(this.currentChat, this.ctx);
+    this.balloonLineCount = this.parsedChat.length;
     this._drawChat();
     this.chatTimeoutId = setTimeout(() => {
-      this.currentChat = '';
       this._clearChat();
+      this.currentChat = '';
+      this.parsedChat = [];
+      this.balloonLineCount = 0;
       clearTimeout(this.chatTimeoutId);
     }, CHAT_BALLOON.CLEAR_TIME_MS);
   }
@@ -124,7 +129,7 @@ class Character {
     );
 
     this._drawNickname();
-    if (this.currentChat) this._drawChat(this.currentChat);
+    if (this.currentChat) this._drawChat();
   }
 
   _walk() {
@@ -241,13 +246,9 @@ class Character {
         + CHAT_BALLOON.BORDER_WIDTH * 2
         + CHAT_BALLOON.TIP_HEIGHT,
     );
-    this.balloonLineCount = 0;
   }
 
   _drawChat() {
-    const parsedChat = parseChat(this.currentChat, this.ctx);
-    this.balloonLineCount = parsedChat.length;
-
     this.chatBalloonX = (TILE.WIDTH * this.indexX)
       - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
 
@@ -268,7 +269,7 @@ class Character {
     this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
     this.ctx.fillStyle = 'black';
 
-    parsedChat.forEach((val, lineOrder) => {
+    this.parsedChat.forEach((val, lineOrder) => {
       this.ctx.fillText(
         val,
         this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
