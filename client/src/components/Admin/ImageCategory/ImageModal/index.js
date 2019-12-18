@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  ModalWrapper, ModalContent, ModalButtonWrapper, ModalOkButton, ModalCloseButton,
-} from './style';
-import Row from './Row';
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { ModalWrapper, ModalButtonWrapper } from '../../style';
 
-const ImageModal = ({ image, closeModal, fetchData }) => {
+const ImageModal = ({
+  image, open, closeModal, fetchData,
+}) => {
   const [categoryValue, setCategoryValue] = useState(image.category);
   const [nameValue, setNameValue] = useState(image.name);
   const [urlValue, setUrlValue] = useState(image.url);
@@ -23,26 +25,35 @@ const ImageModal = ({ image, closeModal, fetchData }) => {
   };
 
   return (
-    <ModalWrapper>
-      <ModalContent>
-        <Row
-          category="category"
+    <Modal open={open}>
+      <ModalWrapper>
+        <TextField
+          label="category"
           value={categoryValue}
-          changeValue={(e) => setCategoryValue(e.target.value)} />
-        <Row
-          category="name"
+          onChange={(e) => setCategoryValue(e.target.value)} />
+        <TextField
+          label="name"
           value={nameValue}
-          changeValue={(e) => setNameValue(e.target.value)} />
-        <Row
-          category="url"
+          onChange={(e) => setNameValue(e.target.value)} />
+        <TextField
+          label="url"
           value={urlValue}
-          changeValue={(e) => setUrlValue(e.target.value)} />
-      </ModalContent>
-      <ModalButtonWrapper>
-        <ModalOkButton onClick={fetchImage}>확인</ModalOkButton>
-        <ModalCloseButton onClick={closeModal}>취소</ModalCloseButton>
-      </ModalButtonWrapper>
-    </ModalWrapper>
+          onChange={(e) => setUrlValue(e.target.value)} />
+        <ModalButtonWrapper>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchImage}>
+          확인
+          </Button>
+          <Button
+            variant="contained"
+            onClick={closeModal}>
+          취소
+          </Button>
+        </ModalButtonWrapper>
+      </ModalWrapper>
+    </Modal>
   );
 };
 
@@ -53,6 +64,7 @@ ImageModal.propTypes = {
     name: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  open: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
 };

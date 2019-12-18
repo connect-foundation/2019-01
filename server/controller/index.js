@@ -108,6 +108,16 @@ class Controller {
    *
    * @param {User} user
    */
+  _letUserLeaveLobby(user) {
+    if (user.isInLobby() === false) return;
+    const userId = user.getId();
+    lobby.leaveUser(userId);
+  }
+
+  /**
+   *
+   * @param {User} user
+   */
   async _letUserStartGame(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
@@ -176,6 +186,7 @@ class Controller {
     user.onDisconnecting(() => {
       console.log('a user disconnected');
       this._letUserLeaveRoom(user);
+      this._letUserLeaveLobby(user);
     });
     user.onEnterLobby(() => this._letUserEnterLobby(user));
   }

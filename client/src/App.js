@@ -1,4 +1,6 @@
 import React from 'react';
+import loadable from '@loadable/component';
+import {} from 'dotenv/config';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
@@ -6,8 +8,10 @@ import {} from 'dotenv/config';
 import Login from './components/Login';
 import Lobby from './components/Lobby';
 import Room from './components/Room';
-import Admin from './components/Admin';
 import OAuth from './components/OAuth';
+import AuthGuard from './components/AuthGuard';
+
+const Admin = loadable(() => import('./components/Admin'));
 
 function App() {
   return (
@@ -16,8 +20,10 @@ function App() {
         <Route path="/" exact component={Login} />
         <Route path="/lobby" exact component={Lobby} />
         <Route path="/room/:roomId" component={Room} />
-        <Route path="/OAuth" exact component={OAuth} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/oauth" exact component={OAuth} />
+        <Route path="/admin" exact>
+          <AuthGuard component={Admin} />
+        </Route>
         <Route>
           <Redirect to="/" />
         </Route>
