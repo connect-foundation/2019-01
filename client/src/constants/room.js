@@ -91,48 +91,8 @@ export const DASHBOARD = {
 
 export const CHAT_AREA = {
   MAX_MESSAGE_LENGTH: 50,
-  BOX_SHADOW: '1px 1px 0px dimgrey',
-  BUTTON_COLOR: 'rgba(255, 255, 255, 0.5)',
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
-  BORDER: '1px solid lightslategrey',
-  BORDER_RADIUS: 8,
-  CHAT_HEADER: {
-    PERCENT_WIDTH: 100,
-    PERCENT_HEIGHT: 8,
-  },
-  ROOM_INFO: {
-    PERCENT_WIDTH: 50,
-    PERCENT_HEIGHT: 100,
-  },
-  PLAYER_INFO: {
-    PERCENT_WIDTH: 45,
-    PERCENT_HEIGHT: 100,
-  },
-  EMOJI: {
-    PERCENT_WIDTH: 40,
-    PERCENT_HEIGHT: 50,
-  },
-  EXIT_BUTTON: {
-    PERCENT_WIDTH: 25,
-    PERCENT_HEIGHT: 100,
-  },
-  CHAT_LOG: {
-    PERCENT_WIDTH: 100,
-    PERCENT_HEIGHT: 75,
-  },
-  CHAT_INPUT: {
-    PERCENT_WIDTH: 100,
-    PERCENT_HEIGHT: 8,
-  },
-  CHAT_INPUT_BOX: {
-    PERCENT_WIDTH: 72,
-    PERCENT_HEIGHT: 100,
-  },
-  SEND_BUTTON: {
-    PERCENT_WIDTH: 25,
-    PERCENT_HEIGHT: 100,
-  },
 };
 
 export const SOUND_TOGGLE = {
