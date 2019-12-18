@@ -366,19 +366,27 @@ class Room {
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
   _endGame(isSomeoneAlive = true) {
     const characterList = [];
+    this.isMoving = true;
 
     if (isSomeoneAlive === false) {
-      this.isMoving = true;
       this.indexOfCharacters = this._getEmptyIndexMatrix();
       this.aliveUsers.forEach((user) => {
         const [indexX, indexY] = this._placeCharacter(user);
         characterList.push({ nickname: user.getNickname(), indexX, indexY });
       });
-      this.isMoving = false;
-      this._clearMoveQueue();
-
-      this._broadcastPlayerNum();
     }
+
+    if (this.aliveUsers.size === 0) {
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.users.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+    }
+
+    this.isMoving = false;
+    this._clearMoveQueue();
+    this._broadcastPlayerNum();
 
     this.users.forEach((user) => user.emitEndGame({ characterList }));
 
