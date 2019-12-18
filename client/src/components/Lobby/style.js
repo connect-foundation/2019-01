@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { setSize, setFlexDirection, setBorderAndRadius } from '../Style/util';
+import { setSize, setFlex, setBorderAndRadius } from '../Style/util';
 import {
   LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
 } from '../Style/Lobby/constants';
@@ -15,7 +15,7 @@ export const LobbyWrapper = styled.div`
     background-color: ${LOBBY.BACKGROUND_COLOR};
     font-size: ${LOBBY.FONT_SIZE}px; 
     ${setBorderAndRadius(LOBBY)}
-    ${setSize(LOBBY.WIDTH, LOBBY.HEIGHT)}
+    ${setSize(LOBBY)}
 `;
 
 export const LobbyHeader = styled.div`

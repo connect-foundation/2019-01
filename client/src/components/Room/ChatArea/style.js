@@ -2,18 +2,15 @@ import styled from 'styled-components';
 import {
   CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
 } from '../../../constants/room';
+import { setSize, setBorderAndRadius, setFlex } from '../../Style/util';
 
 export const ChatAreaWrapper = styled.div`
-    width: ${CHAT_AREA.WIDTH}px;
-    height: ${ROOM.getHeight()}px;
     box-sizing: border-box;
     padding: 1%;
-    border: ${CHAT_AREA.BORDER};
-    border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${CHAT_AREA.BG_COLOR};
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    ${setSize(CHAT_AREA)}
+    ${setBorderAndRadius(CHAT_AREA)}
+    ${setFlex('column')}
 `;
 
 export const ChatHeader = styled.div`

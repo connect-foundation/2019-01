@@ -116,6 +116,7 @@ export const GAME_START_BUTTON = {
 export const CHAT_AREA = {
   BG_COLOR: 'rgba(255, 255, 255, 0.2)',
   WIDTH: 280,
+  getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
   FONT_SIZE: 15,
   MAX_MESSAGE_LENGTH: 50,
   BOX_SHADOW: '1px 1px 0px dimgrey',
@@ -123,6 +124,7 @@ export const CHAT_AREA = {
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
   BORDER: '1px solid lightslategrey',
+  BORDER_RADIUS: 8,
 };
 
 export const SOUND_TOGGLE = {
