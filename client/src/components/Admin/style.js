@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import { setFlex } from '../Style/util';
 
 const drawerWidth = 240;
 
@@ -34,13 +35,10 @@ export const LAST_CELL_WITDH = {
 };
 
 export const NicknameBodyWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+  ${setFlex('row')}
 `;
 
 export const ModalWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -48,12 +46,12 @@ export const ModalWrapper = styled.div`
   background-color: white;
   width: 80%;
   padding: 5%;
+  ${setFlex('column')}
 `;
 
 export const ModalButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
   margin-top: 5%;
+  ${setFlex('row', 'space-between')}
 `;
 
 export const SnackbarMessageWrapper = styled.span`
