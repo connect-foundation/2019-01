@@ -12,6 +12,8 @@ const URL = {
     QUIZ: '/admin/quiz',
     QUIZ_LIST: '/admin/quiz/list',
     NICKNAME: '/admin/nickname/',
+    IMAGE: '/admin/image',
+    IMAGE_LIST: '/admin/image/list',
   },
   BACKGROUND_MUSIC: 'https://kr.object.ncloudstorage.com/connect-2019-01/music/backgound-groovyhiphop.mp3',
   BUTTON_CLICK_SOUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/music/soundeffect-buttonclick.ogg',

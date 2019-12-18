@@ -1,11 +1,12 @@
 export const setSize = (constants) => `
-  width: ${constants.WIDTH}px;
-  height: ${constants.HEIGHT}px;
+  width: ${constants.WIDTH || constants.getWidth()}px;
+  height: ${constants.HEIGHT || constants.getHeight()}px;
 `;
 
-export const setFlexDirection = (direction) => `
+export const setFlex = (direction, justifyContent = '') => `
   display: flex;
   flex-direction: ${direction};
+  justify-content: ${justifyContent};
 `;
 
 export const setBorderAndRadius = (constants) => `

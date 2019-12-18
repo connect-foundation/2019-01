@@ -167,8 +167,8 @@ class User {
     this.socket.emit(EVENT.END_ROUND, data);
   }
 
-  emitEndGame() {
-    this.socket.emit(EVENT.END_GAME);
+  emitEndGame(data) {
+    this.socket.emit(EVENT.END_GAME, data);
   }
 
   emitResetGame(data) {

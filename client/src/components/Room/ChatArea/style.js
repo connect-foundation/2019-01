@@ -2,18 +2,15 @@ import styled from 'styled-components';
 import {
   CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
 } from '../../../constants/room';
+import { setSize, setBorderAndRadius, setFlex } from '../../Style/util';
 
 export const ChatAreaWrapper = styled.div`
-    width: ${CHAT_AREA.WIDTH}px;
-    height: ${ROOM.getHeight()}px;
     box-sizing: border-box;
     padding: 1%;
-    border: ${CHAT_AREA.BORDER};
-    border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${CHAT_AREA.BG_COLOR};
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    ${setSize(CHAT_AREA)}
+    ${setBorderAndRadius(CHAT_AREA)}
+    ${setFlex('column')}
 `;
 
 export const ChatHeader = styled.div`
@@ -86,6 +83,10 @@ export const ExitButton = styled.button.attrs({
     cursor: ${(props) => (props.isGameStarted ? 'default' : 'pointer')};
     background-image: ${(props) => (props.isGameStarted ? ROOM.BUTTON_HOVER_EFFECT : 'none')};
     box-shadow: ${(props) => (props.isGameStarted ? 'none' : CHAT_AREA.BOX_SHADOW)};
+`;
+
+export const ChatCanvas = styled.canvas`
+    display: none;
 `;
 
 export const ChatLog = styled.div`

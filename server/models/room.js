@@ -275,6 +275,15 @@ class Room {
    * round를 시작하게 합니다.
    */
   _startRound() {
+    if (this.aliveUsers.size === 0) {
+      this.aliveUsers = new Map(this.users);
+    }
+
+    if (this.aliveUsers.size === 1) {
+      this._endGame(false);
+      return;
+    }
+
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
     this.isMoving = true;
@@ -319,13 +328,14 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    if (this.aliveUsers.size - dropUsers.length !== 0) {
+    const isSomeoneAlive = this.aliveUsers.size > dropUsers.length;
+    if (isSomeoneAlive) {
       dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
     }
     this._broadcastPlayerNum();
 
     if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
-      setTimeout(() => this._endGame(), ROOM.WAITING_TIME_MS);
+      setTimeout(() => this._endGame(isSomeoneAlive), ROOM.WAITING_TIME_MS);
       return;
     }
 
@@ -354,8 +364,32 @@ class Room {
   }
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
-  _endGame() {
-    this.users.forEach((user) => user.emitEndGame());
+  _endGame(isSomeoneAlive = true) {
+    const characterList = [];
+    this.isMoving = true;
+
+    if (isSomeoneAlive === false) {
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.aliveUsers.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+    }
+
+    if (this.aliveUsers.size === 0) {
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.users.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+    }
+
+    this.isMoving = false;
+    this._clearMoveQueue();
+    this._broadcastPlayerNum();
+
+    this.users.forEach((user) => user.emitEndGame({ characterList }));
+
     setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
   }
 

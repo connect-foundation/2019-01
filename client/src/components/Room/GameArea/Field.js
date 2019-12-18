@@ -116,6 +116,7 @@ const Field = () => {
     socket.onMove(moveCharacter);
     socket.onEndRound(appearThanos);
     socket.onLeaveUser(deleteCharacters);
+    socket.onEndGame(teleportCharacters);
     socket.onResetGame(teleportCharacters);
     socket.onChatMessage(chatCharacters);
 
@@ -126,6 +127,7 @@ const Field = () => {
       socket.offMove();
       socket.offEndRound();
       socket.offLeaveUser();
+      socket.offEndGame();
       socket.offResetGame();
       socket.offChatMessage();
     };
