@@ -6,8 +6,8 @@ export default {
     add: async(category, name, url) => await preparedStatement(
         `INSERT INTO Image (category, name, url) VALUES (?,?,?);`, 
         category, name, url),
-    updateCategory: async(id, category) => await preparedStatement(`UPDATE Image SET category = ? WHERE id = ?;`, category, id),
-    updateName: async(id, name) => await preparedStatement(`UPDATE Image SET name = ? WHERE id = ?;`, name, id),
-    updateUrl: async(id, url) => await preparedStatement(`UPDATE Image SET url = ? WHERE id = ?;`, url, id),
+    updateImage: async(id, category, name, url) => {
+        await preparedStatement(`UPDATE Image SET category = ?, name = ?, url = ? WHERE id = ?;`, category, name, url, id);
+    },
     delete: async(id) => await preparedStatement(`DELETE FROM Image WHERE id = ?;`, id),
 };
