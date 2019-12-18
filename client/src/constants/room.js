@@ -3,6 +3,10 @@ export const TILE = {
   HEIGHT: 60,
 };
 
+export const MESSAGE = {
+  PATH_ERROR: '잘못된 경로로 들어왔습니다.',
+};
+
 export const FIELD = {
   ROW: 8,
   COLUMN: 16,
@@ -84,6 +88,8 @@ export const KEYCODE = {
 
 export const DASHBOARD = {
   BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
+  NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   SECOND: 1,
   SECOND_MS: 1000,
 };
@@ -91,6 +97,7 @@ export const DASHBOARD = {
 
 export const CHAT_AREA = {
   MAX_MESSAGE_LENGTH: 50,
+  CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
   NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
