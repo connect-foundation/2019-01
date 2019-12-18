@@ -4,8 +4,7 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
-import { LOBBY, KNOCK_MESSAGE } from '../constants/lobby';
-import { ROOM } from '../constants/room';
+import { KNOCK_MESSAGE } from '../constants/lobby';
 /**
  * Controller class
  * @property {array} rooms
@@ -75,7 +74,7 @@ class Controller {
       return;
     }
     await room.enterUser(user);
-    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_ENTERED);
+    lobby.updateRoomInfo(roomId);
   }
 
   /**
@@ -98,12 +97,11 @@ class Controller {
     if (room === undefined) return;
     const roomId = room.getId();
     room.leaveUser(user);
+    lobby.updateRoomInfo(roomId);
+
     if (room.getNumOfUsers() === 0) {
-      lobby.updateRoomInfo(roomId, LOBBY.ACTION.NO_USERS);
       lobby.deleteRoom(roomId);
-      return;
     }
-    lobby.updateRoomInfo(roomId, LOBBY.ACTION.USER_LEAVED);
   }
 
   /**
@@ -115,7 +113,7 @@ class Controller {
     const room = lobby.getRoom(user.getRoomId());
     const roomId = room.getId();
     const isStart = await room.startGame(user);
-    if (isStart) lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_STARTED);
+    if (isStart) lobby.updateRoomInfo(roomId);
   }
 
   /**
@@ -152,13 +150,11 @@ class Controller {
   }
 
   _letUsersKnowGameEnded(user, roomId) {
-    setTimeout(() => {
-      const room = lobby.getRoom(roomId);
+    const room = lobby.getRoom(roomId);
 
-      if (room !== undefined && room.isStarted() === false) {
-        lobby.updateRoomInfo(roomId, LOBBY.ACTION.GAME_ENDED);
-      }
-    }, ROOM.WAITING_TIME_MS);
+    if (room !== undefined && room.isStarted() === false) {
+      lobby.updateRoomInfo(roomId);
+    }
   }
 
   /**
@@ -172,7 +168,7 @@ class Controller {
       await this._letUserEnterRoom(user, roomId);
     });
     user.onStartGame(() => this._letUserStartGame(user));
-    user.onEndGame((roomId) => this._letUsersKnowGameEnded(user, roomId));
+    user.onReadyRoom((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));

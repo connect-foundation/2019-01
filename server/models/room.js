@@ -65,6 +65,14 @@ class Room {
     return this.isGameStarted;
   }
 
+  _broadcastPlayerNum() {
+    const data = {
+      numOfPlayer: this.aliveUsers.size,
+      numOfViewer: this.users.size - this.aliveUsers.size,
+    };
+    this.users.forEach((user) => user.emitUpdatePlayerNum(data));
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
@@ -131,6 +139,8 @@ class Room {
       roomName: this.name,
     });
     this.aliveUsers.set(user.getNickname(), user);
+
+    this._broadcastPlayerNum();
   }
 
   makeCharacterList(myCharacter) {
@@ -170,6 +180,7 @@ class Room {
     });
     this.aliveUsers.delete(nickname);
     user.emitLeaveRoom();
+    this._broadcastPlayerNum();
   }
 
   // emit: start_game / 모든 유저 / (시작 가능 시) 게임 상태 변경
@@ -265,9 +276,19 @@ class Room {
   /**
    * round를 시작하게 합니다.
    */
-  async _startRound() {
+  _startRound() {
+    if (this.aliveUsers.size === 0) {
+      this.aliveUsers = new Map(this.users);
+    }
+
+    if (this.aliveUsers.size === 1) {
+      this._endGame(false);
+      return;
+    }
+
     this.currentQuiz = this.quizList[this.currentRound];
     this.currentTime = 0;
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     const characterList = [];
 
@@ -287,8 +308,11 @@ class Room {
         characterList,
       });
     });
+    this._clearMoveQueue();
+    this.isMoving = false;
 
     this._countTime();
+    this._broadcastPlayerNum();
   }
 
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
@@ -306,12 +330,14 @@ class Room {
       user.emitEndRound(endRoundInfos);
     });
 
-    if (this.aliveUsers.size - dropUsers.length !== 0) {
+    const isSomeoneAlive = this.aliveUsers.size > dropUsers.length;
+    if (isSomeoneAlive) {
       dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
     }
+    this._broadcastPlayerNum();
 
     if (this.aliveUsers.size === 1 || this.currentRound === ROOM.MAX_ROUND) {
-      this._endGame();
+      setTimeout(() => this._endGame(isSomeoneAlive), ROOM.WAITING_TIME_MS);
       return;
     }
 
@@ -340,24 +366,56 @@ class Room {
   }
 
   // emit: end_game / 모든 유저 / 우승자 닉네임, 게임 상태, 모든 캐릭터 + 닉네임 + 위치
-  _endGame() {
+  _endGame(isSomeoneAlive = true) {
     const characterList = [];
+    this.isMoving = true;
+
+    if (isSomeoneAlive === false) {
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.aliveUsers.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+    }
+
+    if (this.aliveUsers.size === 0) {
+      this.indexOfCharacters = this._getEmptyIndexMatrix();
+      this.users.forEach((user) => {
+        const [indexX, indexY] = this._placeCharacter(user);
+        characterList.push({ nickname: user.getNickname(), indexX, indexY });
+      });
+    }
+
+    this.isMoving = false;
+    this._clearMoveQueue();
+    this._broadcastPlayerNum();
+
+    this.users.forEach((user) => user.emitEndGame({ characterList }));
+
+    setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
+  }
+
+  _resetGame() {
+    const characterList = [];
+    this.isMoving = true;
     this.indexOfCharacters = this._getEmptyIndexMatrix();
     this.users.forEach((user) => {
       const [indexX, indexY] = this._placeCharacter(user);
       characterList.push({ nickname: user.getNickname(), indexX, indexY });
     });
-
     this.users.forEach((user) => {
-      setTimeout(() => user.emitEndGame({
+      user.emitResetGame({
         characterList,
         isOwner: this._isOwner(user),
-      }), ROOM.WAITING_TIME_MS);
+      });
     });
+    this._clearMoveQueue();
+    this.isMoving = false;
     this.isGameStarted = false;
-
     this.aliveUsers.clear();
     this.users.forEach((user) => this.aliveUsers.set(user.getNickname(), user));
+
+    this._broadcastPlayerNum();
   }
 
   /**
@@ -450,6 +508,10 @@ class Room {
       && this.aliveUsers.size <= ROOM.MAX_USER
       && this._isOwner(user)
       && this.isGameStarted === false);
+  }
+
+  _clearMoveQueue() {
+    this.moveQueue = [];
   }
 }
 

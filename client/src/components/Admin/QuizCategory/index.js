@@ -73,12 +73,12 @@ const QuizCategory = () => {
             <QuizTh>quistion</QuizTh>
             <QuizTh>comment</QuizTh>
             <QuizTh>answer</QuizTh>
+            <QuizTh>
+              <QuizButton onClick={openAddModal}>추가</QuizButton>
+            </QuizTh>
           </QuizTr>
         </QuizThead>
         <QuizTbody>
-          <QuizTr>
-            <QuizButton onClick={openAddModal}>추가</QuizButton>
-          </QuizTr>
           {quizData}
         </QuizTbody>
       </QuizTable>

@@ -11,7 +11,6 @@ import Alert from '../Alert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
-import { LOBBY } from '../../constants/lobby';
 
 const privateKey = process.env.REACT_APP_JWT_SECRET_KEY;
 const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
@@ -67,35 +66,11 @@ const Lobby = () => {
     setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
   };
 
-  const updateRoomInfo = ({ roomId, action }) => {
-    const {
-      id, name, numOfUsers, isEnterable,
-    } = roomInfos.get(roomId);
-    switch (action) {
-      case LOBBY.ACTION.USER_ENTERED:
-        roomInfos.set(id, {
-          id, name, numOfUsers: numOfUsers + 1, isEnterable,
-        });
-        break;
-      case LOBBY.ACTION.USER_LEAVED:
-        roomInfos.set(id, {
-          id, name, numOfUsers: numOfUsers - 1, isEnterable,
-        });
-        break;
-      case LOBBY.ACTION.GAME_STARTED:
-        roomInfos.set(id, {
-          id, name, numOfUsers, isEnterable: false,
-        });
-        break;
-      case LOBBY.ACTION.GAME_ENDED:
-        roomInfos.set(id, {
-          id, name, numOfUsers, isEnterable: true,
-        });
-        break;
-      case LOBBY.ACTION.NO_USERS:
-        roomInfos.delete(id);
-        break;
-      default: return;
+  const updateRoomInfo = ({ roomId, roomInfo }) => {
+    const { numOfUsers } = roomInfo;
+    roomInfos.set(roomId, roomInfo);
+    if (numOfUsers === 0) {
+      roomInfos.delete(roomId);
     }
     setRoomInfoButtons(() => {
       const _roomInfoButtons = [];
@@ -117,9 +92,11 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const githubId = getNicknameFromJwt();
+    const githubId = socket.isGuest() ? undefined : getNicknameFromJwt();
 
-    setUserName(githubId === undefined ? 'guest' : githubId);
+    if (githubId !== undefined) {
+      setUserName(githubId);
+    }
 
     if (socket.isConnected() === false) {
       socket.connect(githubId === undefined ? {} : { githubId });

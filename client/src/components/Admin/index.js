@@ -10,13 +10,16 @@ import URL from '../../constants/url';
 import UserList from './UserCategory';
 import QuizList from './QuizCategory';
 import NicknameList from './NicknameCategory';
+import ImageList from './ImageCategory';
 
 const Admin = () => {
   const [body, setBody] = useState(<UserList />);
   const listItem = [
     { text: 'USERS', component: <UserList /> },
     { text: 'NICKNAMES', component: <NicknameList /> },
-    { text: 'QUIZS', component: <QuizList /> }];
+    { text: 'QUIZS', component: <QuizList /> },
+    { text: 'IMAGES', component: <ImageList /> },
+  ];
 
   const classes = useStyles();
 

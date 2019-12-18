@@ -102,9 +102,9 @@ class User {
     this.socket.on(EVENT.START_GAME, () => callback());
   }
 
-  onEndGame(callback) {
+  onReadyRoom(callback) {
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.END_GAME, (roomId) => callback(roomId));
+    this.socket.on(EVENT.READY_ROOM, (roomId) => callback(roomId));
   }
 
   onMove(callback) {
@@ -171,6 +171,10 @@ class User {
     this.socket.emit(EVENT.END_GAME, data);
   }
 
+  emitResetGame(data) {
+    this.socket.emit(EVENT.RESET_GAME, data);
+  }
+
   emitMove(data) {
     this.socket.emit(EVENT.MOVE, data);
   }
@@ -189,6 +193,10 @@ class User {
 
   emitGoToLobby() {
     this.socket.emit(EVENT.GO_TO_LOBBY);
+  }
+
+  emitUpdatePlayerNum(data) {
+    this.socket.emit(EVENT.UPDATE_PLAYER_NUM, data);
   }
 }
 
