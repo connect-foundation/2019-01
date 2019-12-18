@@ -306,6 +306,7 @@ class Room {
         characterList,
       });
     });
+    this._clearMoveQueue();
     this.isMoving = false;
 
     this._countTime();
@@ -397,6 +398,7 @@ class Room {
         isOwner: this._isOwner(user),
       });
     });
+    this._clearMoveQueue();
     this.isMoving = false;
     this.isGameStarted = false;
     this.aliveUsers.clear();
@@ -495,6 +497,10 @@ class Room {
       && this.aliveUsers.size <= ROOM.MAX_USER
       && this._isOwner(user)
       && this.isGameStarted === false);
+  }
+
+  _clearMoveQueue() {
+    this.moveQueue = [];
   }
 }
 

@@ -79,6 +79,7 @@ const Field = () => {
         if (character === undefined) return;
 
         if (character.isAlive() === false) character.setAlive(true);
+        character.clearMoveQueue();
         character.teleport(indexX, indexY);
       });
       return newCharacters;
