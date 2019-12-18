@@ -1,6 +1,6 @@
-export const setSize = (width, height) => `
-  width: ${width}px;
-  height: ${height}px;
+export const setSize = (constants) => `
+  width: ${constants.WIDTH}px;
+  height: ${constants.HEIGHT}px;
 `;
 
 export const setFlexDirection = (direction) => `
