@@ -136,6 +136,7 @@ const DashBoard = ({ buttonClickSound }) => {
       socket.offEndRound();
       socket.offResetGame();
       socket.offEndGame();
+      socket.offResetGame();
       socket.offStartGame();
       clearTimeout(lastTimerId);
     };
