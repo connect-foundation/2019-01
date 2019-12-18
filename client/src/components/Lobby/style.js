@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 import {
   LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
-} from '../Style/Lobby/constants';
+} from '../Style/Lobby';
 
 
 export const LobbyWrapper = styled.div`

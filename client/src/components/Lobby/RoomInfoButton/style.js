@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { setBorderAndRadius } from '../../Style/util';
 import {
   ROOM_INFO, BUTTON_EFFECT,
-} from '../../Style/Lobby/constants';
+} from '../../Style/Lobby';
 
 export const RoomInfoWrapper = styled.div`
     display: flex;

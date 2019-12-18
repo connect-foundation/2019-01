@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { setSize, setBorderAndRadius, setFlex } from '../../Style/util';
 import {
   DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON, ROOM,
-} from '../../Style/Room/constants';
+} from '../../Style/Room';
 
 export const GameAreaWrapper = styled.div`
     width: fit-content;
