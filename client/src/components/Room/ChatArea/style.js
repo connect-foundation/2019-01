@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {
   CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
-} from '../../../constants/room';
+} from '../../Style/Room/constants';
 import { setSize, setBorderAndRadius, setFlex } from '../../Style/util';
 
 export const ChatAreaWrapper = styled.div`

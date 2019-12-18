@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ROOM_NAME } from '../../../../constants/room';
+import { ROOM_NAME } from '../../../Style/Room/constants';
 
 export const RoomNameWrapper = styled.div`
   box-sizing: border-box;
