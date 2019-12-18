@@ -14,7 +14,7 @@
   </a>
 </p>
 
-![](https://i.imgur.com/qAtbtqw.png)
+<p align="center"><img width="500" height="312" src="https://i.imgur.com/qAtbtqw.png"></p>
 
 ### 📖 [Wiki](https://github.com/connect-foundation/2019-01/wiki)
 ### 🕹️ [Click and Play game!](https://boolean-avengers.dev)
@@ -92,21 +92,20 @@ npm test
 
 ## 🏗 Architecture
 ### Server & Client
-![](https://i.imgur.com/bt9mdJ1.png)
+<p align="center"><img width="650" height="520" src="https://i.imgur.com/bt9mdJ1.png"></p>
 
 ### CI/CD
-![](https://i.imgur.com/wF4PSVH.png)
+<p align="center"><img src="https://i.imgur.com/wF4PSVH.png"></p>
 
 ### Socket event flow
-![](https://i.imgur.com/SIYguR1.png)
+<p align="center"><img width="700" height="480" src="https://i.imgur.com/SIYguR1.png"></p>
 
 ### Game Logic
 #### Move
-![](https://i.imgur.com/4ReXZ9y.png)
+<p align="center"><img src="https://i.imgur.com/4ReXZ9y.png"></p>
 
 #### Game start to end
-![](https://i.imgur.com/XOAeYzi.png)
-
+<p align="center"><img src="https://i.imgur.com/XOAeYzi.png"></p>
 
 ## 👨‍👩‍👦‍👦 Author
 
