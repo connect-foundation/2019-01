@@ -13,7 +13,11 @@ import { ROOM, DIRECTION, FIELD } from '../constants/room';
  * @property {number} currentRound
  * @property {number} currentTime
  * @property {Map<string, user>} users
- * @property {Array.<Array.<number, number>>} indexOfCharacters
+ * @property {Array.<Array.<object>>} indexOfCharacters
+ * @property {Array.<stringr>} nicknameList
+ * @property {Map<string, user>} aliveUsers
+ * @property {Array.<object>} moveQueue
+ * @property {boolean} isMoving
  */
 class Room {
   constructor(id, name) {
