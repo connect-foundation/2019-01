@@ -26,15 +26,9 @@ router.post('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
   try {
-    const { id, action, value } = req.body;
-    const actionUpdateMap = {
-      category: imageDb.updateCategory,
-      name: imageDb.updateName,
-      url: imageDb.updateUrl,
-    };
-    const updateFunction = actionUpdateMap[action];
-    if (updateFunction === undefined) throw new Error('non-exist action');
-    const queryResult = await updateFunction(id, value);
+    const { id, data } = req.body;
+    const { category, name, url } = data;
+    const queryResult = await imageDb.updateImage(id, category, name, url);
     const result = isSuccessFul(queryResult);
     res.status(200).send({ result });
   } catch (error) {
