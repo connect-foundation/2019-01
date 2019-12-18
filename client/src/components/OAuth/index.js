@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 const OAuth = () => {
   useEffect(() => {
-    window.open('about:blank', '_self');
     window.close();
   }, []);
 

@@ -69,6 +69,10 @@ class Controller {
     const room = lobby.getRoom(roomId);
     await this._assignCharacter(user);
     lobby.leaveUser(user.getId());
+    if (room === undefined) {
+      user.emitGoToLobby();
+      return;
+    }
     await room.enterUser(user);
     lobby.updateRoomInfo(roomId);
   }
@@ -90,6 +94,7 @@ class Controller {
   _letUserLeaveRoom(user) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
+    if (room === undefined) return;
     const roomId = room.getId();
     room.leaveUser(user);
     lobby.updateRoomInfo(roomId);
