@@ -50,10 +50,10 @@ const ImageCategory = () => {
         };
         setFetchImage(() => fetchAddData);
         setModalContent({
-          id: 0,
-          category: '',
-          name: '',
-          url: '',
+          id: ADMIN.MODAL.DEFAULT.ID,
+          category: ADMIN.MODAL.DEFAULT.CATEGORY,
+          name: ADMIN.MODAL.DEFAULT.NAME,
+          url: ADMIN.MODAL.DEFAULT.URL,
         });
       }
       return true;
