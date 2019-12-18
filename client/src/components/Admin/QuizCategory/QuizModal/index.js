@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   ModalWrapper, ModalContent, ModalButtonWrapper, ModalOkButton, ModalCloseButton,
 } from './style';
-import Row from './row';
+import Row from './Row';
 
 const QuizModal = ({ quiz, closeModal, fetchData }) => {
   const [categoryValue, setCategoryValue] = useState(quiz.category);

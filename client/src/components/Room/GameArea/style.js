@@ -66,7 +66,7 @@ export const GameStartButton = styled.div`
     cursor: pointer;
 `;
 
-export const WaitingText = styled.div`
+const DashboardText = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
@@ -74,10 +74,5 @@ export const WaitingText = styled.div`
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
 
-export const GameEndText = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
-`;
+export const WaitingText = DashboardText;
+export const GameEndText = DashboardText;
