@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   ChatLog, Chat, ChatNickname, ChatMessage, ChatNotice,
 } from './style';
+import { CHAT_AREA } from '../../../constants/room';
 import socket from '../../../modules/socket';
 
 const Log = () => {
@@ -37,7 +38,7 @@ const Log = () => {
 
   return (
     <ChatLog ref={logRef}>
-      <ChatNotice>** 매너채팅 해요 ^_^ **</ChatNotice>
+      <ChatNotice>{CHAT_AREA.NOTICE_MESSAGE}</ChatNotice>
       {chatList}
     </ChatLog>
   );

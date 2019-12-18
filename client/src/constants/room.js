@@ -93,6 +93,7 @@ export const CHAT_AREA = {
   MAX_MESSAGE_LENGTH: 50,
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
+  NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
 };
 
 export const SOUND_TOGGLE = {
