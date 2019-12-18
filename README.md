@@ -14,7 +14,7 @@
   </a>
 </p>
 
-<center><img src="https://i.imgur.com/qAtbtqw.png" width="500" height="300"></center>
+![](https://i.imgur.com/qAtbtqw.png)
 
 ### 📖 [Wiki](https://github.com/connect-foundation/2019-01/wiki)
 ### 🕹️ [Click and Play game!](https://boolean-avengers.dev)
