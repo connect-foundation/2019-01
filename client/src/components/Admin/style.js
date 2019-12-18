@@ -35,7 +35,7 @@ export const NicknameBodyWrapper = styled.div`
   flex-direction: row;
 `;
 
-export const QuizModalWrapper = styled.div`
+export const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -47,7 +47,7 @@ export const QuizModalWrapper = styled.div`
   padding: 5%;
 `;
 
-export const QuizModalButtonWrapper = styled.div`
+export const ModalButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 5%;

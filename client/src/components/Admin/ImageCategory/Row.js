@@ -1,26 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ImageTh, ImageTr, ImageButton,
-} from './style';
-import fetchData from '../util';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
+import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
 
-const Row = ({ openModal, image }) => {
-  const columns = Object.keys(image);
-
-  const deleteButtonHandler = (id) => {
-    fetchData('delete', URL.ADMIN.IMAGE, { id });
+const Row = ({ openModal, image, openSnackbar }) => {
+  const deleteButtonHandler = () => {
+    fetchData('delete', URL.ADMIN.IMAGE, { id: image.id })
+      .then(({ result }) => openSnackbar(result));
   };
 
   return (
-    <ImageTr>
-      {columns.map((key) => <ImageTh>{image[key]}</ImageTh>)}
-      <ImageTh>
-        <ImageButton onClick={openModal}>수정</ImageButton>
-        <ImageButton onClick={() => deleteButtonHandler(image.id)}>삭제</ImageButton>
-      </ImageTh>
-    </ImageTr>
+    <TableRow>
+      <TableCell>{image.id}</TableCell>
+      <TableCell>{image.category}</TableCell>
+      <TableCell>{image.name}</TableCell>
+      <TableCell>{image.url}</TableCell>
+      <TableCell align="right" style={{ width: '200px' }}>
+        <Button
+          variant="contained"
+          onClick={() => openModal(image)}>
+          수정
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={deleteButtonHandler}>
+          삭제
+        </Button>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -32,6 +43,7 @@ Row.propTypes = {
     name: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  openSnackbar: PropTypes.func.isRequired,
 };
 
 export default Row;

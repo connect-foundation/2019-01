@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { QuizModalWrapper, QuizModalButtonWrapper } from '../../style';
+import { ModalWrapper, ModalButtonWrapper } from '../../style';
 
 const QuizModal = ({
   quiz, open, closeModal, fetchData,
@@ -30,7 +30,7 @@ const QuizModal = ({
 
   return (
     <Modal open={open}>
-      <QuizModalWrapper>
+      <ModalWrapper>
         <TextField
           label="category"
           value={categoryValue}
@@ -51,7 +51,7 @@ const QuizModal = ({
           label="answer"
           value={answerValue}
           onChange={(e) => setAnswerValue(e.target.value)} />
-        <QuizModalButtonWrapper>
+        <ModalButtonWrapper>
           <Button
             variant="contained"
             color="primary"
@@ -63,8 +63,8 @@ const QuizModal = ({
             onClick={closeModal}>
           취소
           </Button>
-        </QuizModalButtonWrapper>
-      </QuizModalWrapper>
+        </ModalButtonWrapper>
+      </ModalWrapper>
     </Modal>
   );
 };

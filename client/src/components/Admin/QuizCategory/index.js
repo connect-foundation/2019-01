@@ -6,7 +6,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import CustomSnackbar from '../CustomSnackbar';
-import fetchData from '../util';
+import { fetchData } from '../../../util';
 import QuizRow from './Row';
 import QuizModal from './QuizModal';
 import URL from '../../../constants/url';
@@ -50,12 +50,12 @@ const QuizCategory = () => {
         };
         setFetchQuiz(() => fetchAddData);
         setModalContent({
-          id: 'id',
-          category: 'category',
-          level: 'level',
-          question: 'question',
-          comment: 'comment',
-          answer: 'answer',
+          id: 0,
+          category: '',
+          level: 1,
+          question: '',
+          comment: '',
+          answer: 0,
         });
       }
       return true;
@@ -94,18 +94,6 @@ const QuizCategory = () => {
             <TableCell>Question</TableCell>
             <TableCell>Comment</TableCell>
             <TableCell>Answer</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {quizData}
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
             <TableCell align="right">
               <Button
                 variant="contained"
@@ -115,7 +103,8 @@ const QuizCategory = () => {
               </Button>
             </TableCell>
           </TableRow>
-        </TableBody>
+        </TableHead>
+        <TableBody>{quizData}</TableBody>
       </Table>
       <CustomSnackbar open={isSnackbarOpen} message={snackbarMessage} />
       {isModalOpen ? (

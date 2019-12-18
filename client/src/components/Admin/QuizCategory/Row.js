@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
-import fetchData from '../util';
+import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
 
 const Row = ({ openModal, quiz, openSnackbar }) => {

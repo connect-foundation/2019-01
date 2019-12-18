@@ -6,7 +6,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import UserRow from './Row';
 import CustomSnackbar from '../CustomSnackbar';
-import fetchData from '../util';
+import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
 
 const UserCategory = () => {
