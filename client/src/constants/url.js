@@ -7,6 +7,7 @@ const URL = {
   PRODUCTION_GITHUB_LOGOUT: '/api/oauth/github/logout',
   ADMIN_BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/boolean_avengers_logo2.png',
   ADMIN: {
+    IAM: '/admin/iam',
     USER: '/admin/user',
     USER_LIST: '/admin/user/list',
     QUIZ: '/admin/quiz',

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import userFinder from '../database/user';
+import { getTimeOneDayLater } from '../util';
 import URL from '../constants/url';
 
 const privateKey = process.env.JWT_SECRET_KEY;
@@ -22,15 +23,11 @@ const githubOauth = async (req, res, next) => {
     },
   });
 
-  const userId = data.login;
-  const [user] = await userFinder.fetchUserInfo(userId);
-
-  if (user === undefined) {
-    userFinder.registerUser(data.login);
-  }
-
-  const token = jwt.sign({ id: data.login }, privateKey, { algorithm });
-  res.cookie('jwt', token);
+  const githubId = data.login;
+  const [user] = await userFinder.fetchUser(githubId);
+  if (user === undefined) userFinder.registerUser(githubId);
+  const token = jwt.sign({ githubId }, privateKey, { algorithm });
+  res.cookie('_jwt', token, { expires: getTimeOneDayLater() });
   return next();
 };
 

@@ -43,12 +43,13 @@ const Lobby = () => {
 
   const openRoomCreateModal = () => setModalOpen(true);
 
-  const getNicknameFromJwt = () => {
+  const getGithubIdFromJwt = () => {
     const cookies = cookie.parse(document.cookie);
-    if (cookies.jwt === undefined) return undefined;
-    const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
-    if (userInfo === undefined || userInfo.id === undefined) return undefined;
-    return userInfo.id;
+    const { _jwt } = cookies;
+    if (_jwt === undefined) return undefined;
+    const userInfo = jwt.verify(_jwt, privateKey, { algorithm });
+    if (userInfo === undefined) return undefined;
+    return userInfo.githubId;
   };
 
   const enterCreatedRoom = (roomId) => {
@@ -118,8 +119,7 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const githubId = getNicknameFromJwt();
-
+    const githubId = getGithubIdFromJwt();
     setUserName(githubId === undefined ? 'guest' : githubId);
 
     if (socket.isConnected() === false) {
