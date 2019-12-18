@@ -76,9 +76,9 @@ const buttonStyle = `
     font-family: ${ROOM.FONT_FAMILY};
 `;
 
-export const ExitButton = styled.button.attrs({
-  disabled: (props) => (props.isGameStarted ? 'disabled' : ''),
-})`
+export const ExitButton = styled.button.attrs((props) => ({
+  disabled: props.isGameStarted ? 'disabled' : '',
+}))`
     width: 25%;
     height: 100%;
     ${buttonStyle}
