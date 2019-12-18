@@ -3,6 +3,11 @@ export const setSize = (constants) => `
   height: ${constants.HEIGHT || constants.getHeight()}px;
 `;
 
+export const setPercentSize = (constants) => `
+  width: ${constants.PERCENT_WIDTH}%;
+  height: ${constants.PERCENT_HEIGHT}%;
+`;
+
 export const setFlex = (direction, justifyContent = '') => `
   display: flex;
   flex-direction: ${direction};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  ChatLog, Chat, ChatNinkname, ChatMessage, ChatNotice,
+  ChatLog, Chat, ChatNickname, ChatMessage, ChatNotice,
 } from './style';
 import socket from '../../../modules/socket';
 
@@ -10,7 +10,7 @@ const Log = () => {
 
   const makeChat = (nickname, message, index) => (
     <Chat key={index}>
-      <ChatNinkname>{nickname}: </ChatNinkname>
+      <ChatNickname>{nickname}: </ChatNickname>
       <ChatMessage>{message}</ChatMessage>
     </Chat>
   );

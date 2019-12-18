@@ -125,6 +125,42 @@ export const CHAT_AREA = {
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
   BORDER: '1px solid lightslategrey',
   BORDER_RADIUS: 8,
+  CHAT_HEADER: {
+    PERCENT_WIDTH: 100,
+    PERCENT_HEIGHT: 8,
+  },
+  ROOM_INFO: {
+    PERCENT_WIDTH: 50,
+    PERCENT_HEIGHT: 100,
+  },
+  PLAYER_INFO: {
+    PERCENT_WIDTH: 45,
+    PERCENT_HEIGHT: 100,
+  },
+  EMOJI: {
+    PERCENT_WIDTH: 40,
+    PERCENT_HEIGHT: 50,
+  },
+  EXIT_BUTTON: {
+    PERCENT_WIDTH: 25,
+    PERCENT_HEIGHT: 100,
+  },
+  CHAT_LOG: {
+    PERCENT_WIDTH: 100,
+    PERCENT_HEIGHT: 75,
+  },
+  CHAT_INPUT: {
+    PERCENT_WIDTH: 100,
+    PERCENT_HEIGHT: 8,
+  },
+  CHAT_INPUT_BOX: {
+    PERCENT_WIDTH: 72,
+    PERCENT_HEIGHT: 100,
+  },
+  SEND_BUTTON: {
+    PERCENT_WIDTH: 25,
+    PERCENT_HEIGHT: 100,
+  },
 };
 
 export const SOUND_TOGGLE = {
