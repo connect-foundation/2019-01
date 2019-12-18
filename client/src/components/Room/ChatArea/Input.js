@@ -35,8 +35,8 @@ const Input = () => {
       const messageText = event.target.value;
       const messageLineCount = parseChat(messageText, ctx).length;
       const newMessage = (
-        messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
-          || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT
+        (messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
+          || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT)
           ? messageText.slice(0, messageText.length - 1)
           : messageText
       );
