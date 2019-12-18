@@ -10,21 +10,21 @@ import { fetchData } from '../../../util';
 import QuizRow from './Row';
 import QuizModal from './QuizModal';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const QuizCategory = () => {
   const [quizData, setQuizData] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [fetchQuiz, setFetchQuiz] = useState(null);
   const timerId = useRef(null);
-  const SNACKBAR_TIME_MS = 3000;
 
   const openSnackbar = (result) => {
     setIsSnackbarOpen(true);
-    setSnackbarMessage(result ? '반영 성공' : '반영 실패');
-    timerId.current = setTimeout(() => setIsSnackbarOpen(false), SNACKBAR_TIME_MS);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
   const openEditModal = (quiz) => {
@@ -106,7 +106,7 @@ const QuizCategory = () => {
         </TableHead>
         <TableBody>{quizData}</TableBody>
       </Table>
-      <CustomSnackbar open={isSnackbarOpen} message={snackbarMessage} />
+      <CustomSnackbar open={isSnackbarOpen} result={fetchResult} />
       {isModalOpen ? (
         <QuizModal
           quiz={modalContent}

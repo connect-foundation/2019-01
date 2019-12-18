@@ -5,6 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
+import { LAST_CELL_WITDH } from '../style';
 
 const Row = ({ openModal, image, openSnackbar }) => {
   const deleteButtonHandler = () => {
@@ -18,7 +19,7 @@ const Row = ({ openModal, image, openSnackbar }) => {
       <TableCell>{image.category}</TableCell>
       <TableCell>{image.name}</TableCell>
       <TableCell>{image.url}</TableCell>
-      <TableCell align="right" style={{ width: '200px' }}>
+      <TableCell align="right" style={LAST_CELL_WITDH}>
         <Button
           variant="contained"
           onClick={() => openModal(image)}>

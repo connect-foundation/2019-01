@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
+import { LAST_CELL_WITDH } from '../style';
 
 const Row = ({
   id, type, nickname, openSnackbar,
@@ -31,7 +32,7 @@ const Row = ({
       <TableCell>
         <TextField onChange={updateNickname} value={currentNickname} />
       </TableCell>
-      <TableCell align="right" style={{ width: '200px' }}>
+      <TableCell align="right" style={LAST_CELL_WITDH}>
         <Button
           variant="contained"
           onClick={updateButtonHandler}>

@@ -6,7 +6,6 @@ const drawerWidth = 240;
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    fontVariantCaps: 'all-small-caps',
   },
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -30,6 +29,10 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const LAST_CELL_WITDH = {
+  width: '200px',
+};
+
 export const NicknameBodyWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -51,4 +54,8 @@ export const ModalButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 5%;
+`;
+
+export const SnackbarMessageWrapper = styled.span`
+  font-weight: bold;
 `;

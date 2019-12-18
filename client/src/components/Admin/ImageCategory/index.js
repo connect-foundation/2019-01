@@ -10,23 +10,22 @@ import { fetchData } from '../../../util';
 import ImageRow from './Row';
 import ImageModal from './ImageModal';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const ImageCategory = () => {
   const [ImageData, setImageData] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [fetchImage, setFetchImage] = useState(null);
   const timerId = useRef(null);
-  const SNACKBAR_TIME_MS = 3000;
 
   const openSnackbar = (result) => {
     setIsSnackbarOpen(true);
-    setSnackbarMessage(result ? '반영 성공' : '반영 실패');
-    timerId.current = setTimeout(() => setIsSnackbarOpen(false), SNACKBAR_TIME_MS);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
-
 
   const openEditModal = (image) => {
     setIsModalOpen((prevIsModalOpen) => {
@@ -90,7 +89,7 @@ const ImageCategory = () => {
             <TableCell>ID</TableCell>
             <TableCell>Category</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Url</TableCell>
+            <TableCell>URL</TableCell>
             <TableCell align="right">
               <Button
                 variant="contained"
@@ -103,7 +102,7 @@ const ImageCategory = () => {
         </TableHead>
         <TableBody>{ImageData}</TableBody>
       </Table>
-      <CustomSnackbar open={isSnackbarOpen} message={snackbarMessage} />
+      <CustomSnackbar open={isSnackbarOpen} result={fetchResult} />
       {isModalOpen ? (
         <ImageModal
           image={modalContent}

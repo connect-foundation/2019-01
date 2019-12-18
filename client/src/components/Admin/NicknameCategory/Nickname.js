@@ -11,19 +11,19 @@ import CustomSnackbar from '../CustomSnackbar';
 import { fetchData } from '../../../util';
 import NicknameRow from './Row';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState([]);
   const [newNickname, setNewNickname] = useState('');
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [fetchResult, setFetchResult] = useState(false);
   const timerId = useRef(null);
-  const SNACKBAR_TIME_MS = 3000;
 
   const openSnackbar = (result) => {
     setOpen(true);
-    setMessage(result ? '반영 성공' : '반영 실패');
-    timerId.current = setTimeout(() => setOpen(false), SNACKBAR_TIME_MS);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setOpen(false), ADMIN.ADMINSNACKBAR_TIME_MS);
   };
 
   const makeNewRow = (nicknameArray) => {
@@ -58,7 +58,7 @@ const Nickname = ({ type }) => {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>{type}</TableCell>
+            <TableCell>{type.toUpperCase()}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -80,7 +80,7 @@ const Nickname = ({ type }) => {
           {nicknameList}
         </TableBody>
       </Table>
-      <CustomSnackbar open={open} message={message} />
+      <CustomSnackbar open={open} result={fetchResult} />
     </>
   );
 };

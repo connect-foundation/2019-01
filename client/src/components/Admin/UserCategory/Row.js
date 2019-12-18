@@ -6,6 +6,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
+import { LAST_CELL_WITDH } from '../style';
 
 const Row = ({ user, openSnackbar }) => {
   const [isAdmin, githubId] = [Boolean(user.is_admin), user.github_id];
@@ -35,7 +36,7 @@ const Row = ({ user, openSnackbar }) => {
           onChange={updateUserAuthority}
           value="primary" />
       </TableCell>
-      <TableCell align="right" style={{ width: '200px' }}>
+      <TableCell align="right" style={LAST_CELL_WITDH}>
         <Button
           variant="contained"
           onClick={() => updateButtonHandler()}>

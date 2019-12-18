@@ -8,18 +8,18 @@ import UserRow from './Row';
 import CustomSnackbar from '../CustomSnackbar';
 import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const UserCategory = () => {
   const [userData, setUserData] = useState(null);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [fetchResult, setFetchResult] = useState(false);
   const timerId = useRef(null);
-  const SNACKBAR_TIME_MS = 3000;
 
   const openSnackbar = (result) => {
     setOpen(true);
-    setMessage(result ? '반영 성공' : '반영 실패');
-    timerId.current = setTimeout(() => setOpen(false), SNACKBAR_TIME_MS);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
   const makeNewRow = (userList) => {
@@ -46,7 +46,7 @@ const UserCategory = () => {
         </TableHead>
         <TableBody>{userData}</TableBody>
       </Table>
-      <CustomSnackbar open={open} message={message} />
+      <CustomSnackbar open={open} result={fetchResult} />
     </>
   );
 };
