@@ -96,7 +96,7 @@ class Room {
    *   characterList,
    *   isGameStarted: this.isGameStarted,
    *   question: this.currentQuiz.question,
-   *   timeLimit: ROOM.TIME_LIMIT - this.currentTime,
+   *   timeLimit: ROOM.TIME_LIMIT_S - this.currentTime,
    *   isOwner: this._isOwner(user),
    * });
    */
@@ -132,7 +132,7 @@ class Room {
       characterList,
       isGameStarted: this.isGameStarted,
       question: this.currentQuiz.question,
-      timeLimit: ROOM.TIME_LIMIT - this.currentTime,
+      timeLimit: ROOM.TIME_LIMIT_S - this.currentTime,
       isOwner: this._isOwner(user),
       roomName: this.name,
     });
@@ -302,7 +302,7 @@ class Room {
       user.emitStartRound({
         round: this.currentRound,
         question: this.currentQuiz.question,
-        timeLimit: ROOM.TIME_LIMIT,
+        timeLimit: ROOM.TIME_LIMIT_S,
         characterList,
       });
     });
@@ -442,12 +442,12 @@ class Room {
   _countTime() {
     setTimeout(() => {
       this.currentTime += 1;
-      if (this.currentTime < ROOM.TIME_LIMIT) {
+      if (this.currentTime < ROOM.TIME_LIMIT_S) {
         this._countTime();
         return;
       }
       this._endRound();
-    }, ROOM.SECOND);
+    }, ROOM.MILLI_SECOND);
   }
 
   /**
