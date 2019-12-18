@@ -213,9 +213,9 @@ class Character {
     this._clearChat();
   }
 
-  _drawRoundRect(startX, startY, width, lineHeight, radius) {
+  _drawRoundRect(startX, startY, width, lineHeight, balloonLineCount, radius) {
     let borderRadius = radius;
-    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
+    const maxHeight = lineHeight * balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
 
     if (width < 2 * borderRadius) borderRadius = width / 2;
     if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
@@ -261,6 +261,7 @@ class Character {
       this.chatBalloonY,
       CHAT_BALLOON.WIDTH,
       CHAT_BALLOON.LINE_HEIGHT,
+      this.balloonLineCount,
       CHAT_BALLOON.BORDER_RADIUS,
     );
 
