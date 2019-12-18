@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { setSize, setFlex } from '../Style/util';
-import { ROOM, SOUND_TOGGLE } from '../../constants/room';
+import { ROOM, SOUND_TOGGLE } from '../Style/Room/constants';
 
 export const Wrapper = styled.div`
     position: absolute;
@@ -22,7 +22,7 @@ export const SoundToggleWrapper = styled.div`
     width: 100%;
     box-sizing: border-box;
     padding-right: ${SOUND_TOGGLE.PADDING_RIGHT}px;
-    ${setFlex('row', 'row-reverse')}
+    ${setFlex('row-reverse')}
 `;
 
 export const SoundToggle = styled.span`
