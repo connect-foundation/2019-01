@@ -18,7 +18,7 @@ const Row = ({
   };
 
   const updateButtonHandler = () => {
-    const data = { id, type: currentNickname };
+    const data = { id, [type]: currentNickname };
     fetchData('put', `${URL.ADMIN.NICKNAME}${type}`, data)
       .then(({ result }) => openSnackbar(result));
   };
