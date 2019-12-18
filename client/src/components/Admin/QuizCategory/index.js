@@ -1,23 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import {
-  QuizBodyWrapper, QuizTable, QuizTh, QuizThead, QuizTr, QuizTbody, QuizButton,
-} from './style';
+import React, { useState, useEffect, useRef } from 'react';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
+import CustomSnackbar from '../CustomSnackbar';
 import fetchData from '../util';
 import QuizRow from './Row';
 import QuizModal from './QuizModal';
 import URL from '../../../constants/url';
 
 const QuizCategory = () => {
-  const [quizData, setQuizData] = useState('');
+  const [quizData, setQuizData] = useState([]);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [fetchQuiz, setFetchQuiz] = useState(null);
+  const timerId = useRef(null);
+  const SNACKBAR_TIME_MS = 3000;
 
-  const openEditModal = (quiz) => () => {
+  const openSnackbar = (result) => {
+    setIsSnackbarOpen(true);
+    setSnackbarMessage(result ? '반영 성공' : '반영 실패');
+    timerId.current = setTimeout(() => setIsSnackbarOpen(false), SNACKBAR_TIME_MS);
+  };
+
+  const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
         const fetchEditData = (quizInfo) => {
-          fetchData('put', URL.ADMIN.QUIZ, { id: quizInfo.id, data: quizInfo });
+          fetchData('put', URL.ADMIN.QUIZ, { id: quizInfo.id, data: quizInfo })
+            .then(({ result }) => openSnackbar(result));
         };
         setFetchQuiz(() => fetchEditData);
         setModalContent(quiz);
@@ -30,7 +45,8 @@ const QuizCategory = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
         const fetchAddData = (quizInfo) => {
-          fetchData('post', URL.ADMIN.QUIZ, quizInfo);
+          fetchData('post', URL.ADMIN.QUIZ, quizInfo)
+            .then(({ result }) => openSnackbar(result));
         };
         setFetchQuiz(() => fetchAddData);
         setModalContent({
@@ -50,40 +66,66 @@ const QuizCategory = () => {
 
   const makeNewRow = (quizList) => {
     setQuizData(() => quizList.map(
-      (quiz) => {
-        const openModal = openEditModal(quiz);
-        return <QuizRow openModal={openModal} quiz={quiz} />;
-      },
+      (quiz) => (
+        <QuizRow
+          key={quiz.id}
+          openModal={openEditModal}
+          quiz={quiz}
+          openSnackbar={openSnackbar} />
+      ),
     ));
   };
 
   useEffect(() => {
     fetchData('get', URL.ADMIN.QUIZ_LIST)
       .then((res) => makeNewRow(res.quizList));
+
+    return () => clearTimeout(timerId.current);
   }, []);
 
   return (
-    <QuizBodyWrapper>
-      <QuizTable>
-        <QuizThead>
-          <QuizTr>
-            <QuizTh>id</QuizTh>
-            <QuizTh>category</QuizTh>
-            <QuizTh>level</QuizTh>
-            <QuizTh>quistion</QuizTh>
-            <QuizTh>comment</QuizTh>
-            <QuizTh>answer</QuizTh>
-          </QuizTr>
-        </QuizThead>
-        <QuizTbody>
-          <QuizTr>
-            <QuizButton onClick={openAddModal}>추가</QuizButton>
-          </QuizTr>
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>Level</TableCell>
+            <TableCell>Question</TableCell>
+            <TableCell>Comment</TableCell>
+            <TableCell>Answer</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {quizData}
-        </QuizTbody>
-      </QuizTable>
-      {isModalOpen ? <QuizModal quiz={modalContent} closeModal={closeModal} fetchData={fetchQuiz} /> : ''}
-    </QuizBodyWrapper>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={openAddModal}>
+              추가
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+      <CustomSnackbar open={isSnackbarOpen} message={snackbarMessage} />
+      {isModalOpen ? (
+        <QuizModal
+          quiz={modalContent}
+          open={isModalOpen}
+          closeModal={closeModal}
+          fetchData={fetchQuiz} />
+      ) : ''}
+    </>
   );
 };
 
