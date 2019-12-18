@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { setSize, setBorderAndRadius } from '../../Style/util';
-import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../Style/Lobby/constants';
+import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../Style/Lobby';
 
 export const LoginButtonWrapper = styled.div`
     padding: ${LOGIN_BUTTON.PADDING};

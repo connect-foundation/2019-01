@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { setSize, setFlex } from '../Style/util';
-import { ROOM, SOUND_TOGGLE } from '../Style/Room/constants';
+import { ROOM, SOUND_TOGGLE } from '../Style/Room';
 
 export const Wrapper = styled.div`
     position: absolute;

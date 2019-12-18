@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {
   CHAT_AREA, ROOM, QUIZ, ROOM_NAME,
-} from '../../Style/Room/constants';
+} from '../../Style/Room';
 import {
   setSize, setBorderAndRadius, setPercentSize, setFlex,
 } from '../../Style/util';

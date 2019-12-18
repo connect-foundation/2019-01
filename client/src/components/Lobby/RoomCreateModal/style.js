@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
+<<<<<<< HEAD
 } from '../../Style/Modal/constants';
 import { setBorderAndRadius, setFlex } from '../../Style/util';
 import { BUTTON_EFFECT } from '../../Style/Lobby/constants';
+=======
+} from '../../Style/Modal';
+import { setBorderAndRadius } from '../../Style/util';
+import { BUTTON_EFFECT } from '../../Style/Lobby';
+>>>>>>> 134de43e07e8d01ca2e13b9e344b7295610ec5bd
 
 export const ModalWrapper = styled.div`
     position: absolute;

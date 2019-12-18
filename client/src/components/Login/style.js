@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import LOGIN from '../Style/Login/constants';
+import LOGIN from '../Style/Login';
 import { ROOM } from '../../constants/room';
 import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 

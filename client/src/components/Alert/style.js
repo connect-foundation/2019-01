@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import {
   MODAL, CREATE_ROOM_BUTTON, TITLE, HEADER,
-} from '../Style/Modal/constants';
+} from '../Style/Modal';
 import { setBorderAndRadius } from '../Style/util';
-import { LOBBY, BUTTON_EFFECT } from '../Style/Lobby/constants';
+import { LOBBY, BUTTON_EFFECT } from '../Style/Lobby';
 
 export const AlertWrapper = styled.div`
   width: ${MODAL.WIDTH}px;
