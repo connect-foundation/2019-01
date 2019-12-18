@@ -29,6 +29,6 @@ export const GitHubPath = styled.path.attrs({ d: LOGIN_BUTTON.SVG.PATH.INDEXES }
 export const GitHubIcon = styled.svg.attrs(
   { viewBox: `${LOGIN_BUTTON.SVG.X} ${LOGIN_BUTTON.SVG.Y} ${LOGIN_BUTTON.SVG.W} ${LOGIN_BUTTON.SVG.H}` },
 )`
-    ${setSize(LOGIN_BUTTON.GITHUB_ICON)}
     shape-rendering: ${LOGIN_BUTTON.GITHUB_ICON.SHAPE_REDERING};
+    ${setSize(LOGIN_BUTTON.GITHUB_ICON)}
 `;

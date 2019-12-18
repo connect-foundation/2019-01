@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { setSize, setBorderAndRadius } from '../Style/util';
+import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 import {
   LOBBY, NICKNAME, HEADER, BODY, ROOM_INFO, CREATE_ROOM_BUTTON, BUTTON_EFFECT,
 } from '../Style/Lobby/constants';
@@ -19,11 +19,10 @@ export const LobbyWrapper = styled.div`
 `;
 
 export const LobbyHeader = styled.div`
-    display: flex;
     box-sizing: border-box;
-    justify-content: space-between;
     height: ${HEADER.HEIGHT}px;
     padding: ${HEADER.PADDING};
+    ${setFlex('row', 'space-between')}
 `;
 
 export const LobbyBody = styled.div`
@@ -65,10 +64,9 @@ export const CreateRoomButton = styled.div`
 `;
 
 export const RoomInfoWrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
     padding: ${ROOM_INFO.PADDING};
     margin-bottom: ${ROOM_INFO.MARGIN_BOTTOM}px;
+    ${setFlex('row', 'space-between')}
     ${setBorderAndRadius(ROOM_INFO)}
     color: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.COLOR : ROOM_INFO.COLOR)};  
     cursor: ${(props) => (props.enterable ? ROOM_INFO.ENTERABLE.CURSOR : ROOM_INFO.CURSOR)};

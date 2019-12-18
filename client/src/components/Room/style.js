@@ -1,32 +1,28 @@
 import styled from 'styled-components';
+import { setSize, setFlex } from '../Style/util';
 import { ROOM, SOUND_TOGGLE } from '../../constants/room';
 
 export const Wrapper = styled.div`
     position: absolute;
-    display: flex;
-    flex-direction: column;
     width: ${ROOM.getWidth()}px;
     height: ${ROOM.getHeight() + SOUND_TOGGLE.HEIGHT}px;
-    justify-content: space-between;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);    
+    ${setFlex('column', 'space-between')}
 `;
 
 export const RoomWrapper = styled.div`
-    display: flex;
-    width: ${ROOM.getWidth()}px;
-    height: ${ROOM.getHeight()}px;
-    justify-content: space-between;
+    ${setSize(ROOM)}
+    ${setFlex('row', 'space-between')}
 `;
 
 export const SoundToggleWrapper = styled.div`
-    display: flex;
-    flex-direction: row-reverse;
     height: ${SOUND_TOGGLE.HEIGHT}px;
     width: 100%;
     box-sizing: border-box;
     padding-right: ${SOUND_TOGGLE.PADDING_RIGHT}px;
+    ${setFlex('row', 'row-reverse')}
 `;
 
 export const SoundToggle = styled.span`

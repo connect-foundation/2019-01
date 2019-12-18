@@ -35,7 +35,7 @@ const Login = () => {
         <LoginGitHubButton onClick={() => popupGitHubOAuth(oauthUrl, enterLobbyAsGithubUser)}>
           <GitHubIcon>
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
-            <path stroke={LOGIN.SVG.PATH.COLOR} d={LOGIN.SVG.PATH.INDEXES} />
+            <path stroke={LOGIN.SVG_PATH.COLOR} d={LOGIN.SVG_PATH.INDEXES} />
           </GitHubIcon>
           <LoginGitHubText>
             GitHub으로 로그인
