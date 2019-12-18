@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to Boolean Avengers 👋</h1>
 <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
     <img src="https://img.shields.io/badge/node-10.16.0-blue.svg" />
   <img src="https://img.shields.io/badge/npm-6.9.0-blue.svg" />
   <a href="https://github.com/connect-foundation/2019-01" target="_blank">
@@ -14,12 +14,10 @@
   </a>
 </p>
 
-![](https://i.imgur.com/qAtbtqw.png)
-
-<br>
+<center><img src="https://i.imgur.com/qAtbtqw.png" width="500" height="300"></center>
 
 ### 📖 [Wiki](https://github.com/connect-foundation/2019-01/wiki)
-### 🕹️ [Click and Play our game!](https://boolean-avengers.dev)
+### 🕹️ [Click and Play game!](https://boolean-avengers.dev)
 > #### 개발자를 위한 OX 퀴즈 게임 서비스
 > 끝까지 살아남는 자가 채용된다!
 식상한 퀴즈게임과 지루한 개발 공부에 질리셨나요?
@@ -92,6 +90,24 @@ npm test
 └── 📁util
 ```
 
+## 🏗 Architecture
+### Server & Client
+![](https://i.imgur.com/bt9mdJ1.png)
+
+### CI/CD
+![](https://i.imgur.com/wF4PSVH.png)
+
+### Socket event flow
+![](https://i.imgur.com/SIYguR1.png)
+
+### Game Logic
+#### Move
+![](https://i.imgur.com/4ReXZ9y.png)
+
+#### Game start to end
+![](https://i.imgur.com/XOAeYzi.png)
+
+
 ## 👨‍👩‍👦‍👦 Author
 
 👤 **boostcamp 2019-01**
@@ -108,7 +124,6 @@ Allowed use and edit only for non-commercial from [Source](https://forums.rpgmak
 Allowed use only for non-commercial from [Source](https://www.bensound.com/royalty-free-music)
 
 ## 🤝 Contributing
-
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/connect-foundation/2019-01/issues).
 
 ***
