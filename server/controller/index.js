@@ -25,7 +25,7 @@ class Controller {
    * @param {User} user
    */
   _letUserEnterLobby(user) {
-    if (user.isInLobby()) return;
+    if (user.isInLobby() === false) return;
     lobby.enterUser(user);
   }
 
