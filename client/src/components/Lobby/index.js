@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
@@ -18,68 +19,16 @@ const algorithm = process.env.REACT_APP_JWT_ALGORITHM;
 const Lobby = () => {
   const [userName, setUserName] = useState('guest');
   const [isModalOpen, setModalOpen] = useState(false);
-  const [roomInfoButtons, setRoomInfoButtons] = useState([]);
   const [isAlertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [roomInfoButtons, setRoomInfoButtons] = useState([]);
   const history = useHistory();
   const roomInfos = new Map();
 
-  const makeRoomInfoButton = ({
-    // eslint-disable-next-line react/prop-types
-    id, name, numOfUsers, isEnterable,
-  }) => {
-    const onClick = () => socket.emitKnockRoom(id);
-    return (
-      <RoomInfoButton
-        key={id}
-        name={name}
-        numOfUsers={numOfUsers}
-        enterable={isEnterable}
-        onClick={onClick} />
-    );
-  };
-
-  const openRoomCreateModal = () => setModalOpen(true);
-
-  const getGithubIdFromJwt = () => {
-    const cookies = cookie.parse(document.cookie);
-    const { _jwt } = cookies;
-    if (_jwt === undefined) return undefined;
-    const userInfo = jwt.verify(_jwt, privateKey, { algorithm });
-    if (userInfo === undefined) return undefined;
-    return userInfo.githubId;
-  };
+  const openCreateRoomModal = () => setModalOpen(true);
 
   const enterCreatedRoom = (roomId) => {
     history.push(`/room/${roomId}`);
-  };
-
-  const updateCreatedRoom = (createdRoomInfo) => {
-    roomInfos.set(createdRoomInfo.id, createdRoomInfo);
-    setRoomInfoButtons((currentRoomButtons) => [
-      ...currentRoomButtons,
-      makeRoomInfoButton(createdRoomInfo),
-    ]);
-  };
-
-  const updateCurrentRoomInfos = (currentRoomInfos) => {
-    currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
-    setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
-  };
-
-  const updateRoomInfo = ({ roomId, roomInfo }) => {
-    const { numOfUsers } = roomInfo;
-    roomInfos.set(roomId, roomInfo);
-    if (numOfUsers === 0) {
-      roomInfos.delete(roomId);
-    }
-    setRoomInfoButtons(() => {
-      const _roomInfoButtons = [];
-      roomInfos.forEach((roominfo) => {
-        _roomInfoButtons.push(makeRoomInfoButton(roominfo));
-      });
-      return _roomInfoButtons;
-    });
   };
 
   const enterRoom = ({ isEnterable, roomId, message }) => {
@@ -92,31 +41,71 @@ const Lobby = () => {
     setAlertOpen(true);
   };
 
-  useEffect(() => {
-    const githubId = socket.isGuest() ? undefined : getGithubIdFromJwt();
+  const makeRoomInfoButton = ({
+    id, name, numOfUsers, isEnterable,
+  }) => (
+    <RoomInfoButton
+      key={id}
+      name={name}
+      numOfUsers={numOfUsers}
+      enterable={isEnterable}
+      onClick={socket.emitKnockRoom(id)} />
+  );
 
-    if (githubId !== undefined) {
-      setUserName(githubId);
-    }
+  const addRoom = (newRoomInfo) => {
+    roomInfos.set(newRoomInfo.id, newRoomInfo);
+    setRoomInfoButtons((currentRoomButtons) => [
+      ...currentRoomButtons,
+      makeRoomInfoButton(newRoomInfo),
+    ]);
+  };
+
+  const updateCurrentRoomInfos = (currentRoomInfos) => {
+    currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
+    setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
+  };
+
+  const updateRoomInfo = ({ roomId, roomInfo }) => {
+    const { numOfUsers } = roomInfo;
+    roomInfos.set(roomId, roomInfo);
+    if (numOfUsers === 0) roomInfos.delete(roomId);
+    setRoomInfoButtons(() => {
+      const _roomInfoButtons = [];
+      roomInfos.forEach((roominfo) => _roomInfoButtons.push(makeRoomInfoButton(roominfo)));
+      return _roomInfoButtons;
+    });
+  };
+
+  const decodeGithubIdFromJwt = () => {
+    const { _jwt } = cookie.parse(document.cookie);
+    if (_jwt === undefined) return undefined;
+    const userInfo = jwt.verify(_jwt, privateKey, { algorithm });
+    if (userInfo === undefined) return undefined;
+    return userInfo.githubId;
+  };
+
+  useEffect(() => {
+    const githubId = socket.isGuest() ? undefined : decodeGithubIdFromJwt();
+    if (githubId !== undefined) setUserName(githubId);
 
     if (socket.isConnected() === false) {
       socket.connect(githubId === undefined ? {} : { githubId });
       socket.onDisconnect(() => history.replace('/'));
     }
 
-    socket.onEnterLobby(updateCurrentRoomInfos);
-    socket.onCreateRoom(enterCreatedRoom);
-    socket.onRoomIsCreated(updateCreatedRoom);
-    socket.onUpdateRoomInfo(updateRoomInfo);
-    socket.onKnockRoom(enterRoom);
     socket.emitEnterLobby();
+    socket.onEnterLobby(updateCurrentRoomInfos);
+    socket.onKnockRoom(enterRoom);
+    socket.onRoomIsCreated(addRoom);
+    socket.onCreateRoom(enterCreatedRoom);
+    socket.onUpdateRoomInfo(updateRoomInfo);
 
     return () => {
       socket.offEnterLobby();
-      socket.offCreateRoom();
-      socket.offRoomIsCreated();
-      socket.offUpdateRoomInfo();
       socket.offKnockRoom();
+      socket.offRoomIsCreated();
+      socket.offCreateRoom();
+      socket.offUpdateRoomInfo();
     };
   }, []);
 
@@ -128,7 +117,7 @@ const Lobby = () => {
           <GitHubLoginButton userName={userName} />
         </LobbyHeader>
         <LobbyBody>
-          <CreateRoomButton onClick={openRoomCreateModal}>+ new Room();</CreateRoomButton>
+          <CreateRoomButton onClick={openCreateRoomModal}>+ new Room();</CreateRoomButton>
           {roomInfoButtons}
         </LobbyBody>
       </LobbyWrapper>

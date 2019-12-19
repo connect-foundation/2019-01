@@ -26,9 +26,7 @@ const Log = () => {
   useEffect(() => {
     socket.onChatMessage(addChat);
 
-    return () => {
-      socket.offChatMessage();
-    };
+    return () => socket.offChatMessage();
   }, []);
 
   useEffect(() => {

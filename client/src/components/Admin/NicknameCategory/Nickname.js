@@ -16,8 +16,8 @@ import ADMIN from '../../../constants/admin';
 const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState([]);
   const [newNickname, setNewNickname] = useState('');
-  const [open, setOpen] = useState(false);
   const [fetchResult, setFetchResult] = useState(false);
+  const [open, setOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -27,15 +27,14 @@ const Nickname = ({ type }) => {
   };
 
   const makeNewRow = (nicknameArray) => {
-    const nicknameTagList = () => nicknameArray.map((nickname) => (
+    setnicknameList(() => nicknameArray.map((nickname) => (
       <NicknameRow
         key={nickname.id}
         id={nickname.id}
         type={type}
         openSnackbar={openSnackbar}
         nickname={type === 'adj' ? nickname.adj : nickname.noun} />
-    ));
-    setnicknameList(nicknameTagList);
+    )));
   };
 
   const updateNewNickname = (e) => setNewNickname(e.target.value);
@@ -43,7 +42,8 @@ const Nickname = ({ type }) => {
   const addNickname = () => {
     const nicknameData = {};
     nicknameData[type] = newNickname;
-    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData);
+    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData)
+      .then(({ result }) => openSnackbar(result));
   };
 
   useEffect(() => {

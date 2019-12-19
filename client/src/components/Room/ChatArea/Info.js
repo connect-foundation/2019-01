@@ -7,19 +7,21 @@ import {
 import socket from '../../../modules/socket';
 
 const Info = () => {
-  const [isGameStarted, setGameStarted] = useState(false);
   const [numOfPlayer, setNumOfPlayer] = useState(0);
   const [numOfViewer, setNumOfViewer] = useState(0);
+  const [isGameStarted, setGameStarted] = useState(false);
   const history = useHistory();
 
-  const inactiveExitButton = () => setGameStarted(true);
+  const goToLobby = () => history.goBack();
+
   const activeExitButton = () => setGameStarted(false);
+
+  const inactiveExitButton = () => setGameStarted(true);
+
   const exitRoom = () => {
     if (isGameStarted) return;
     socket.emitLeaveRoom();
   };
-
-  const goToLobby = () => history.goBack();
 
   const updatePlayerNum = (data) => {
     setNumOfPlayer(data.numOfPlayer);
@@ -27,16 +29,16 @@ const Info = () => {
   };
 
   useEffect(() => {
-    socket.onUpdatePlayerNum(updatePlayerNum);
+    socket.onLeaveRoom(goToLobby);
     socket.onStartGame(inactiveExitButton);
     socket.onResetGame(activeExitButton);
-    socket.onLeaveRoom(goToLobby);
+    socket.onUpdatePlayerNum(updatePlayerNum);
 
     return () => {
-      socket.offUpdatePlayerNum();
+      socket.offLeaveRoom();
       socket.offStartGame();
       socket.offResetGame();
-      socket.offLeaveRoom();
+      socket.offUpdatePlayerNum();
     };
   }, []);
 

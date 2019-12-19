@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import GameArea from './GameArea';
 import ChatArea from './ChatArea';
@@ -11,22 +11,21 @@ import URL from '../../constants/url';
 import { ROOM } from '../../constants/room';
 
 const Room = () => {
-  const [backgroundMusic] = useState(new Audio(URL.BACKGROUND_MUSIC));
-  const [buttonClickSound] = useState(new Audio(URL.BUTTON_CLICK_SOUND));
+  const [isSoundOn, setSoundOn] = useState(true);
+  const [isExistRoom, setIsExistRoom] = useState(true);
   const [gameStartSound] = useState(new Audio(URL.GAME_START_SOUND));
   const [gameEndSound] = useState(new Audio(URL.GAME_END_SOUND));
-  const [isSoundOn, setSoundOn] = useState(true);
-  const [isValidRoom, setIsValidRoom] = useState(true);
+  const [backgroundMusic] = useState(new Audio(URL.BACKGROUND_MUSIC));
+  const [buttonClickSound] = useState(new Audio(URL.BUTTON_CLICK_SOUND));
 
-  const { roomId } = useParams();
   const history = useHistory();
+  const timerId = useRef(null);
+  const { roomId } = useParams();
 
-  const toggleSound = () => {
-    setSoundOn(!isSoundOn);
-    backgroundMusic.muted = !backgroundMusic.muted;
-    buttonClickSound.muted = !buttonClickSound.muted;
-    gameStartSound.muted = !gameStartSound.muted;
-    gameEndSound.muted = !gameEndSound.muted;
+  const goToLobby = () => history.goBack();
+
+  const notifyEndGame = ({ isOwner }) => {
+    if (isOwner) socket.emitReadyRoom(roomId);
   };
 
   const playStartSound = () => {
@@ -39,15 +38,17 @@ const Room = () => {
     gameEndSound.play();
   };
 
-  const replayBackgroundMusic = () => setTimeout(
-    () => backgroundMusic.play(), ROOM.WAITING_SOUND_TIME_MS,
-  );
-
-  const notifyEndGame = ({ isOwner }) => {
-    if (isOwner) socket.emitReadyRoom(roomId);
+  const replayBackgroundMusic = () => {
+    timerId.current = setTimeout(() => backgroundMusic.play(), ROOM.WAITING_SOUND_TIME_MS);
   };
 
-  const goToLobby = () => history.goBack();
+  const toggleSound = () => {
+    setSoundOn(!isSoundOn);
+    backgroundMusic.muted = !backgroundMusic.muted;
+    buttonClickSound.muted = !buttonClickSound.muted;
+    gameStartSound.muted = !gameStartSound.muted;
+    gameEndSound.muted = !gameEndSound.muted;
+  };
 
   useEffect(() => {
     backgroundMusic.autoplay = true;
@@ -59,8 +60,8 @@ const Room = () => {
     socket.emitEnterRoom(roomId);
     socket.onStartGame(playStartSound);
     socket.onEndGame(playEndSound);
-    socket.onGoToLobby(() => setIsValidRoom(false));
     socket.onResetGame(notifyEndGame);
+    socket.onGoToLobby(() => setIsExistRoom(false));
 
     return () => {
       backgroundMusic.pause();
@@ -69,6 +70,7 @@ const Room = () => {
       socket.offGoToLobby();
       socket.offResetGame();
       socket.emitLeaveRoom();
+      clearTimeout(timerId.current);
     };
   }, []);
 
@@ -83,7 +85,7 @@ const Room = () => {
           <ChatArea />
         </RoomWrapper>
       </Wrapper>
-      {isValidRoom ? '' : <Alert message={ROOM.MESSAGE.PATH_ERROR} closeCallback={goToLobby} />}
+      {isExistRoom ? '' : <Alert message={ROOM.MESSAGE.PATH_ERROR} closeCallback={goToLobby} />}
     </>
   );
 };

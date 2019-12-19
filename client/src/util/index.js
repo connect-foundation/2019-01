@@ -22,7 +22,7 @@ export const fetchData = async (method, path, body) => {
   return data.json();
 };
 
-export const AmIAdmin = async () => {
+export const amIAdmin = async () => {
   const { result } = await fetchData('get', URL.ADMIN.IAM);
   return result;
 };
