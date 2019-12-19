@@ -31,12 +31,14 @@ class Room {
     this.currentQuiz = {};
     this.currentRound = 0;
     this.users = new Map();
-    this.indexOfUsers = this._getEmptyIndexMatrix();
+    this.indexOfUsers = this._makeEmptyIndexMatrix();
     this.nicknameList = [];
     this.aliveUsers = new Map();
     this.moveQueue = [];
     this.isMoveLock = false;
   }
+
+  // 외부에서 사용되는 method
 
   getId() {
     return this.id;
@@ -48,17 +50,6 @@ class Room {
 
   isStarted() {
     return this.isGameStarted;
-  }
-
-  async _fetchRandomNickname() {
-    const adjList = await nicknameFinder.fetchAdjList();
-    const nounList = await nicknameFinder.fetchNounList();
-    const smallLength = adjList.length > nounList.length ? nounList.length : adjList.length;
-
-    for (let idx = 0; idx < smallLength; idx += 1) {
-      const nickname = `${adjList[idx].adj} ${nounList[idx].noun}`;
-      this.nicknameList.push(nickname);
-    }
   }
 
   /**
@@ -84,21 +75,7 @@ class Room {
     return this.users.has(user.getNickname());
   }
 
-  _broadcastPlayerNum() {
-    const data = {
-      numOfPlayer: this.aliveUsers.size,
-      numOfViewer: this.users.size - this.aliveUsers.size,
-    };
-    this.users.forEach((user) => user.emitUpdatePlayerNum(data));
-  }
-
-  _lockMove() {
-    this.isMoveLock = true;
-  }
-
-  _unlockMove() {
-    this.isMoveLock = false;
-  }
+  // 외부에서 사용되는 게임 logic method
 
   /**
    * @param {User} user
@@ -118,69 +95,9 @@ class Room {
       user.setNickname(this.nicknameList.shift());
     }
     this._acceptUser(user);
-    this._broadcastNewUser(user);
     this._sendAllUsers(user);
+    this._broadcastNewUser(user);
     this._broadcastPlayerNum();
-  }
-
-  /**
-   * @param {User} user
-   */
-  _acceptUser(user) {
-    const nickname = user.getNickname();
-    user.setRoomId(this.id);
-    this.users.set(nickname, user);
-    this.aliveUsers.set(nickname, user);
-  }
-
-  /**
-   * @param {User} user
-   */
-  _broadcastNewUser(user) {
-    const [indexX, indexY] = user.getIndexes();
-    const newUser = {
-      isMine: false,
-      nickname: user.getNickname(),
-      url: user.getCharacterUrl(),
-      indexX,
-      indexY,
-    };
-
-    this.users.forEach((_user) => {
-      if (user === _user) return;
-      _user.emitEnterNewUser({ characterList: [newUser] });
-    });
-  }
-
-  /**
-   * @param {User} user
-   */
-  _sendAllUsers(user) {
-    const characterList = this._makeCharacterList(user.getId());
-    user.emitEnterRoom({
-      characterList,
-      isOwner: this._isOwner(user),
-      roomName: this.name,
-    });
-  }
-
-  /**
-   * @param {string} userId
-   */
-  _makeCharacterList(userId) {
-    const characterList = [];
-
-    this.users.forEach((user, nickname) => {
-      if (user.isPlaced() === false) return;
-      const [indexX, indexY] = user.getIndexes();
-      const isMine = userId === user.getId();
-      const url = user.getCharacterUrl();
-      characterList.push({
-        isMine, nickname, url, indexX, indexY,
-      });
-    });
-
-    return characterList;
   }
 
   /**
@@ -192,34 +109,6 @@ class Room {
     this._broadcastLeaveUser(nickname);
     user.emitLeaveRoom();
     this._broadcastPlayerNum();
-  }
-
-  /**
-   * @param {User} user
-   * @param {string} nickname
-   */
-  _deleteUser(user, nickname) {
-    if (user.isPlaced()) {
-      const [indexX, indexY] = user.getIndexes();
-      this.indexOfUsers[indexX][indexY] = undefined;
-      user.deleteCharacterInfo();
-    }
-
-    this.nicknameList.push(nickname);
-    this.users.delete(nickname);
-    this.aliveUsers.delete(nickname);
-    user.deleteRoomId();
-  }
-
-  /**
-   * @param {string} nickname
-   */
-  _broadcastLeaveUser(nickname) {
-    const isAlive = this.aliveUsers.has(nickname);
-    const characterList = [{ nickname, isAlive }];
-    this.users.forEach((_user) => {
-      _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
-    });
   }
 
   /**
@@ -256,22 +145,6 @@ class Room {
     if (this.moveQueue.length > 0) {
       this.moveUser(this.moveQueue.shift());
     }
-  }
-
-  /**
-   * @param {User} user
-   * @param {number} direction
-   */
-  _turnUser(user, direction) {
-    this.moveQueue.push({ user, direction, isLoop: false });
-  }
-
-  /**
-   * @param {User} user
-   * @param {number} direction
-   */
-  _knockBackUser(user, direction) {
-    this.moveQueue.push({ user, direction, isLoop: true });
   }
 
   /**
@@ -314,20 +187,6 @@ class Room {
   }
 
   /**
-   * @param {Array.<number>} oldIndexes
-   * @param {Array.<number>} newIndexes
-   * @param {User} user
-   */
-  _updateIndexes(oldIndexes, newIndexes, user) {
-    const [oldIndexX, oldIndexY] = oldIndexes;
-    const [newIndexX, newIndexY] = newIndexes;
-
-    this.indexOfUsers[oldIndexX][oldIndexY] = undefined;
-    this.indexOfUsers[newIndexX][newIndexY] = user;
-    user.setIndexes(newIndexX, newIndexY);
-  }
-
-  /**
    * @param {User} user
    * @param {string} message
    */
@@ -335,6 +194,8 @@ class Room {
     const nickname = user.getNickname();
     this.users.forEach((_user) => _user.emitChatMessage({ nickname, message }));
   }
+
+  // 내부에서 사용되는 게임 logic method
 
   _startRound() {
     if (this.aliveUsers.size === 0) {
@@ -350,44 +211,6 @@ class Room {
     this._broadcastStartRound();
     this._broadcastPlayerNum();
     setTimeout(() => this._endRound(), ROOM.TIME_LIMIT * ROOM.SECOND_MS);
-  }
-
-  _resurrectAllUser() {
-    this.aliveUsers = new Map(this.users);
-  }
-
-  _prepareForNewRound() {
-    this.currentQuiz = this.quizList[this.currentRound];
-  }
-
-  _broadcastStartRound() {
-    const characterList = this._teleportUsers(this.aliveUsers);
-    const { question } = this.currentQuiz;
-    const timeLimit = ROOM.TIME_LIMIT;
-
-    this.users.forEach((user) => user.emitStartRound({
-      question, timeLimit, characterList,
-    }));
-  }
-
-  /**
-   * @param {Map.<string, User>} users
-   * @returns {Array.<Object>}
-   */
-  _teleportUsers(users) {
-    this._lockMove();
-    this.indexOfUsers = this._getEmptyIndexMatrix();
-
-    const characterList = [];
-    users.forEach((user, nickname) => {
-      const [indexX, indexY] = this._placeUser(user);
-      characterList.push({ nickname, indexX, indexY });
-    });
-
-    this._clearMoveQueue();
-    this._unlockMove();
-
-    return characterList;
   }
 
   _endRound() {
@@ -416,21 +239,33 @@ class Room {
     setTimeout(() => this._startNextRound(), ROOM.WAITING_TIME_MS);
   }
 
-  /**
-   * @param {Array.<Object>} dropUsers
-   */
-  _broadcastEndRound(dropUsers) {
-    const { comment, answer } = this.currentQuiz;
-    const endRoundInfos = { comment, answer, characterList: dropUsers };
+  _prepareForNewRound() {
+    this.currentQuiz = this.quizList[this.currentRound];
+  }
 
-    this.users.forEach((user) => user.emitEndRound(endRoundInfos));
+  _startNextRound() {
+    this.currentRound += 1;
+    this._startRound();
   }
 
   /**
-   * @param {Array.<Object>} dropUsers
+   * @param {Map.<string, User>} winners
    */
-  _killUser(dropUsers) {
-    dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
+  _endGame(winners) {
+    this._broadcastEndGame(winners);
+    this._broadcastPlayerNum();
+    setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
+  }
+
+  _resetGame() {
+    this._broadcastResetGame();
+    this._resetGameData();
+    this._broadcastPlayerNum();
+  }
+
+  _resetGameData() {
+    this.isGameStarted = false;
+    this.aliveUsers = new Map(this.users);
   }
 
   /**
@@ -447,9 +282,205 @@ class Room {
     return this.currentRound === ROOM.MAX_ROUND;
   }
 
-  _startNextRound() {
-    this.currentRound += 1;
-    this._startRound();
+  async _fetchRandomNickname() {
+    const adjList = await nicknameFinder.fetchAdjList();
+    const nounList = await nicknameFinder.fetchNounList();
+    const smallLength = adjList.length > nounList.length ? nounList.length : adjList.length;
+
+    for (let idx = 0; idx < smallLength; idx += 1) {
+      const nickname = `${adjList[idx].adj} ${nounList[idx].noun}`;
+      this.nicknameList.push(nickname);
+    }
+  }
+
+  /**
+   * @param {User} user
+   * @returns {Array.<number>}
+   */
+  _placeUser(user) {
+    this._lockMove();
+    const [indexX, indexY] = this._makeRandomIndexes();
+    user.setIndexes(indexX, indexY);
+    this.indexOfUsers[indexX][indexY] = user;
+    this._clearMoveQueue();
+    this._unlockMove();
+    return [indexX, indexY];
+  }
+
+  /**
+   * @param {User} user
+   */
+  _acceptUser(user) {
+    const nickname = user.getNickname();
+    user.setRoomId(this.id);
+    this.users.set(nickname, user);
+    this.aliveUsers.set(nickname, user);
+  }
+
+  /**
+   * @param {User} user
+   */
+  _sendAllUsers(user) {
+    const characterList = this._makeCharacterList(user.getId());
+    user.emitEnterRoom({
+      characterList,
+      isOwner: this._isOwner(user),
+      roomName: this.name,
+    });
+  }
+
+  /**
+   * @param {User} user
+   * @param {string} nickname
+   */
+  _deleteUser(user, nickname) {
+    if (user.isPlaced()) {
+      const [indexX, indexY] = user.getIndexes();
+      this.indexOfUsers[indexX][indexY] = undefined;
+      user.deleteCharacterInfo();
+    }
+
+    this.nicknameList.push(nickname);
+    this.users.delete(nickname);
+    this.aliveUsers.delete(nickname);
+    user.deleteRoomId();
+  }
+
+  /**
+   * @param {User} user
+   * @param {number} direction
+   */
+  _turnUser(user, direction) {
+    this.moveQueue.push({ user, direction, isLoop: false });
+  }
+
+  /**
+   * @param {User} user
+   * @param {number} direction
+   */
+  _knockBackUser(user, direction) {
+    this.moveQueue.push({ user, direction, isLoop: true });
+  }
+
+  _resurrectAllUser() {
+    this.aliveUsers = new Map(this.users);
+  }
+
+  /**
+   * @param {Map.<string, User>} users
+   * @returns {Array.<Object>}
+   */
+  _teleportUsers(users) {
+    this._lockMove();
+    this.indexOfUsers = this._makeEmptyIndexMatrix();
+
+    const characterList = [];
+    users.forEach((user, nickname) => {
+      const [indexX, indexY] = this._placeUser(user);
+      characterList.push({ nickname, indexX, indexY });
+    });
+
+    this._clearMoveQueue();
+    this._unlockMove();
+
+    return characterList;
+  }
+
+  /**
+   * @param {Array.<Object>} dropUsers
+   */
+  _killUser(dropUsers) {
+    dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
+  }
+
+  /**
+   * @param {User} user
+   */
+  _broadcastNewUser(user) {
+    const [indexX, indexY] = user.getIndexes();
+    const newUser = {
+      isMine: false,
+      nickname: user.getNickname(),
+      url: user.getCharacterUrl(),
+      indexX,
+      indexY,
+    };
+
+    this.users.forEach((_user) => {
+      if (user === _user) return;
+      _user.emitEnterNewUser({ characterList: [newUser] });
+    });
+  }
+
+  _broadcastPlayerNum() {
+    const data = {
+      numOfPlayer: this.aliveUsers.size,
+      numOfViewer: this.users.size - this.aliveUsers.size,
+    };
+    this.users.forEach((user) => user.emitUpdatePlayerNum(data));
+  }
+
+  /**
+   * @param {string} nickname
+   */
+  _broadcastLeaveUser(nickname) {
+    const isAlive = this.aliveUsers.has(nickname);
+    const characterList = [{ nickname, isAlive }];
+    this.users.forEach((_user) => {
+      _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
+    });
+  }
+
+  _broadcastStartRound() {
+    const characterList = this._teleportUsers(this.aliveUsers);
+    const { question } = this.currentQuiz;
+    const timeLimit = ROOM.TIME_LIMIT;
+
+    this.users.forEach((user) => user.emitStartRound({
+      question, timeLimit, characterList,
+    }));
+  }
+
+  /**
+   * @param {Array.<Object>} dropUsers
+   */
+  _broadcastEndRound(dropUsers) {
+    const { comment, answer } = this.currentQuiz;
+    const endRoundInfos = { comment, answer, characterList: dropUsers };
+
+    this.users.forEach((user) => user.emitEndRound(endRoundInfos));
+  }
+
+  /**
+   * @param {Map.<string, User>} winners
+   */
+  _broadcastEndGame(winners) {
+    const newWinners = winners.size === 0 ? this.users : winners;
+    const characterList = this._teleportUsers(newWinners);
+
+    this.users.forEach((user) => user.emitEndGame({ characterList }));
+  }
+
+  _broadcastResetGame() {
+    const characterList = this._teleportUsers(this.users);
+    this.users.forEach((user) => {
+      const isOwner = this._isOwner(user);
+      user.emitResetGame({ characterList, isOwner });
+    });
+  }
+
+  /**
+   * @param {Array.<number>} oldIndexes
+   * @param {Array.<number>} newIndexes
+   * @param {User} user
+   */
+  _updateIndexes(oldIndexes, newIndexes, user) {
+    const [oldIndexX, oldIndexY] = oldIndexes;
+    const [newIndexX, newIndexY] = newIndexes;
+
+    this.indexOfUsers[oldIndexX][oldIndexY] = undefined;
+    this.indexOfUsers[newIndexX][newIndexY] = user;
+    user.setIndexes(newIndexX, newIndexY);
   }
 
   /**
@@ -479,64 +510,31 @@ class Room {
   }
 
   /**
-   * @param {Map.<string, User>} winners
-   */
-  _endGame(winners) {
-    this._broadcastEndGame(winners);
-    this._broadcastPlayerNum();
-    setTimeout(() => this._resetGame(), ROOM.WAITING_TIME_MS);
-  }
-
-  /**
-   * @param {Map.<string, User>} winners
-   */
-  _broadcastEndGame(winners) {
-    const newWinners = winners.size === 0 ? this.users : winners;
-    const characterList = this._teleportUsers(newWinners);
-
-    this.users.forEach((user) => user.emitEndGame({ characterList }));
-  }
-
-  _resetGame() {
-    this._broadcastResetGame();
-    this._resetGameData();
-    this._broadcastPlayerNum();
-  }
-
-  _broadcastResetGame() {
-    const characterList = this._teleportUsers(this.users);
-    this.users.forEach((user) => {
-      const isOwner = this._isOwner(user);
-      user.emitResetGame({ characterList, isOwner });
-    });
-  }
-
-  _resetGameData() {
-    this.isGameStarted = false;
-    this.aliveUsers = new Map(this.users);
-  }
-
-  /**
-   * @param {User} user
-   * @returns {Array.<number>}
-   */
-  _placeUser(user) {
-    this._lockMove();
-    const [indexX, indexY] = this._makeRandomIndexes();
-    user.setIndexes(indexX, indexY);
-    this.indexOfUsers[indexX][indexY] = user;
-    this._clearMoveQueue();
-    this._unlockMove();
-    return [indexX, indexY];
-  }
-
-  /**
    * @param {User} user
    * @returns {Boolean}
    */
   _isOwner(user) {
     const ownerNickname = this.users.keys().next().value;
     return ownerNickname === user.getNickname();
+  }
+
+  /**
+   * @param {string} userId
+   */
+  _makeCharacterList(userId) {
+    const characterList = [];
+
+    this.users.forEach((user, nickname) => {
+      if (user.isPlaced() === false) return;
+      const [indexX, indexY] = user.getIndexes();
+      const isMine = userId === user.getId();
+      const url = user.getCharacterUrl();
+      characterList.push({
+        isMine, nickname, url, indexX, indexY,
+      });
+    });
+
+    return characterList;
   }
 
   /**
@@ -552,7 +550,7 @@ class Room {
   /**
    * @returns {Array.<Array.<User>>}
    */
-  _getEmptyIndexMatrix() {
+  _makeEmptyIndexMatrix() {
     return Array(ROOM.FIELD_COLUMN).fill().map(() => Array(ROOM.FIELD_ROW));
   }
 
@@ -602,6 +600,14 @@ class Room {
         && this._isOwner(user)
         && this.isGameStarted === false
     );
+  }
+
+  _lockMove() {
+    this.isMoveLock = true;
+  }
+
+  _unlockMove() {
+    this.isMoveLock = false;
   }
 
   _clearMoveQueue() {
