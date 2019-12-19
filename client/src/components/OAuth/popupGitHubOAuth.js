@@ -1,6 +1,5 @@
 import OAUTH from '../../constants/oauth';
-
-const isFunction = (callback) => typeof callback === 'function';
+import { isFunction } from '../../util';
 
 const popupGitHubOAuth = (OAuthUrl, callback) => {
   const width = OAUTH.POPUP.WIDTH;

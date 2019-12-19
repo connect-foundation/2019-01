@@ -1,38 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import {
-  UserBodyWrapper, UserTable, UserTh, UserThead, UserTbody, UserTr,
-} from './style';
+import React, { useState, useEffect, useRef } from 'react';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import UserRow from './Row';
-import fetchData from '../util';
+import CustomSnackbar from '../CustomSnackbar';
+import { fetchData } from '../../../util';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const UserCategory = () => {
-  const [userData, setUserData] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [fetchResult, setFetchResult] = useState(false);
+  const timerId = useRef(null);
+
+  const openSnackbar = (result) => {
+    setOpen(true);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setOpen(false), ADMIN.SNACKBAR_TIME_MS);
+  };
 
   const makeNewRow = (userList) => {
-    const userTagList = userList.map((user) => <UserRow user={user} />);
+    const userTagList = userList.map((user) => (
+      <UserRow key={user.github_id} user={user} openSnackbar={openSnackbar} />));
     setUserData(userTagList);
   };
 
   useEffect(() => {
     fetchData('get', URL.ADMIN.USER_LIST)
       .then((res) => makeNewRow(res.userList));
+    return () => clearTimeout(timerId.current);
   }, []);
 
   return (
-    <UserBodyWrapper>
-      <UserTable>
-        <UserThead>
-          <UserTr>
-            <UserTh>github_id</UserTh>
-            <UserTh>is_Admin</UserTh>
-          </UserTr>
-        </UserThead>
-        <UserTbody>
-          {userData}
-        </UserTbody>
-      </UserTable>
-    </UserBodyWrapper>
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>GitHub ID</TableCell>
+            <TableCell>ADMIN</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{userData}</TableBody>
+      </Table>
+      <CustomSnackbar open={open} result={fetchResult} />
+    </>
   );
 };
 

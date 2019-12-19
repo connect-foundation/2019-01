@@ -1,5 +1,5 @@
 import React from 'react';
-import { NicknameBodyWrapper } from './style';
+import { NicknameBodyWrapper } from '../style';
 import Nickname from './Nickname';
 
 const NicknameCategory = () => (

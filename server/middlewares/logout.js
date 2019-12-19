@@ -3,7 +3,7 @@ const githubLogout = async (req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3006');
 
   res.header('Access-Control-Allow-Credentials', true);
-  res.clearCookie('jwt');
+  res.clearCookie('_jwt');
   return next();
 };
 

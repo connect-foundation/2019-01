@@ -2,7 +2,7 @@ import { query, preparedStatement } from './util';
 /* eslint-disable */
 export default {
     fetchRandomCharacter: async() => await query(`SELECT url FROM Image WHERE category='character' ORDER BY RAND() LIMIT 1;`),
-    fetchAllImages: async() => await query(`SELECT * FROM Image;`),
+    fetchAllImages: async() => await query(`SELECT id, category, name, url FROM Image;`),
     add: async(category, name, url) => await preparedStatement(
         `INSERT INTO Image (category, name, url) VALUES (?,?,?);`, 
         category, name, url),

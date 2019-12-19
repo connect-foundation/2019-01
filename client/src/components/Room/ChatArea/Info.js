@@ -19,7 +19,7 @@ const Info = () => {
     socket.emitLeaveRoom();
   };
 
-  const enterLobby = () => history.replace('/lobby');
+  const goToLobby = () => history.goBack();
 
   const updatePlayerNum = (data) => {
     setNumOfPlayer(data.numOfPlayer);
@@ -30,7 +30,7 @@ const Info = () => {
     socket.onUpdatePlayerNum(updatePlayerNum);
     socket.onStartGame(inactiveExitButton);
     socket.onResetGame(activeExitButton);
-    socket.onLeaveRoom(enterLobby);
+    socket.onLeaveRoom(goToLobby);
 
     return () => {
       socket.offUpdatePlayerNum();

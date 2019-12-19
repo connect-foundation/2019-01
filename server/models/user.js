@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import EVENT from '../constants/socket-event';
 import { isFunction } from '../util';
 import imageFinder from '../database/image';
@@ -109,143 +110,157 @@ class User {
     return this.roomId;
   }
 
+  setRoomId(roomId) {
+    this.roomId = roomId;
+  }
+
+  deleteRoomId() {
+    this.roomId = null;
+  }
+
+  isConnected() {
+    return this.socket !== undefined && this.socket.connected;
+  }
+
   /**
    *
+   * @param {string} eventName
    * @param {Function} callback
    */
-  onEnterLobby(callback) {
+  _on(eventName, callback) {
+    if (this.socket === undefined) return;
     if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.ENTER_LOBBY, () => {
-      callback();
-      this.roomId = null;
+    this.socket.on(eventName, (data) => {
+      console.log('on fire', eventName);
+      callback(data);
     });
+  }
+
+  onEnterLobby(callback) {
+    this._on(EVENT.ENTER_LOBBY, callback);
   }
 
   onKnockRoom(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.KNOCK_ROOM, (roomId) => {
-      callback(roomId);
-      this.roomId = null;
-    });
+    this._on(EVENT.KNOCK_ROOM, callback);
   }
 
   onEnterRoom(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.ENTER_ROOM, (roomId) => {
-      callback(roomId);
-      this.roomId = roomId;
-    });
+    this._on(EVENT.ENTER_ROOM, callback);
   }
 
   onCreateRoom(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.CREATE_ROOM, (roomName) => callback(roomName));
+    this._on(EVENT.CREATE_ROOM, callback);
   }
 
   onLeaveRoom(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.LEAVE_ROOM, () => {
-      callback();
-      this.roomId = null;
-    });
+    this._on(EVENT.LEAVE_ROOM, callback);
   }
 
   onStartGame(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.START_GAME, () => callback());
+    this._on(EVENT.START_GAME, callback);
   }
 
   onReadyRoom(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.READY_ROOM, (roomId) => callback(roomId));
+    this._on(EVENT.READY_ROOM, callback);
   }
 
   onMove(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.MOVE, (direction) => callback(direction));
+    this._on(EVENT.MOVE, callback);
   }
 
   onUseSkill(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.USE_SKILL, (direction) => callback(direction));
+    this._on(EVENT.USE_SKILL, callback);
   }
 
   onChatMessage(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.CHAT_MESSAGE, (message) => callback(message));
+    this._on(EVENT.CHAT_MESSAGE, callback);
   }
 
   onDisconnecting(callback) {
-    if (isFunction(callback) === false) return;
-    this.socket.on(EVENT.DISCONNECT, () => callback());
+    this._on(EVENT.DISCONNECT, callback);
+  }
+
+  /**
+   *
+   * @param {string} eventName
+   * @param {*} data
+   */
+  _emit(eventName, data) {
+    if (this.isConnected() === false) return;
+    this.socket.emit(eventName, data);
+    console.log('emit', eventName);
   }
 
   emitEnterLobby(data) {
-    this.socket.emit(EVENT.ENTER_LOBBY, data);
+    this._emit(EVENT.ENTER_LOBBY, data);
   }
 
   emitCreateRoom(data) {
-    this.socket.emit(EVENT.CREATE_ROOM, data);
+    this._emit(EVENT.CREATE_ROOM, data);
   }
 
   emitRoomIsCreated(data) {
-    this.socket.emit(EVENT.ROOM_IS_CREATED, data);
+    this._emit(EVENT.ROOM_IS_CREATED, data);
   }
 
   emitUpdateRoomInfo(data) {
-    this.socket.emit(EVENT.UPDATE_ROOM_INFO, data);
+    this._emit(EVENT.UPDATE_ROOM_INFO, data);
   }
 
   emitKnockRoom(data) {
-    this.socket.emit(EVENT.KNOCK_ROOM, data);
+    this._emit(EVENT.KNOCK_ROOM, data);
   }
 
   emitEnterRoom(data) {
-    this.socket.emit(EVENT.ENTER_ROOM, data);
+    this._emit(EVENT.ENTER_ROOM, data);
   }
 
   emitEnterNewUser(data) {
-    this.socket.emit(EVENT.ENTER_NEW_USER, data);
+    this._emit(EVENT.ENTER_NEW_USER, data);
   }
 
   emitLeaveUser(data) {
-    this.socket.emit(EVENT.LEAVE_USER, data);
+    this._emit(EVENT.LEAVE_USER, data);
   }
 
   emitStartRound(data) {
-    this.socket.emit(EVENT.START_ROUND, data);
+    this._emit(EVENT.START_ROUND, data);
   }
 
   emitEndRound(data) {
-    this.socket.emit(EVENT.END_ROUND, data);
+    this._emit(EVENT.END_ROUND, data);
   }
 
   emitEndGame(data) {
-    this.socket.emit(EVENT.END_GAME, data);
+    this._emit(EVENT.END_GAME, data);
   }
 
   emitResetGame(data) {
-    this.socket.emit(EVENT.RESET_GAME, data);
+    this._emit(EVENT.RESET_GAME, data);
   }
 
   emitMove(data) {
-    this.socket.emit(EVENT.MOVE, data);
+    this._emit(EVENT.MOVE, data);
   }
 
   emitChatMessage(data) {
-    this.socket.emit(EVENT.CHAT_MESSAGE, data);
+    this._emit(EVENT.CHAT_MESSAGE, data);
   }
 
   emitStartGame() {
-    this.socket.emit(EVENT.START_GAME);
+    this._emit(EVENT.START_GAME);
   }
 
   emitLeaveRoom() {
-    this.socket.emit(EVENT.LEAVE_ROOM);
+    this._emit(EVENT.LEAVE_ROOM);
+  }
+
+  emitGoToLobby() {
+    this._emit(EVENT.GO_TO_LOBBY);
   }
 
   emitUpdatePlayerNum(data) {
-    this.socket.emit(EVENT.UPDATE_PLAYER_NUM, data);
+    this._emit(EVENT.UPDATE_PLAYER_NUM, data);
   }
 }
 

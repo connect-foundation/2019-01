@@ -3,8 +3,8 @@ const clientSecret = process.env.NODE_ENV === 'production' ? process.env.PRODUCT
 
 const URL = {
   LOCAL_ORIGIN: 'http://localhost:3006/',
-  LOCAL_REACT_OAUTH: 'http://localhost:3006/OAuth',
-  PRODUCTION_REACT_OAUTH: '/OAuth',
+  LOCAL_REACT_OAUTH: 'http://localhost:3006/oauth',
+  PRODUCTION_REACT_OAUTH: '/oauth',
   LOCAL_REACT_LOBBY: 'http://localhost:3006/lobby',
   PRODUCTION_REACT_LOBBY: '/lobby',
   GET_ACCESS_TOKEN: (requestToken) => `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${requestToken}`,

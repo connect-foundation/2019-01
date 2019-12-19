@@ -2,13 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import {} from 'dotenv/config';
 import cookie from 'cookie';
 import socket from '../../modules/socket';
 import RoomInfoButton from './RoomInfoButton';
 import GitHubLoginButton from './GitHubLoginButton';
 import RoomCreateModal from './RoomCreateModal';
-import RoomEnterAlert from './RoomEnterAlert';
+import Alert from '../Alert';
 import {
   LobbyWrapper, LobbyHeader, LobbyBody, LobbyNickname, CreateRoomButton,
 } from './style';
@@ -42,16 +41,17 @@ const Lobby = () => {
 
   const openRoomCreateModal = () => setModalOpen(true);
 
-  const getNicknameFromJwt = () => {
+  const getGithubIdFromJwt = () => {
     const cookies = cookie.parse(document.cookie);
-    if (cookies.jwt === undefined) return undefined;
-    const userInfo = jwt.verify(cookies.jwt, privateKey, { algorithm });
-    if (userInfo === undefined || userInfo.id === undefined) return undefined;
-    return userInfo.id;
+    const { _jwt } = cookies;
+    if (_jwt === undefined) return undefined;
+    const userInfo = jwt.verify(_jwt, privateKey, { algorithm });
+    if (userInfo === undefined) return undefined;
+    return userInfo.githubId;
   };
 
   const enterCreatedRoom = (roomId) => {
-    history.replace(`/room/${roomId}`);
+    history.push(`/room/${roomId}`);
   };
 
   const updateCreatedRoom = (createdRoomInfo) => {
@@ -93,7 +93,7 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const githubId = socket.isGuest() ? undefined : getNicknameFromJwt();
+    const githubId = socket.isGuest() ? undefined : getGithubIdFromJwt();
 
     if (githubId !== undefined) {
       setUserName(githubId);
@@ -134,7 +134,7 @@ const Lobby = () => {
       </LobbyWrapper>
       {isModalOpen ? <RoomCreateModal setOpen={setModalOpen} /> : ''}
       {isAlertOpen
-        ? <RoomEnterAlert message={alertMessage} closeAlert={() => setAlertOpen(false)} />
+        ? <Alert message={alertMessage} closeCallback={() => setAlertOpen(false)} />
         : ''}
     </>
   );

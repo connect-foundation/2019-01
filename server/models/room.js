@@ -120,8 +120,12 @@ class Room {
    * @param {User} user
    */
   async enterUser(user) {
-    this._placeUser(user);
+    if (this.isGameStarted) {
+      user.emitGoToLobby();
+      return;
+    }
 
+    this._placeUser(user);
     if (this.nicknameList.length === 0) {
       await this._fetchRandomNickname();
     }
@@ -129,7 +133,6 @@ class Room {
     if (user.isGuest()) {
       user.setNickname(this.nicknameList.shift());
     }
-
     this._acceptUser(user);
     this._broadcastNewUser(user);
     this._sendAllUsers(user);
@@ -137,8 +140,10 @@ class Room {
   }
 
   _acceptUser(user) {
-    this.users.set(user.getNickname(), user);
-    this.aliveUsers.set(user.getNickname(), user);
+    const nickname = user.getNickname();
+    user.setRoomId(this.id);
+    this.users.set(nickname, user);
+    this.aliveUsers.set(nickname, user);
   }
 
   _broadcastNewUser(user) {
@@ -195,6 +200,7 @@ class Room {
     this.nicknameList.push(nickname);
     this.users.delete(nickname);
     this.aliveUsers.delete(nickname);
+    user.deleteRoomId();
   }
 
   _broadcastLeaveUser(nickname) {
