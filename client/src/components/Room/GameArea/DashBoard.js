@@ -72,16 +72,8 @@ const DashBoard = ({ buttonClickSound }) => {
     setCounter('--');
   };
 
-  const enterRoom = ({
-    question, isGameStarted, timeLimit, isOwner,
-  }) => {
-    if (question !== undefined) setNotice(question);
-    if (isGameStarted !== undefined) setGameStarted(isGameStarted);
+  const enterRoom = ({ isOwner }) => {
     if (isOwner !== undefined) setOwner(isOwner);
-    if (isGameStarted && timeLimit > 0) {
-      setCounter(timeLimit);
-      startCounter();
-    }
   };
 
   const leaveUser = ({ isOwner }) => {
