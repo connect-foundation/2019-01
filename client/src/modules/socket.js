@@ -18,6 +18,10 @@ class SocketContainer {
     return this.guest;
   }
 
+  isConnected() {
+    return this.socket !== undefined && this.socket.connected;
+  }
+
   connect(query) {
     this.socket = (
       process.env.NODE_ENV === 'production'
@@ -29,10 +33,6 @@ class SocketContainer {
         }));
   }
 
-  isConnected() {
-    return this.socket !== undefined && this.socket.connected;
-  }
-
   disconnect() {
     if (this.isConnected()) this.socket.disconnect();
   }
@@ -42,28 +42,27 @@ class SocketContainer {
     this.socket.emit(eventName, data);
   }
 
-  emitCreateRoom(roomName) {
-    this._emit(EVENT.CREATE_ROOM, roomName);
+  _on(eventName, callback) {
+    if (this.socket === undefined) return;
+    if (isFunction(callback) === false) return;
+    this.socket.on(eventName, (data) => callback(data));
   }
 
-  emitStartGame() {
-    this._emit(EVENT.START_GAME);
-  }
-
-  emitReadyRoom(roomId) {
-    this._emit(EVENT.READY_ROOM, roomId);
-  }
-
-  emitMove(direction) {
-    this._emit(EVENT.MOVE, direction);
-  }
-
-  emitUseSkill(direction) {
-    this._emit(EVENT.USE_SKILL, direction);
+  _off(eventName) {
+    if (this.socket === undefined) return;
+    this.socket.off(eventName);
   }
 
   emitEnterLobby() {
     this._emit(EVENT.ENTER_LOBBY, undefined, false);
+  }
+
+  emitCreateRoom(roomName) {
+    this._emit(EVENT.CREATE_ROOM, roomName);
+  }
+
+  emitReadyRoom(roomId) {
+    this._emit(EVENT.READY_ROOM, roomId);
   }
 
   emitKnockRoom(roomId) {
@@ -78,14 +77,20 @@ class SocketContainer {
     this._emit(EVENT.LEAVE_ROOM);
   }
 
-  emitChatMessage(message) {
-    this._emit(EVENT.CHAT_MESSAGE, message);
+  emitStartGame() {
+    this._emit(EVENT.START_GAME);
   }
 
-  _on(eventName, callback) {
-    if (this.socket === undefined) return;
-    if (isFunction(callback) === false) return;
-    this.socket.on(eventName, (data) => callback(data));
+  emitMove(direction) {
+    this._emit(EVENT.MOVE, direction);
+  }
+
+  emitUseSkill(direction) {
+    this._emit(EVENT.USE_SKILL, direction);
+  }
+
+  emitChatMessage(message) {
+    this._emit(EVENT.CHAT_MESSAGE, message);
   }
 
   onEnterLobby(callback) {
@@ -166,11 +171,6 @@ class SocketContainer {
 
   onUpdatePlayerNum(callback) {
     this._on(EVENT.UPDATE_PLAYER_NUM, callback);
-  }
-
-  _off(eventName) {
-    if (this.socket === undefined) return;
-    this.socket.off(eventName);
   }
 
   offEnterLobby() {

@@ -43,14 +43,17 @@ const Lobby = () => {
 
   const makeRoomInfoButton = ({
     id, name, numOfUsers, isEnterable,
-  }) => (
-    <RoomInfoButton
-      key={id}
-      name={name}
-      numOfUsers={numOfUsers}
-      enterable={isEnterable}
-      onClick={socket.emitKnockRoom(id)} />
-  );
+  }) => {
+    const onClick = () => socket.emitKnockRoom(id);
+    return (
+      <RoomInfoButton
+        key={id}
+        name={name}
+        numOfUsers={numOfUsers}
+        enterable={isEnterable}
+        onClick={onClick} />
+    );
+  };
 
   const addRoom = (newRoomInfo) => {
     roomInfos.set(newRoomInfo.id, newRoomInfo);
