@@ -41,9 +41,6 @@ app.use((err, req, res, next) => {
   res.send({ result: false, message: err.message });
 });
 
-socketIo.on('connection', (socket) => {
-  console.log('a user connected');
-  controller.connectUser(socket);
-});
+socketIo.on('connection', (socket) => controller.connectUser(socket));
 
 export default { app, socketIo };

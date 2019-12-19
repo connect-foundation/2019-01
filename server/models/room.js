@@ -118,6 +118,7 @@ class Room {
     if (user.isGuest()) {
       user.setNickname(this.nicknameList.shift());
     }
+    user.setRoomId(this.id);
     this.users.set(user.getNickname(), user);
 
     const myCharacter = user.getCharacter();
@@ -168,17 +169,17 @@ class Room {
       this.indexOfCharacters[indexX][indexY] = undefined;
       user.deleteCharacter();
     }
-    this.nicknameList.push(user.getNickname());
-
-    this.users.delete(user.getNickname());
     const nickname = user.getNickname();
+    this.nicknameList.push(nickname);
+    this.users.delete(nickname);
+    this.aliveUsers.delete(nickname);
+    user.deleteRoomId();
     const isAlive = this.aliveUsers.has(nickname);
     const characterList = [{ nickname, isAlive }];
 
     this.users.forEach((_user) => {
       _user.emitLeaveUser({ characterList, isOwner: this._isOwner(_user) });
     });
-    this.aliveUsers.delete(nickname);
     user.emitLeaveRoom();
     this._broadcastPlayerNum();
   }
