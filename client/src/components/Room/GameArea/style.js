@@ -39,6 +39,11 @@ export const CounterWrapper = styled.div`
     background-color: white;
     font-size: ${COUNTER.FONT_SIZE}px;
     ${setBorderAndRadius(COUNTER)}
+    color: ${({ counter }) => {
+    const clockColorArray = DASHBOARD.CLOCK_COLOR_ARRAY;
+    const isUrgent = counter < clockColorArray.length;
+    return isUrgent ? clockColorArray[counter] : 'black';
+  }};
 `;
 
 export const GameStartButton = styled.div`

@@ -1,9 +1,9 @@
 const ADMIN = {
+  SNACKBAR_TIME_MS: 3000,
   MESSAGE: {
     SUCCESS: 'Request Success!',
     FAILURE: 'Request Failure',
   },
-  SNACKBAR_TIME_MS: 3000,
   MODAL: {
     DEFAULT: {
       ID: 0,

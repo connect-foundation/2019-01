@@ -10,20 +10,25 @@ import socket from '../../../modules/socket';
 const RoomCreateModal = ({ setOpen }) => {
   const [roomName, setRoomName] = useState('');
 
+  const closeHandler = () => setOpen(false);
+
+  const createRoomHandler = () => {
+    const trimmedName = roomName.trim();
+    if (trimmedName.length === 0) {
+      setRoomName('');
+      return;
+    }
+    socket.emitCreateRoom(roomName);
+  };
+
   const keyInputHandler = (e) => {
     const roomNameText = e.target.value;
     const newRoomName = (
-      roomNameText.length > ROOM_INFO.NAME_MAXLENGTH
+      (roomNameText.length > ROOM_INFO.NAME_MAXLENGTH)
         ? roomNameText.slice(0, ROOM_INFO.NAME_MAXLENGTH)
         : roomNameText
     );
     setRoomName(newRoomName);
-  };
-  const closeHandler = () => setOpen(false);
-  const createRoomHandler = () => {
-    const trimmedName = roomName.trim();
-    if (trimmedName.length === 0) setRoomName('');
-    else socket.emitCreateRoom(roomName);
   };
 
   return (

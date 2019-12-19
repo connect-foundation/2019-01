@@ -30,15 +30,15 @@ const ImageModal = ({
         <TextField
           label="category"
           value={categoryValue}
-          onChange={(e) => setCategoryValue(e.target.value)} />
+          onChange={(event) => setCategoryValue(event.target.value)} />
         <TextField
           label="name"
           value={nameValue}
-          onChange={(e) => setNameValue(e.target.value)} />
+          onChange={(event) => setNameValue(event.target.value)} />
         <TextField
           label="url"
           value={urlValue}
-          onChange={(e) => setUrlValue(e.target.value)} />
+          onChange={(event) => setUrlValue(event.target.value)} />
         <ModalButtonWrapper>
           <Button
             variant="contained"

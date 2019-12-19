@@ -9,6 +9,11 @@ const Log = () => {
   const [chatList, setChatList] = useState([]);
   const logRef = useRef();
 
+  /**
+   * @param {string} nickname
+   * @param {string} message
+   * @param {number} index
+   */
   const makeChat = (nickname, message, index) => (
     <Chat key={index}>
       <ChatNickname>{nickname}: </ChatNickname>
@@ -16,6 +21,11 @@ const Log = () => {
     </Chat>
   );
 
+  /**
+   * @param {Object} param0
+   *  @param {string} param0.nickname
+   *  @param {string} param0.message
+   */
   const addChat = ({ nickname, message }) => {
     setChatList((prevChatList) => {
       const newChat = makeChat(nickname, message, prevChatList.length);
@@ -26,9 +36,7 @@ const Log = () => {
   useEffect(() => {
     socket.onChatMessage(addChat);
 
-    return () => {
-      socket.offChatMessage();
-    };
+    return () => socket.offChatMessage();
   }, []);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginPageBackground,
-  LoginGitHubButton, LoginAnonyButton, LoginGitHubText,
+  LoginGitHubButton, LoginAnonyButton, LoginGitHubText, GitHubPath,
 } from './style';
 import URL from '../../constants/url';
 import socket from '../../modules/socket';
@@ -29,7 +29,7 @@ const Login = () => {
         <LoginGitHubButton onClick={() => popupGitHubOAuth(oauthUrl, enterLobbyAsGithubUser)}>
           <GitHubIcon>
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
-            <path stroke={LOGIN.SVG_PATH.COLOR} d={LOGIN.SVG_PATH.INDEXES} />
+            <GitHubPath />
           </GitHubIcon>
           <LoginGitHubText>
             GitHub으로 로그인

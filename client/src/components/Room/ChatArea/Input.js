@@ -9,6 +9,7 @@ import socket from '../../../modules/socket';
 const Input = () => {
   const [message, setMessage] = useState('');
   const [updateMessage, setUpdateMessage] = useState(() => {});
+
   const inputRef = React.useRef();
   const canvasRef = React.useRef();
 
@@ -23,9 +24,7 @@ const Input = () => {
   };
 
   const sendMessageWithEnter = (event) => {
-    if (event.keyCode === KEYCODE.ENTER) {
-      sendMessage();
-    }
+    if (event.keyCode === KEYCODE.ENTER) sendMessage();
   };
 
   useEffect(() => {
