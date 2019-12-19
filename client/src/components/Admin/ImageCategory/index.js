@@ -14,11 +14,11 @@ import ADMIN from '../../../constants/admin';
 
 const ImageCategory = () => {
   const [ImageData, setImageData] = useState([]);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [fetchImage, setFetchImage] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [fetchImage, setFetchImage] = useState(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -27,14 +27,24 @@ const ImageCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  const fetchImageData = (fetchType) => (imageInfo) => {
+    const imageRequestMap = new Map([
+      ['edit', { fetchMethod: 'put', data: { id: imageInfo.id, data: imageInfo } }],
+      ['add', { fetchMethod: 'post', data: imageInfo }],
+    ]);
+
+    fetchData(
+      imageRequestMap.get(fetchType).fetchMethod,
+      URL.ADMIN.IMAGE,
+      imageRequestMap.get(fetchType).data,
+    )
+      .then(({ result }) => openSnackbar(result));
+  };
+
   const openEditModal = (image) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        const fetchEditData = (imageInfo) => {
-          fetchData('put', URL.ADMIN.IMAGE, { id: imageInfo.id, data: imageInfo })
-            .then(({ result }) => openSnackbar(result));
-        };
-        setFetchImage(() => fetchEditData);
+        setFetchImage(() => fetchImageData('edit'));
         setModalContent(image);
       }
       return true;
@@ -44,11 +54,7 @@ const ImageCategory = () => {
   const openAddModal = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        const fetchAddData = (imageInfo) => {
-          fetchData('post', URL.ADMIN.IMAGE, imageInfo)
-            .then(({ result }) => openSnackbar(result));
-        };
-        setFetchImage(() => fetchAddData);
+        setFetchImage(() => fetchImageData('add'));
         setModalContent({
           id: ADMIN.MODAL.DEFAULT.ID,
           category: ADMIN.MODAL.DEFAULT.CATEGORY,
