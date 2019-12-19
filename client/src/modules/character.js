@@ -36,6 +36,14 @@ class Character {
     if (alive === false) this._clear();
   }
 
+  setCurrentChat(chatText) {
+    this.currentChat = chatText;
+  }
+
+  getNickname() {
+    return this.nickname;
+  }
+
   isAlive() {
     return this.alive;
   }
@@ -44,12 +52,8 @@ class Character {
     return this.mine;
   }
 
-  getNickname() {
-    return this.nickname;
-  }
-
-  setCurrentChat(chatText) {
-    this.currentChat = chatText;
+  isMoving() {
+    return this.requestId !== null;
   }
 
   clearMoveQueue() {
@@ -61,10 +65,6 @@ class Character {
     this.img = new Image();
     this.img.src = this.imgUrl;
     this.img.onload = () => this._draw();
-  }
-
-  isMoving() {
-    return this.requestId !== null;
   }
 
   move(direction, newIndexX, newIndexY) {
@@ -104,29 +104,6 @@ class Character {
     }, CHAT_BALLOON.CLEAR_TIME_MS);
   }
 
-  _draw() {
-    /*
-     * HTML canvas drawImage() Method :
-     * context.drawImage(img,startX,startY,startWidth,startheight,x,y,width,height)
-     */
-    if (this.alive === false) return;
-
-    this.ctx.drawImage(
-      this.img,
-      CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
-      CHARACTER.SIZE * this.direction,
-      CHARACTER.getWidth(),
-      CHARACTER.getHeight(),
-      TILE.WIDTH * this.indexX,
-      TILE.HEIGHT * this.indexY,
-      TILE.WIDTH,
-      TILE.HEIGHT,
-    );
-
-    this._drawNickname();
-    if (this.currentChat) this._drawChat(this.currentChat);
-  }
-
   _walk() {
     this.frameCount += 1;
     const frameFullCount = (
@@ -158,21 +135,6 @@ class Character {
     }
   }
 
-  _relocate() {
-    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
-    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
-    this.teleport(newIndexX, newIndexY);
-    this.turn(direction, newIndexX, newIndexY);
-  }
-
-  _stop() {
-    if (this.requestId !== null) {
-      window.cancelAnimationFrame(this.requestId);
-      this.requestId = null;
-      this.curShapeLoopIdx = 0;
-    }
-  }
-
   _step() {
     const directionOption = {
       [CHARACTER.DIRECTION.UP]: { idx: 'indexY', sign: -1 },
@@ -190,58 +152,64 @@ class Character {
     this.curShapeLoopIdx += 1;
   }
 
-  _clear() {
-    this.ctx.clearRect(
+  _stop() {
+    if (this.requestId !== null) {
+      window.cancelAnimationFrame(this.requestId);
+      this.requestId = null;
+      this.curShapeLoopIdx = 0;
+    }
+  }
+
+  _relocate() {
+    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
+    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+    this.teleport(newIndexX, newIndexY);
+    this.turn(direction, newIndexX, newIndexY);
+  }
+
+  _draw() {
+    if (this.alive === false) return;
+
+    this.ctx.drawImage(
+      this.img,
+      CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
+      CHARACTER.SIZE * this.direction,
+      CHARACTER.getWidth(),
+      CHARACTER.getHeight(),
       TILE.WIDTH * this.indexX,
       TILE.HEIGHT * this.indexY,
       TILE.WIDTH,
       TILE.HEIGHT,
     );
 
-    this.ctx.clearRect(
+    this._drawNickname();
+    if (this.currentChat) this._drawChat(this.currentChat);
+  }
+
+  _drawNickname() {
+    this.ctx.fillStyle = NICKNAME.BG_COLOR;
+
+    this.nameTagX = (TILE.WIDTH * this.indexX) - ((NICKNAME.WIDTH - TILE.WIDTH) / 2);
+    this.nameTagY = TILE.HEIGHT * (this.indexY + 1);
+
+    this.ctx.fillRect(
       this.nameTagX,
       this.nameTagY,
-      NICKNAME.WIDTH + 1,
+      NICKNAME.WIDTH,
       NICKNAME.HEIGHT,
     );
 
-    this._clearChat();
-  }
+    this.ctx.font = NICKNAME.FONT;
+    this.ctx.textAlign = NICKNAME.ALIGN;
+    this.ctx.textBaseline = NICKNAME.BASELINE;
+    this.ctx.fillStyle = this.mine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
 
-  _drawRoundRect(startX, startY, width, lineHeight, radius) {
-    let borderRadius = radius;
-    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
-
-    if (width < 2 * borderRadius) borderRadius = width / 2;
-    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
-
-    this.ctx.fillStyle = 'black';
-    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
-    this.ctx.beginPath();
-    this.ctx.moveTo(startX + borderRadius, startY);
-    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
-    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
-    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
-    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
-    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
-    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
-    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
-    this.ctx.closePath();
-    this.ctx.stroke();
-    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
-    this.ctx.fill();
-  }
-
-  _clearChat() {
-    this.ctx.clearRect(
-      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
-      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
-      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
-      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
-        + CHAT_BALLOON.BORDER_WIDTH * 2
-        + CHAT_BALLOON.TIP_HEIGHT,
+    this.ctx.fillText(
+      this.nickname,
+      this.nameTagX + NICKNAME.WIDTH / 2,
+      this.nameTagY + NICKNAME.HEIGHT / 2 + 2,
+      NICKNAME.WIDTH,
     );
-    this.balloonLineCount = 0;
   }
 
   _drawChat() {
@@ -279,30 +247,58 @@ class Character {
     });
   }
 
-  _drawNickname() {
-    this.ctx.fillStyle = NICKNAME.BG_COLOR;
+  _drawRoundRect(startX, startY, width, lineHeight, radius) {
+    let borderRadius = radius;
+    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
 
-    this.nameTagX = (TILE.WIDTH * this.indexX) - ((NICKNAME.WIDTH - TILE.WIDTH) / 2);
-    this.nameTagY = TILE.HEIGHT * (this.indexY + 1);
+    if (width < 2 * borderRadius) borderRadius = width / 2;
+    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
 
-    this.ctx.fillRect(
+    this.ctx.fillStyle = 'black';
+    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
+    this.ctx.beginPath();
+    this.ctx.moveTo(startX + borderRadius, startY);
+    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
+    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
+    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
+    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
+    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
+    this.ctx.closePath();
+    this.ctx.stroke();
+    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
+    this.ctx.fill();
+  }
+
+  _clear() {
+    this.ctx.clearRect(
+      TILE.WIDTH * this.indexX,
+      TILE.HEIGHT * this.indexY,
+      TILE.WIDTH,
+      TILE.HEIGHT,
+    );
+
+    this.ctx.clearRect(
       this.nameTagX,
       this.nameTagY,
-      NICKNAME.WIDTH,
+      NICKNAME.WIDTH + 1,
       NICKNAME.HEIGHT,
     );
 
-    this.ctx.font = NICKNAME.FONT;
-    this.ctx.textAlign = NICKNAME.ALIGN;
-    this.ctx.textBaseline = NICKNAME.BASELINE;
-    this.ctx.fillStyle = this.mine ? NICKNAME.MINE_COLOR : NICKNAME.OTHER_COLOR;
+    this._clearChat();
+  }
 
-    this.ctx.fillText(
-      this.nickname,
-      this.nameTagX + NICKNAME.WIDTH / 2,
-      this.nameTagY + NICKNAME.HEIGHT / 2 + 2,
-      NICKNAME.WIDTH,
+  _clearChat() {
+    this.ctx.clearRect(
+      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
+      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
+      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
+        + CHAT_BALLOON.BORDER_WIDTH * 2
+        + CHAT_BALLOON.TIP_HEIGHT,
     );
+    this.balloonLineCount = 0;
   }
 }
 

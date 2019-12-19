@@ -16,8 +16,8 @@ import ADMIN from '../../../constants/admin';
 const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState([]);
   const [newNickname, setNewNickname] = useState('');
-  const [open, setOpen] = useState(false);
   const [fetchResult, setFetchResult] = useState(false);
+  const [open, setOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -26,6 +26,9 @@ const Nickname = ({ type }) => {
     timerId.current = setTimeout(() => setOpen(false), ADMIN.ADMINSNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Array} nicknameArray
+   */
   const makeNewRow = (nicknameArray) => {
     setnicknameList(() => nicknameArray.map((nickname) => (
       <NicknameRow
@@ -37,7 +40,7 @@ const Nickname = ({ type }) => {
     )));
   };
 
-  const updateNewNickname = (e) => setNewNickname(e.target.value);
+  const updateNewNickname = (event) => setNewNickname(event.target.value);
 
   const addNickname = () => {
     const nicknameData = {};

@@ -9,6 +9,7 @@ import socket from '../../../modules/socket';
 const Input = () => {
   const [message, setMessage] = useState('');
   const [updateMessage, setUpdateMessage] = useState(() => {});
+
   const inputRef = React.useRef();
   const canvasRef = React.useRef();
 
@@ -23,20 +24,26 @@ const Input = () => {
   };
 
   const sendMessageWithEnter = (event) => {
-    if (event.keyCode === KEYCODE.ENTER) {
-      sendMessage();
-    }
+    if (event.keyCode === KEYCODE.ENTER) sendMessage();
   };
+
+  /**
+   * @param {number} messageLength
+   * @param {number} messageLineCount
+   */
+  const isShorterThanMax = (messageLength, messageLineCount) => (
+    messageLength > CHAT_AREA.MAX_MESSAGE_LENGTH || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT
+  );
 
   useEffect(() => {
     const chatCanvas = canvasRef.current;
     const ctx = chatCanvas.getContext('2d');
+
     setUpdateMessage(() => (event) => {
       const messageText = event.target.value;
       const messageLineCount = parseChat(messageText, ctx).length;
       const newMessage = (
-        (messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
-          || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT)
+        isShorterThanMax(messageText.length, messageLineCount)
           ? messageText.slice(0, messageText.length - 1)
           : messageText
       );

@@ -4,10 +4,10 @@ import { ROOM_NAME } from '../../../../constants/room';
 import socket from '../../../../modules/socket';
 
 const RoomName = () => {
-  const [roomNameText, setRoomNameText] = useState('');
-  const [position, setPosition] = useState(0);
   const [width, setWidth] = useState(0);
+  const [position, setPosition] = useState(0);
   const [requestId, setRequestId] = useState(null);
+  const [roomNameText, setRoomNameText] = useState('');
 
   const move = () => {
     setPosition((prevPositon) => {
@@ -16,25 +16,38 @@ const RoomName = () => {
     });
     setRequestId(window.requestAnimationFrame(move));
   };
+
   const stop = () => {
     window.cancelAnimationFrame(requestId);
   };
-  const setup = ({ roomName }) => {
-    const newRoomName = `🤔${roomName}`;
-    setRoomNameText(newRoomName);
-    const totalLength = newRoomName.length;
-    const hangulLength = (newRoomName.match(ROOM_NAME.REGEX.HANGUL) || []).length;
-    const emojiLength = (newRoomName.match(ROOM_NAME.REGEX.EMOJI) || []).length;
+
+  /**
+   * @param {string} roomName
+   */
+  const calculateWidth = (roomName) => {
+    const totalLength = roomName.length;
+    const hangulLength = (roomName.match(ROOM_NAME.REGEX.HANGUL) || []).length;
+    const emojiLength = (roomName.match(ROOM_NAME.REGEX.EMOJI) || []).length;
     const othersLength = totalLength - hangulLength - emojiLength;
-    const newWidth = (
+    return (
       hangulLength * ROOM_NAME.FONT_WIDTH.HANGUL
       + emojiLength * ROOM_NAME.FONT_WIDTH.EMOJI
-      + othersLength * ROOM_NAME.FONT_WIDTH.OTHERS);
-    setWidth(newWidth);
+      + othersLength * ROOM_NAME.FONT_WIDTH.OTHERS
+    );
+  };
+
+  /**
+   * @param {object} param0
+   *  @param {string} roomName
+   */
+  const setupRoomName = ({ roomName }) => {
+    const newRoomName = `🤔${roomName}`;
+    setRoomNameText(newRoomName);
+    setWidth(calculateWidth(newRoomName));
   };
 
   useEffect(() => {
-    socket.onEnterRoom(setup);
+    socket.onEnterRoom(setupRoomName);
 
     return () => {
       socket.offEnterRoom();

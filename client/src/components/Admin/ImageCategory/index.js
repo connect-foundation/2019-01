@@ -27,6 +27,9 @@ const ImageCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {string} fetchType
+   */
   const fetchImageData = (fetchType) => (imageInfo) => {
     const imageRequestMap = new Map([
       ['edit', { fetchMethod: 'put', data: { id: imageInfo.id, data: imageInfo } }],
@@ -41,6 +44,13 @@ const ImageCategory = () => {
       .then(({ result }) => openSnackbar(result));
   };
 
+  /**
+   * @param {object} image
+   *   @param {number} image.id
+   *   @param {string} image.category
+   *   @param {string} image.name
+   *   @param {string} image.url
+   */
   const openEditModal = (image) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
@@ -68,6 +78,9 @@ const ImageCategory = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  /**
+   * @param {Array.<{id: number}>} imageList
+   */
   const makeNewRow = (imageList) => {
     setImageData(() => imageList.map(
       (image) => (

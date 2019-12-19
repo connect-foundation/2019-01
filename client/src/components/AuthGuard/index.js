@@ -8,10 +8,7 @@ const AuthGuard = ({ component: Component }) => {
   const history = useHistory();
 
   useEffect(() => {
-    amIAdmin().then((result) => (
-      result
-        ? setIsLoading(false)
-        : history.goBack()));
+    amIAdmin().then((result) => (result ? setIsLoading(false) : history.goBack()));
   }, []);
 
   return (isLoading ? <p>loading...</p> : <Component />);

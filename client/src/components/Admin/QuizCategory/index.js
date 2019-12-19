@@ -27,6 +27,9 @@ const QuizCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {string} fetchType
+   */
   const fetchQuizData = (fetchType) => (quizInfo) => {
     const quizRequestMap = new Map([
       ['edit', { fetchMethod: 'put', data: { id: quizInfo.id, data: quizInfo } }],
@@ -41,6 +44,9 @@ const QuizCategory = () => {
       .then(({ result }) => openSnackbar(result));
   };
 
+  /**
+   * @param {object} quiz
+   */
   const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
@@ -70,6 +76,9 @@ const QuizCategory = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  /**
+   * @param {Array.<object>} quizList
+   */
   const makeNewRow = (quizList) => {
     setQuizData(() => quizList.map(
       (quiz) => (
