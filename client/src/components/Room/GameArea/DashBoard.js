@@ -8,7 +8,7 @@ import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../modules/socket';
 import { changeNumberToTwoDigitString } from '../../../util';
 
-const colorArray = ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'];
+const colorArray = DASHBOARD.CLOCK_COLOR_ARRAY;
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
 
 const DashBoard = ({ buttonClickSound }) => {
@@ -63,7 +63,7 @@ const DashBoard = ({ buttonClickSound }) => {
 
   const endGame = () => {
     setGameEnded(true);
-    setNotice('↓↓↓↓   우승   ↓↓↓↓');
+    setNotice(DASHBOARD.WIN_MESSAGE);
   };
 
   const resetGame = () => {
@@ -108,7 +108,7 @@ const DashBoard = ({ buttonClickSound }) => {
   const readyGame = () => {
     setGameStarted(true);
     setCounter(ROOM.WAITING_TIME_MS / DASHBOARD.SECOND_MS);
-    setNotice('게임이 곧 시작됩니다.');
+    setNotice(DASHBOARD.NOTICE_START_MESSAGE);
     startCounter();
   };
 

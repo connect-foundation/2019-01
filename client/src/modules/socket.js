@@ -22,7 +22,7 @@ class SocketContainer {
     this.socket = (
       process.env.NODE_ENV === 'production'
         ? socketio({
-          path: '/socket.io', transports: ['websocket'], query, reconnection: false, secure: true,
+          path: URL.PRODUCTION_SOCKET_SERVER, transports: ['websocket'], query, reconnection: false, secure: true,
         })
         : socketio(URL.LOCAL_API_SERVER, {
           transports: ['websocket'], query, reconnection: false,

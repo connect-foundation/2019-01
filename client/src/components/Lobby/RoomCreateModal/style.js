@@ -1,27 +1,26 @@
 import styled from 'styled-components';
 import {
   MODAL, HEADER, TITLE, CLOSE_BUTTON, INPUT, CREATE_ROOM_BUTTON,
-} from '../../../constants/modal';
-import { BUTTON_EFFECT } from '../../../constants/lobby';
+} from '../../Style/Modal';
+import { setBorderAndRadius, setFlex } from '../../Style/util';
+import { BUTTON_EFFECT } from '../../Style/Lobby';
 
 export const ModalWrapper = styled.div`
-    width: ${MODAL.WIDTH}px;
     position: absolute;
     top: 50%;
     left: 50%;
+    width: ${MODAL.WIDTH}px;
+    padding: ${MODAL.PADDING};
     transform: translate(-50%,-50%);
     background: ${MODAL.BACKGROUND_COLOR};
-    padding: ${MODAL.PADDING};
-    border: ${MODAL.BORDER};
-    border-radius: ${MODAL.BORDER_RADIUS}px;
+    ${setBorderAndRadius(MODAL)}
 `;
 
 export const ModalHeader = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
     width: 100%;
+    align-items: baseline;
     margin-bottom: ${HEADER.MARGIN_BOTTOM}px;
+    ${setFlex('row', 'space-between')}
 `;
 
 export const ModalTitle = styled.div`
@@ -36,16 +35,14 @@ export const ModalCloseButton = styled.span`
 
 export const ModalInputWrapper = styled.div`
     width: 100%;
+    align-items: baseline;
+    box-sizing: border-box;
     padding: ${INPUT.WRAPPER.PADDING};
     margin-bottom: ${INPUT.WRAPPER.MARGIN_BOTTOM}px;
-    box-sizing: border-box;
-    background-color: ${INPUT.WRAPPER.BACKGROUND_COLOR};
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    border: ${INPUT.WRAPPER.BORDER};
-    border-radius: ${INPUT.WRAPPER.BORDER_RADIUS}px;
     box-shadow: ${INPUT.WRAPPER.BOX_SHADOW};
+    background-color: ${INPUT.WRAPPER.BACKGROUND_COLOR};
+    ${setFlex('row', 'space-between')}
+    ${setBorderAndRadius(INPUT.WRAPPER)}
 `;
 
 export const ModalInput = styled.input.attrs({ autoFocus: true })`
@@ -68,11 +65,10 @@ export const ModalCreateRoomButton = styled.div`
     font-size: ${CREATE_ROOM_BUTTON.FONT_SIZE}px;
     text-align: center;
     box-sizing: border-box;
-    border: ${CREATE_ROOM_BUTTON.BORDER};
-    border-radius: ${CREATE_ROOM_BUTTON.BORDER_RADIUS}px;
     box-shadow: ${CREATE_ROOM_BUTTON.BOX_SHADOW};
     background-color: ${CREATE_ROOM_BUTTON.BACKGROUND_COLOR};
     cursor: pointer;
     ${BUTTON_EFFECT.ACTIVE}
     ${BUTTON_EFFECT.HOVER}
+    ${setBorderAndRadius(CREATE_ROOM_BUTTON)}
 `;

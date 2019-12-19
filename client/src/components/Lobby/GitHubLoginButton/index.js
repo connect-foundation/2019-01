@@ -8,6 +8,7 @@ import popupGitHubOAuth from '../../OAuth/popupGitHubOAuth';
 
 const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
 const logoutUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_LOGOUT : URL.LOCAL_GITHUB_LOGOUT;
+
 const reload = () => window.location.reload();
 
 const GitHubLoginButton = ({ userName }) => (
