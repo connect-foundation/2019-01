@@ -20,7 +20,7 @@ const Field = () => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *   @param {boolean} param0.canMove
    *   @param {string} param0.nickname
    *   @param {number} param0.direction
@@ -48,7 +48,7 @@ const Field = () => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *   @param {string} param0.nickname
    *   @param {string} param0.message
    */
@@ -65,7 +65,7 @@ const Field = () => {
 
   /**
    * @param {Array} newCharacters
-   * @returns {function(
+   * @returns {Function(
    * {
    * url: string,
    * indexX: number,
@@ -84,7 +84,7 @@ const Field = () => {
 
   /**
    * @param {Array} newCharacters
-   * @returns {function({nickname: string, indexX: number, indexY: number})}
+   * @returns {Function({nickname: string, indexX: number, indexY: number})}
    */
   const _teleportCharacter = (newCharacters) => ({ nickname, indexX, indexY }) => {
     const character = newCharacters.get(nickname);
@@ -97,7 +97,7 @@ const Field = () => {
 
   /**
    * @param {Array} newCharacters
-   * @returns {function({nickname: string})}
+   * @returns {Function({nickname: string})}
    */
   const _deleteCharacter = (newCharacters) => ({ nickname }) => {
     const character = newCharacters.get(nickname);

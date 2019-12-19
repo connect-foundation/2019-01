@@ -38,7 +38,7 @@ const RoomName = () => {
 
   /**
    * @param {Object} param0
-   *  @param {string} roomName
+   *  @param {string} param0.roomName
    */
   const setupRoomName = ({ roomName }) => {
     const newRoomName = `🤔${roomName}`;

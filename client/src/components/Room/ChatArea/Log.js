@@ -23,8 +23,8 @@ const Log = () => {
 
   /**
    * @param {Object} param0
-   *  @param {string} nickname
-   *  @param {string} message
+   *  @param {string} param0.nickname
+   *  @param {string} param0.message
    */
   const addChat = ({ nickname, message }) => {
     setChatList((prevChatList) => {

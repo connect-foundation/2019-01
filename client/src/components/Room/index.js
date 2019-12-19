@@ -26,7 +26,7 @@ const Room = () => {
 
   /**
    * @param {Object} param0
-   *  @param {boolean} isOwner
+   *  @param {boolean} param0.isOwner
    */
   const notifyEndGame = ({ isOwner }) => {
     if (isOwner) socket.emitReadyRoom(roomId);

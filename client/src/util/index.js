@@ -5,7 +5,7 @@ import URL from '../constants/url';
 const API_SERVER = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_API_SERVER : URL.LOCAL_API_SERVER;
 
 /**
- * @param {function} callback
+ * @param {Function} callback
  * @returns {boolean}
  */
 export const isFunction = (callback) => typeof callback === 'function';

@@ -17,7 +17,7 @@ const DashBoard = ({ buttonClickSound }) => {
   let lastTimerId;
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    * @param {boolean} param0.isOwner
    */
   const leaveUser = ({ isOwner }) => {
@@ -65,7 +65,7 @@ const DashBoard = ({ buttonClickSound }) => {
   };
 
   /**
-   * @param {*} param0
+   * @param {Object} param0
    *   @param {string} param0.comment
    *   @param {boolean} param0.answer
    */
@@ -87,7 +87,7 @@ const DashBoard = ({ buttonClickSound }) => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *   @param {string} param0.question
    *   @param {boolean} param0.isGameStarted
    *   @param {number} param0.timeLimit
