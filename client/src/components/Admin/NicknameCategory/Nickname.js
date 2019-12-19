@@ -42,7 +42,8 @@ const Nickname = ({ type }) => {
   const addNickname = () => {
     const nicknameData = {};
     nicknameData[type] = newNickname;
-    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData);
+    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData)
+      .then(({ result }) => openSnackbar(result));
   };
 
   useEffect(() => {
