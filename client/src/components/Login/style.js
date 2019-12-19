@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import LOGIN from '../Style/Login';
-import { ROOM } from '../../constants/room';
+import { ROOM } from '../Style/Room';
 import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 
 export const LoginPageWrapper = styled.div`
