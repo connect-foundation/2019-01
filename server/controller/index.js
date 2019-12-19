@@ -15,11 +15,17 @@ class Controller {
    * @param {object} socket
    */
   connectUser(socket) {
+    console.log('a user connected');
     const user = new User(socket);
     this._bindEvent(user);
   }
 
+  /**
+   *
+   * @param {User} user
+   */
   _letUserEnterLobby(user) {
+    if (user.isInLobby()) return;
     lobby.enterUser(user);
   }
 
@@ -30,9 +36,10 @@ class Controller {
    */
   _letUserCreateRoom(user, roomName) {
     if (user.isInLobby() === false) return;
+    if (roomName === '') return;
     const roomId = shortUuid();
     const room = new Room(roomId, roomName);
-    lobby.createRoom(user, room);
+    lobby.addRoom(user, room);
   }
 
   /**
@@ -67,12 +74,12 @@ class Controller {
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
-    await this._assignCharacter(user);
-    lobby.leaveUser(user.getId());
     if (room === undefined) {
       user.emitGoToLobby();
       return;
     }
+    this._letUserLeaveLobby(user);
+    await this._assignCharacter(user);
     await room.enterUser(user);
     lobby.updateRoomInfo(roomId);
   }
@@ -93,9 +100,9 @@ class Controller {
    */
   _letUserLeaveRoom(user) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
     if (room === undefined) return;
-    const roomId = room.getId();
     room.leaveUser(user);
     lobby.updateRoomInfo(roomId);
 
@@ -120,8 +127,8 @@ class Controller {
    */
   async _letUserStartGame(user) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
-    const roomId = room.getId();
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
     const isStart = await room.startGame(user);
     if (isStart) lobby.updateRoomInfo(roomId);
   }
@@ -133,7 +140,8 @@ class Controller {
    */
   _letUserMove(user, direction) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
     room.moveCharacter(user, direction);
   }
 
@@ -144,7 +152,8 @@ class Controller {
    */
   _letUserUseSkill(user, direction) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
     room.useSkill(user, direction);
   }
 
@@ -155,16 +164,30 @@ class Controller {
    */
   _letUserChat(user, message) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
-    room.chat(user.getNickname(), message);
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    room.chat(user, message);
   }
 
+  /**
+   *
+   * @param {User} user
+   * @param {string} roomId
+   */
   _letUsersKnowGameEnded(user, roomId) {
     const room = lobby.getRoom(roomId);
+    if (room === undefined || room.isStarted()) return;
+    lobby.updateRoomInfo(roomId);
+  }
 
-    if (room !== undefined && room.isStarted() === false) {
-      lobby.updateRoomInfo(roomId);
-    }
+  /**
+   *
+   * @param {User} user
+   */
+  _letUserDisconnected(user) {
+    console.log('a user disconnected');
+    this._letUserLeaveRoom(user);
+    this._letUserLeaveLobby(user);
   }
 
   /**
@@ -174,21 +197,15 @@ class Controller {
   _bindEvent(user) {
     user.onCreateRoom((roomName) => this._letUserCreateRoom(user, roomName));
     user.onKnockRoom((roomId) => this._letUserKnockRoom(user, roomId));
-    user.onEnterRoom(async (roomId) => {
-      await this._letUserEnterRoom(user, roomId);
-    });
+    user.onEnterRoom((roomId) => this._letUserEnterRoom(user, roomId));
     user.onStartGame(() => this._letUserStartGame(user));
     user.onReadyRoom((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
     user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
-    user.onDisconnecting(() => {
-      console.log('a user disconnected');
-      this._letUserLeaveRoom(user);
-      this._letUserLeaveLobby(user);
-    });
     user.onEnterLobby(() => this._letUserEnterLobby(user));
+    user.onDisconnecting(() => this._letUserDisconnected(user));
   }
 }
 
