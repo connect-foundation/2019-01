@@ -32,7 +32,7 @@ router.put('/', async (req, res, next) => {
     const {
       category, level, question, comment, answer,
     } = data;
-    const queryResult = await quizDb.updateQuiz(id, category, level, question, comment, answer);
+    const queryResult = await quizDb.update(id, category, level, question, comment, answer);
     const result = isSuccessFul(queryResult);
     res.status(200).send({ result });
   } catch (error) {

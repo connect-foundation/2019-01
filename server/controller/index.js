@@ -4,14 +4,12 @@ import User from '../models/user';
 import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
-import { KNOCK_MESSAGE } from '../constants/lobby';
+import KNOCK_MESSAGE from '../constants/lobby';
 /**
  * Controller class
- * @property {array} rooms
  */
 class Controller {
   /**
-   *
    * @param {object} socket
    */
   connectUser(socket) {
@@ -21,7 +19,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   _letUserEnterLobby(user) {
@@ -30,7 +27,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} roomName
    */
@@ -43,7 +39,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} roomId
    */
@@ -65,11 +60,8 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} roomId
-   *
-   * @fires Controller#enter_room
    */
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby() === false) return;
@@ -85,7 +77,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   async _assignCharacter(user) {
@@ -95,7 +86,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   _letUserLeaveRoom(user) {
@@ -112,7 +102,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   _letUserLeaveLobby(user) {
@@ -122,7 +111,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   async _letUserStartGame(user) {
@@ -134,9 +122,8 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
-   * @param {*} direction
+   * @param {number} direction
    */
   _letUserMove(user, direction) {
     if (user.isInLobby()) return;
@@ -146,9 +133,8 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
-   * @param {*} direction
+   * @param {number} direction
    */
   _letUserUseSkill(user, direction) {
     if (user.isInLobby()) return;
@@ -158,7 +144,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} message
    */
@@ -170,7 +155,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} roomId
    */
@@ -181,7 +165,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   _letUserDisconnected(user) {
@@ -191,7 +174,6 @@ class Controller {
   }
 
   /**
-   *
    * @param {User} user
    */
   _bindEvent(user) {

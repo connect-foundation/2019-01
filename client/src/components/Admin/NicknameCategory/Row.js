@@ -14,13 +14,13 @@ const Row = ({
   const [currentNickname, setNickname] = useState(nickname);
 
   const deleteButtonHandler = () => {
-    fetchData('delete', `${URL.ADMIN.NICKNAME}${type}`, { id })
+    fetchData('delete', `${URL.ADMIN.NICKNAME}/${type}`, { id })
       .then(({ result }) => openSnackbar(result));
   };
 
   const updateButtonHandler = () => {
     const data = { id, [type]: currentNickname };
-    fetchData('put', `${URL.ADMIN.NICKNAME}${type}`, data)
+    fetchData('put', `${URL.ADMIN.NICKNAME}/${type}`, data)
       .then(({ result }) => openSnackbar(result));
   };
 
