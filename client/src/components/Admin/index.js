@@ -5,22 +5,25 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import useStyles from './style';
+import { useStyles } from './style';
 import URL from '../../constants/url';
 import UserList from './UserCategory';
 import QuizList from './QuizCategory';
 import NicknameList from './NicknameCategory';
+import ImageList from './ImageCategory';
 
 const Admin = () => {
   const [body, setBody] = useState(<UserList />);
   const listItem = [
     { text: 'USERS', component: <UserList /> },
     { text: 'NICKNAMES', component: <NicknameList /> },
-    { text: 'QUIZS', component: <QuizList /> }];
+    { text: 'QUIZS', component: <QuizList /> },
+    { text: 'IMAGES', component: <ImageList /> },
+  ];
 
   const classes = useStyles();
 
-  const changeBody = (component) => setBody(() => component);
+  const changeBody = (component) => setBody(component);
 
   return (
     <div className={classes.root}>
@@ -42,7 +45,7 @@ const Admin = () => {
         </List>
       </Drawer>
       <main className={classes.content}>
-        <Typography paragraph>{body}</Typography>
+        <Typography component="span">{body}</Typography>
       </main>
     </div>
   );

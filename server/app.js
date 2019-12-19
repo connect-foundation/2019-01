@@ -9,6 +9,7 @@ import indexRouter from './routes/index';
 import loginRouter from './routes/login';
 import adminRouter from './routes/admin';
 import controller from './controller';
+import ERROR_MSG from './constants/error-message';
 
 const app = express();
 const socketIo = socketio();
@@ -31,7 +32,7 @@ app.use('/oauth', loginRouter);
 app.use('/', indexRouter);
 
 app.use((req, res, next) => {
-  next(createError(404));
+  next(createError(404, ERROR_MSG.REQUEST_NOT_FOUND));
 });
 
 // eslint-disable-next-line no-unused-vars
@@ -40,9 +41,6 @@ app.use((err, req, res, next) => {
   res.send({ result: false, message: err.message });
 });
 
-socketIo.on('connection', (socket) => {
-  console.log('a user connected');
-  controller.connectUser(socket);
-});
+socketIo.on('connection', (socket) => controller.connectUser(socket));
 
 export default { app, socketIo };

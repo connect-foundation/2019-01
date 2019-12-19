@@ -2,8 +2,7 @@
 import socketio from 'socket.io-client';
 import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
-
-const isFunction = (callback) => typeof callback === 'function';
+import { isFunction } from '../util';
 
 class SocketContainer {
   constructor() {
@@ -23,7 +22,7 @@ class SocketContainer {
     this.socket = (
       process.env.NODE_ENV === 'production'
         ? socketio({
-          path: '/socket.io', transports: ['websocket'], query, reconnection: false, secure: true,
+          path: URL.PRODUCTION_SOCKET_SERVER, transports: ['websocket'], query, reconnection: false, secure: true,
         })
         : socketio(URL.LOCAL_API_SERVER, {
           transports: ['websocket'], query, reconnection: false,
@@ -157,6 +156,10 @@ class SocketContainer {
     this._on(EVENT.CHAT_MESSAGE, callback);
   }
 
+  onGoToLobby(callback) {
+    this._on(EVENT.GO_TO_LOBBY, callback);
+  }
+
   onDisconnect(callback) {
     this._on(EVENT.DISCONNECT, callback);
   }
@@ -232,6 +235,10 @@ class SocketContainer {
 
   offChatMessage() {
     this._off(EVENT.CHAT_MESSAGE);
+  }
+
+  offGoToLobby() {
+    this._off(EVENT.GO_TO_LOBBY);
   }
 
   offUpdatePlayerNum() {

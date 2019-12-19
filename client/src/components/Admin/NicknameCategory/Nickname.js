@@ -1,20 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import {
-  NicknameTable, NicknameTh, NicknameThead, NicknameTr,
-  NicknameTbody, NicknameButton, NicknameInput,
-} from './style';
-import fetchData from '../util';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CustomSnackbar from '../CustomSnackbar';
+import { fetchData } from '../../../util';
 import NicknameRow from './Row';
 import URL from '../../../constants/url';
+import ADMIN from '../../../constants/admin';
 
 const Nickname = ({ type }) => {
   const [nicknameList, setnicknameList] = useState([]);
   const [newNickname, setNewNickname] = useState('');
+  const [open, setOpen] = useState(false);
+  const [fetchResult, setFetchResult] = useState(false);
+  const timerId = useRef(null);
+
+  const openSnackbar = (result) => {
+    setOpen(true);
+    setFetchResult(result);
+    timerId.current = setTimeout(() => setOpen(false), ADMIN.ADMINSNACKBAR_TIME_MS);
+  };
 
   const makeNewRow = (nicknameArray) => {
     const nicknameTagList = () => nicknameArray.map((nickname) => (
-      <NicknameRow id={nickname.id} type={type} nickname={type === 'adj' ? nickname.adj : nickname.noun} />
+      <NicknameRow
+        key={nickname.id}
+        id={nickname.id}
+        type={type}
+        openSnackbar={openSnackbar}
+        nickname={type === 'adj' ? nickname.adj : nickname.noun} />
     ));
     setnicknameList(nicknameTagList);
   };
@@ -30,25 +49,39 @@ const Nickname = ({ type }) => {
   useEffect(() => {
     fetchData('get', `${URL.ADMIN.NICKNAME}${type}/list`)
       .then((res) => makeNewRow(type === 'adj' ? res.adjList : res.nounList));
+    return () => clearTimeout(timerId.current);
   }, []);
 
   return (
-    <NicknameTable>
-      <NicknameThead>
-        <NicknameTr>
-          <NicknameTh>id</NicknameTh>
-          <NicknameTh>{type}</NicknameTh>
-        </NicknameTr>
-      </NicknameThead>
-      <NicknameTbody>
-        {nicknameList}
-        <NicknameTr>
-          <NicknameTh />
-          <NicknameInput onChange={updateNewNickname} />
-          <NicknameButton onClick={addNickname}>추가</NicknameButton>
-        </NicknameTr>
-      </NicknameTbody>
-    </NicknameTable>
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>{type.toUpperCase()}</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell />
+            <TableCell>
+              <TextField onChange={updateNewNickname} />
+            </TableCell>
+            <TableCell align="right">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={addNickname}>
+                추가
+              </Button>
+            </TableCell>
+          </TableRow>
+          {nicknameList}
+        </TableBody>
+      </Table>
+      <CustomSnackbar open={open} result={fetchResult} />
+    </>
   );
 };
 

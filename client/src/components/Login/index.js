@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import {} from 'dotenv/config';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginPageBackground,
@@ -12,21 +11,16 @@ import popupGitHubOAuth from '../OAuth/popupGitHubOAuth';
 
 const Login = () => {
   const history = useHistory();
-
   const oauthUrl = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_GITHUB_OAUTH : URL.LOCAL_GITHUB_OAUTH;
 
   const enterLobbyAsGithubUser = () => {
-    history.replace('/lobby');
+    history.push('/lobby');
   };
 
   const enterLobbyAsGuest = () => {
     socket.setGuest(true);
-    history.replace('/lobby');
+    history.push('/lobby');
   };
-
-  useEffect(() => {
-    history.push('/');
-  }, []);
 
   return (
     <LoginPageWrapper>
@@ -35,7 +29,7 @@ const Login = () => {
         <LoginGitHubButton onClick={() => popupGitHubOAuth(oauthUrl, enterLobbyAsGithubUser)}>
           <GitHubIcon>
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
-            <path stroke={LOGIN.SVG.PATH.COLOR} d={LOGIN.SVG.PATH.INDEXES} />
+            <path stroke={LOGIN.SVG_PATH.COLOR} d={LOGIN.SVG_PATH.INDEXES} />
           </GitHubIcon>
           <LoginGitHubText>
             GitHub으로 로그인

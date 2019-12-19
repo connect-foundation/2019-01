@@ -3,16 +3,20 @@ export const TILE = {
   HEIGHT: 60,
 };
 
+export const MESSAGE = {
+  PATH_ERROR: '잘못된 경로로 들어왔습니다.',
+};
+
 export const FIELD = {
   ROW: 8,
   COLUMN: 16,
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
-  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
+  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
 };
 
 export const THANOS = {
-  IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
+  IMG: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
   TIME_MS: 2000,
   HEIGHT_TERM: 10,
   TRUE_X: 0,
@@ -83,46 +87,20 @@ export const KEYCODE = {
 };
 
 export const DASHBOARD = {
-  WIDTH: FIELD.getWidth(),
-  HEIGHT: TILE.HEIGHT * 2,
-  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
+  NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   SECOND: 1,
   SECOND_MS: 1000,
-  BORDER: '2px solid gray',
 };
 
-export const QUIZ = {
-  WIDTH: 550,
-  FONT_SIZE: 24,
-  LEFT: 40,
-};
-
-export const COUNTER = {
-  WIDTH: 80,
-  PADDING: '10px 0',
-  RIGHT: 40,
-  FONT_SIZE: 28,
-  BORDER: '1px solid black',
-};
-
-export const GAME_START_BUTTON = {
-  PADDING: '15px 35px',
-  FONT_SIZE: 28,
-  BACKGROUND_COLOR: 'gold',
-  BOX_SHADOW: '0px 4px 10px 0px',
-  BOX_SHADOW_CLICKED: '0px 2px 5px 0px',
-};
 
 export const CHAT_AREA = {
-  BG_COLOR: 'rgba(255, 255, 255, 0.2)',
-  WIDTH: 280,
-  FONT_SIZE: 15,
   MAX_MESSAGE_LENGTH: 50,
-  BOX_SHADOW: '1px 1px 0px dimgrey',
-  BUTTON_COLOR: 'rgba(255, 255, 255, 0.5)',
+  CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
-  BORDER: '1px solid lightslategrey',
+  NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
 };
 
 export const SOUND_TOGGLE = {
@@ -132,22 +110,11 @@ export const SOUND_TOGGLE = {
 };
 
 export const ROOM = {
-  MARGIN: 20,
-  getWidth() { return FIELD.getWidth() + CHAT_AREA.WIDTH + this.MARGIN; },
-  getHeight() { return FIELD.getHeight() + DASHBOARD.HEIGHT + this.MARGIN; },
   WAITING_TIME_MS: 3000,
-  BORDER_RADIUS_SMALL: 8,
-  BORDER_RADIUS_BIG: 12,
-  FONT_FAMILY: 'DungGeunMo',
-  BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
   WAITING_SOUND_TIME_MS: 2000,
 };
 
 export const ROOM_NAME = {
-  WIDTH: 1000,
-  FONT_SIZE: 30,
-  COLOR: 'dimgray',
-  WRAPPER_MARGIN: '5px 0',
   WRAPPER_WIDTH: CHAT_AREA.WIDTH - 30,
   REGEX: {
     HANGUL: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g,

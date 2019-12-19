@@ -14,5 +14,8 @@ router.use('/nickname/noun', nicknameNounRouter);
 router.use('/nickname/adj', nicknameAdjRouter);
 router.use('/quiz', quizRouter);
 router.use('/image', imageRouter);
+router.use('/iam', (req, res) => {
+  res.status(200).send({ result: true });
+});
 
 export default router;

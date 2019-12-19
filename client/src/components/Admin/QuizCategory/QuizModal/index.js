@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  ModalWrapper, ModalContent, ModalButtonWrapper, ModalOkButton, ModalCloseButton,
-} from './style';
-import Row from './row';
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { ModalWrapper, ModalButtonWrapper } from '../../style';
 
-const QuizModal = ({ quiz, closeModal, fetchData }) => {
+const QuizModal = ({
+  quiz, open, closeModal, fetchData,
+}) => {
   const [categoryValue, setCategoryValue] = useState(quiz.category);
   const [levelValue, setLevelValue] = useState(quiz.level);
   const [questionValue, setQuestionValue] = useState(quiz.question);
@@ -27,34 +29,43 @@ const QuizModal = ({ quiz, closeModal, fetchData }) => {
   };
 
   return (
-    <ModalWrapper>
-      <ModalContent>
-        <Row
-          category="category"
+    <Modal open={open}>
+      <ModalWrapper>
+        <TextField
+          label="category"
           value={categoryValue}
-          changeValue={(e) => setCategoryValue(e.target.value)} />
-        <Row
-          category="level"
+          onChange={(e) => setCategoryValue(e.target.value)} />
+        <TextField
+          label="level"
           value={levelValue}
-          changeValue={(e) => setLevelValue(e.target.value)} />
-        <Row
-          category="question"
+          onChange={(e) => setLevelValue(e.target.value)} />
+        <TextField
+          label="question"
           value={questionValue}
-          changeValue={(e) => setQuestionValue(e.target.value)} />
-        <Row
-          category="comment"
+          onChange={(e) => setQuestionValue(e.target.value)} />
+        <TextField
+          label="comment"
           value={commentValue}
-          changeValue={(e) => setCommentValue(e.target.value)} />
-        <Row
-          category="answer"
+          onChange={(e) => setCommentValue(e.target.value)} />
+        <TextField
+          label="answer"
           value={answerValue}
-          changeValue={(e) => setAnswerValue(e.target.value)} />
-      </ModalContent>
-      <ModalButtonWrapper>
-        <ModalOkButton onClick={fetchQuiz}>확인</ModalOkButton>
-        <ModalCloseButton onClick={closeModal}>취소</ModalCloseButton>
-      </ModalButtonWrapper>
-    </ModalWrapper>
+          onChange={(e) => setAnswerValue(e.target.value)} />
+        <ModalButtonWrapper>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchQuiz}>
+          확인
+          </Button>
+          <Button
+            variant="contained"
+            onClick={closeModal}>
+          취소
+          </Button>
+        </ModalButtonWrapper>
+      </ModalWrapper>
+    </Modal>
   );
 };
 
@@ -67,6 +78,7 @@ QuizModal.propTypes = {
     category: PropTypes.string.isRequired,
     level: PropTypes.number.isRequired,
   }).isRequired,
+  open: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
 };

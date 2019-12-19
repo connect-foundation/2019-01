@@ -1,25 +1,22 @@
 import styled from 'styled-components';
+import { setSize, setBorderAndRadius, setFlex } from '../../Style/util';
 import {
   DASHBOARD, QUIZ, COUNTER, GAME_START_BUTTON, ROOM,
-} from '../../../constants/room';
+} from '../../Style/Room';
 
 export const GameAreaWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     width: fit-content;
     height: 100%;
     box-sizing: border-box;
+    ${setFlex('column', 'space-between')}
 `;
 
 export const DashBoardWrapper = styled.div`
     position: relative;
-    width: ${DASHBOARD.WIDTH}px;
-    height: ${DASHBOARD.HEIGHT}px;
-    border: ${DASHBOARD.BORDER};
-    border-radius: ${ROOM.BORDER_RADIUS_BIG}px;
     box-sizing: border-box;
     background-size: 100% 100%;
+    ${setSize(DASHBOARD)}
+    ${setBorderAndRadius(DASHBOARD)}
 `;
 
 export const QuizWrapper = styled.div`
@@ -39,10 +36,9 @@ export const CounterWrapper = styled.div`
     right: ${COUNTER.RIGHT}px;
     transform: translateY(-50%);
     text-align: center;
-    border: ${COUNTER.BORDER};
-    border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: white;
     font-size: ${COUNTER.FONT_SIZE}px;
+    ${setBorderAndRadius(COUNTER)}
 `;
 
 export const GameStartButton = styled.div`
@@ -61,12 +57,11 @@ export const GameStartButton = styled.div`
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
     border-radius: ${ROOM.BORDER_RADIUS_SMALL}px;
     background-color: ${GAME_START_BUTTON.BACKGROUND_COLOR};
-    border: 0;
     box-shadow: ${GAME_START_BUTTON.BOX_SHADOW};
     cursor: pointer;
 `;
 
-export const WaitingText = styled.div`
+const DashboardText = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
@@ -74,10 +69,5 @@ export const WaitingText = styled.div`
     font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
 `;
 
-export const GameEndText = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: ${GAME_START_BUTTON.FONT_SIZE}px;
-`;
+export const WaitingText = DashboardText;
+export const GameEndText = DashboardText;
