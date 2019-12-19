@@ -17,5 +17,8 @@
   "eslint.provideLintTask": true, //희선
   "eslint.alwaysShowStatus": true,
   "editor.formatOnSave": true,
-  "javascript.format.enable": false
+  "javascript.format.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
