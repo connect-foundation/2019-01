@@ -15,10 +15,16 @@ class Thanos {
     this.img.src = THANOS.IMG;
   }
 
+  /**
+   * @param {number} fieldXValue
+   */
   setFieldXValue(fieldXValue) {
     this.fieldXValue = fieldXValue;
   }
 
+  /**
+   * @param {number} sy
+   */
   draw(sy) {
     this.ctx.drawImage(
       this.img,
@@ -43,6 +49,9 @@ class Thanos {
     });
   }
 
+  /**
+   * @param {number} sy
+   */
   _stopAndWait(sy) {
     this.thanosTimeoutId = setTimeout(() => {
       this._clear(sy);
@@ -50,6 +59,9 @@ class Thanos {
     }, THANOS.TIME_MS);
   }
 
+  /**
+   * @param {number} sy
+   */
   _clear(sy) {
     this.ctx.clearRect(
       this.fieldXValue,

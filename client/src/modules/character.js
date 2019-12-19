@@ -67,6 +67,11 @@ class Character {
     this.img.onload = () => this._draw();
   }
 
+  /**
+   * @param {number} direction
+   * @param {number} newIndexX
+   * @param {number} newIndexY
+   */
   move(direction, newIndexX, newIndexY) {
     if (this.ctx === null) return;
     if (this.requestId) {
@@ -77,6 +82,9 @@ class Character {
     this.requestId = window.requestAnimationFrame(() => this._walk());
   }
 
+  /**
+   * @param {number} direction
+   */
   turn(direction) {
     if (this.ctx === null) return;
     if (this.requestId) return;
@@ -85,6 +93,10 @@ class Character {
     this._draw();
   }
 
+  /**
+   * @param {number} indexX
+   * @param {number} indexY
+   */
   teleport(indexX, indexY) {
     this._stop();
     this._clear();
