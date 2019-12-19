@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import {
   CHARACTER, FIELD, KEYCODE, THANOS,
@@ -13,18 +14,9 @@ const Field = () => {
   const thanosCanvasRef = React.useRef();
   const thanos = new Thanos();
 
-  const addCharacters = ({ characterList }) => {
-    setCharacters((prevCharacters) => {
-      const newCharacters = new Map(prevCharacters);
-      characterList.forEach(({
-        url, indexX, indexY, isMine, nickname,
-      }) => {
-        const character = new Character(url, indexX, indexY, nickname, isMine);
-        if (isMine) setMyCharacter(() => character);
-        newCharacters.set(nickname, character);
-      });
-      return newCharacters;
-    });
+  const killCharacters = (newCharacters) => ({ nickname }) => {
+    const character = newCharacters.get(nickname);
+    character.setAlive(false);
   };
 
   const moveCharacter = ({
@@ -47,53 +39,6 @@ const Field = () => {
     });
   };
 
-  const deleteCharacters = ({ characterList }) => {
-    setCharacters((prevCharacters) => {
-      const newCharacters = new Map(prevCharacters);
-      characterList.forEach(({ nickname }) => {
-        const character = newCharacters.get(nickname);
-        if (character === undefined) return;
-        if (character.isMine()) setMyCharacter(() => null);
-        newCharacters.delete(nickname);
-      });
-      return newCharacters;
-    });
-  };
-
-  const killCharacters = ({ characterList }) => {
-    setCharacters((prevCharacters) => {
-      const newCharacters = new Map(prevCharacters);
-      characterList.forEach(({ nickname }) => {
-        const character = newCharacters.get(nickname);
-        character.setAlive(false);
-      });
-      return newCharacters;
-    });
-  };
-
-  const teleportCharacters = ({ characterList }) => {
-    setCharacters((prevCharacters) => {
-      const newCharacters = new Map(prevCharacters);
-      characterList.forEach(({ nickname, indexX, indexY }) => {
-        const character = newCharacters.get(nickname);
-        if (character === undefined) return;
-
-        if (character.isAlive() === false) character.setAlive(true);
-        character.clearMoveQueue();
-        character.teleport(indexX, indexY);
-      });
-      return newCharacters;
-    });
-  };
-
-  const appearThanos = (data) => {
-    if (document.hidden === false) {
-      thanos.setFieldXValue(data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
-      thanos.draw(0);
-    }
-    killCharacters(data);
-  };
-
   const chatCharacters = ({ nickname, message }) => {
     setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
@@ -105,20 +50,68 @@ const Field = () => {
     });
   };
 
+  const _addCharacter = (newCharacters) => ({
+    url, indexX, indexY, isMine, nickname,
+  }) => {
+    const character = new Character(url, indexX, indexY, nickname, isMine);
+    if (isMine) setMyCharacter(() => character);
+    newCharacters.set(nickname, character);
+  };
+
+  const _teleportCharacter = (newCharacters) => ({ nickname, indexX, indexY }) => {
+    const character = newCharacters.get(nickname);
+    if (character === undefined) return;
+
+    if (character.isAlive() === false) character.setAlive(true);
+    character.clearMoveQueue();
+    character.teleport(indexX, indexY);
+  };
+
+  const _deleteCharacter = (newCharacters) => ({ nickname }) => {
+    const character = newCharacters.get(nickname);
+    if (character === undefined) return;
+    if (character.isMine()) setMyCharacter(() => null);
+    newCharacters.delete(nickname);
+  };
+
+  const attachDataToFunction = (characterList, controlCharacter) => (prevCharacters) => {
+    const newCharacters = new Map(prevCharacters);
+    characterList.forEach(controlCharacter(newCharacters));
+    return newCharacters;
+  };
+
+  const bindFunction = (controlCharacter) => ({ characterList }) => {
+    setCharacters(attachDataToFunction(characterList, controlCharacter));
+  };
+
+  const appearThanos = (data) => {
+    if (document.hidden === false) {
+      thanos.setFieldXValue(data.answer ? THANOS.FALSE_X : THANOS.TRUE_X);
+      thanos.draw(0);
+    }
+    bindFunction(killCharacters)(data);
+  };
+
+  const teleportCharacters = bindFunction(_teleportCharacter);
+
+  const addCharacters = bindFunction(_addCharacter);
+
+  const deleteCharacters = bindFunction(_deleteCharacter);
+
   useEffect(() => {
     const canvas = thanosCanvasRef.current;
     const ctx = canvas.getContext('2d');
     thanos.injectCtx(ctx);
 
-    socket.onStartRound(teleportCharacters);
     socket.onEnterRoom(addCharacters);
     socket.onEnterNewUser(addCharacters);
-    socket.onMove(moveCharacter);
-    socket.onEndRound(appearThanos);
-    socket.onLeaveUser(deleteCharacters);
+    socket.onStartRound(teleportCharacters);
     socket.onEndGame(teleportCharacters);
     socket.onResetGame(teleportCharacters);
+    socket.onLeaveUser(deleteCharacters);
     socket.onChatMessage(chatCharacters);
+    socket.onMove(moveCharacter);
+    socket.onEndRound(appearThanos);
 
     return () => {
       socket.offStartRound();

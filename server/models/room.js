@@ -315,7 +315,6 @@ class Room {
     this._broadcastPlayerNum();
   }
 
-  // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
     const { comment, answer } = this.currentQuiz;
     const dropUsers = this._checkCharactersLocation(this.currentQuiz.answer);

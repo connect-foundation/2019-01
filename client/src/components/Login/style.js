@@ -24,6 +24,7 @@ export const LoginButtonsWrapper = styled.div`
     top: 75%;
     left: 50%;
     padding: ${LOGIN.WRAPPER.PADDING}px;
+    stroke: black;
     box-sizing: border-box;
     font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
     transform: translate(-50%,-50%);
@@ -56,6 +57,8 @@ export const LoginGitHubButton = styled(LoginAnonyButton)`
   color: black;
   ${setFlex('row', 'center')}
 `;
+
+export const GitHubPath = styled.path.attrs({ d: LOGIN.SVG.PATH_INDEXES })``;
 
 export const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
   shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
