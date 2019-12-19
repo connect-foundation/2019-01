@@ -13,11 +13,11 @@ import { ROOM, DIRECTION, FIELD } from '../constants/room';
  * @property {number} currentRound
  * @property {number} currentTime
  * @property {Map<string, user>} users
- * @property {Array.<Array.<object>>} indexOfCharacters
+ * @property {Array.<Array.<object>>} indexOfUsers
  * @property {Array.<stringr>} nicknameList
  * @property {Map<string, user>} aliveUsers
  * @property {Array.<object>} moveQueue
- * @property {boolean} isMoving
+ * @property {boolean} isMoveLock
  */
 class Room {
   constructor(id, name) {
@@ -29,11 +29,11 @@ class Room {
     this.currentRound = 0;
     this.currentTime = 0;
     this.users = new Map();
-    this.indexOfCharacters = this._getEmptyIndexMatrix();
+    this.indexOfUsers = this._getEmptyIndexMatrix();
     this.nicknameList = [];
     this.aliveUsers = new Map();
     this.moveQueue = [];
-    this.isMoving = false;
+    this.isMoveLock = false;
   }
 
   async _fetchRandomNickname() {
@@ -80,6 +80,14 @@ class Room {
     this.users.forEach((user) => user.emitUpdatePlayerNum(data));
   }
 
+  _lockMove() {
+    this.isMoveLock = true;
+  }
+
+  _unlockMove() {
+    this.isMoveLock = false;
+  }
+
   // 아래는 on에 대응한 emit
 
   // emit: enter_room / 자신 / (자신 포함) 모든 캐릭터 + 닉네임 + 위치,
@@ -112,7 +120,7 @@ class Room {
    * @param {User} user
    */
   async enterUser(user) {
-    this._placeCharacter(user);
+    this._placeUser(user);
 
     if (this.nicknameList.length === 0) {
       await this._fetchRandomNickname();
@@ -137,7 +145,7 @@ class Room {
     const newUser = {
       isMine: false,
       nickname: user.getNickname(),
-      ...user.getCharacter().getInfo(),
+      ...user.getCharacterInfo(),
     };
 
     this.users.forEach((_user) => {
@@ -159,11 +167,10 @@ class Room {
     const characterList = [];
 
     this.users.forEach((user, nickname) => {
-      const character = user.getCharacter();
-      if (character.isPlaced() === false) return;
+      if (user.isPlaced() === false) return;
 
       const isMine = userId === user.getId();
-      characterList.push({ isMine, nickname, ...character.getInfo() });
+      characterList.push({ isMine, nickname, ...user.getCharacterInfo() });
     });
 
     return characterList;
@@ -171,26 +178,20 @@ class Room {
 
   // emit: leave_user / 다른 유저 / 삭제할 캐릭터 + 닉네임
   leaveUser(user) {
-    this._deleteCharacter(user);
-
     const nickname = user.getNickname();
-    this._dropUser(nickname);
-
+    this._deleteUser(user, nickname);
     this._broadcastLeaveUser(nickname);
     user.emitLeaveRoom();
     this._broadcastPlayerNum();
   }
 
-  _deleteCharacter(user) {
-    const character = user.getCharacter();
-    if (character !== null && character.isPlaced()) {
-      const [indexX, indexY] = character.getIndexes();
-      this.indexOfCharacters[indexX][indexY] = undefined;
+  _deleteUser(user, nickname) {
+    if (user.isPlaced()) {
+      const [indexX, indexY] = user.getIndexes();
+      this.indexOfUsers[indexX][indexY] = undefined;
       user.deleteCharacter();
     }
-  }
 
-  _dropUser(nickname) {
     this.nicknameList.push(nickname);
     this.users.delete(nickname);
     this.aliveUsers.delete(nickname);
@@ -219,65 +220,70 @@ class Room {
   }
 
   useSkill(user, direction) {
-    const character = user.getCharacter();
-    if (character.isPlaced() === false) return;
+    if (user.isPlaced() === false) return;
 
-    const [oldIndexX, oldIndexY] = character.getIndexes();
-    const { nextUser } = this._canBeMoved(oldIndexX, oldIndexY, direction);
+    const oldIndexes = user.getIndexes();
+    const newIndexes = this._makeNewIndexes(oldIndexes, direction);
+    const { nextUser } = this._checkUserCanMove(newIndexes);
 
     if (nextUser === undefined) return;
-    this.moveQueue.push({ user, direction, isLoop: false });
-    this.moveQueue.push({ user: nextUser, direction, isLoop: true });
+    this._turnUser(user, direction);
+    this._knockBackUser(nextUser, direction);
+
     if (this.moveQueue.length > 0) {
-      // eslint-disable-next-line no-shadow
-      const { user, direction, isLoop } = this.moveQueue.shift();
-      this.moveCharacter(user, direction, isLoop);
+      this.moveUser(this.moveQueue.shift());
     }
   }
 
-  // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
-  moveCharacter(user, direction, isLoop = false) {
-    const character = user.getCharacter();
+  _turnUser(user, direction) {
+    this.moveQueue.push({ user, direction, isLoop: false });
+  }
 
-    if (character.isPlaced() === false) return;
-    if (this.isMoving) {
+  _knockBackUser(user, direction) {
+    this.moveQueue.push({ user, direction, isLoop: true });
+  }
+
+  // emit: move / 모든 유저 / 특정 캐릭터의 이동할 위치
+  moveUser({ user, direction, isLoop = false }) {
+    if (user.isPlaced() === false) return;
+    if (this.isMoveLock) {
       this.moveQueue.push({ user, direction, isLoop });
       return;
     }
-    this.isMoving = true;
 
-    const [oldIndexX, oldIndexY] = character.getIndexes();
-    const { newIndexX, newIndexY, canMove } = this._canBeMoved(oldIndexX, oldIndexY, direction);
-    const canTurn = direction !== character.getDirection();
+    this._lockMove();
+    const canTurn = direction !== user.getDirection();
+    const oldIndexes = user.getIndexes();
+    const newIndexes = this._makeNewIndexes(oldIndexes, direction);
+    const { canMove } = this._checkUserCanMove(newIndexes);
+    const nickname = user.getNickname();
+    user.setDirection(direction);
 
-    if (canMove) {
-      character.setIndexes(newIndexX, newIndexY);
-      this.indexOfCharacters[oldIndexX][oldIndexY] = undefined;
-      this.indexOfCharacters[newIndexX][newIndexY] = user;
-    }
-
+    if (canMove) this._updateIndexes(oldIndexes, newIndexes, user);
     if (canMove || canTurn) {
-      // character의 기본 direction을 null로 설정했습니다.
-      // 추후에는 캐릭터 생성시 랜덤한 방향을 바라보게 하거나 아래를 보게 해줄수도 있겠죠
-      const nickname = user.getNickname();
-      character.setDirection(direction);
-      this.users.forEach((_user) => {
-        _user.emitMove({
-          canMove, nickname, direction, newIndexX, newIndexY,
-        });
-      });
+      const [newIndexX, newIndexY] = newIndexes;
+      this.users.forEach((_user) => _user.emitMove({
+        canMove, nickname, direction, newIndexX, newIndexY,
+      }));
     }
 
     if (canMove && isLoop) {
       this.moveQueue.push({ user, direction, isLoop });
     }
 
-    this.isMoving = false;
+    this._unlockMove();
     if (this.moveQueue.length > 0) {
-      // eslint-disable-next-line no-shadow
-      const { user, direction, isLoop } = this.moveQueue.shift();
-      this.moveCharacter(user, direction, isLoop);
+      this.moveUser(this.moveQueue.shift());
     }
+  }
+
+  _updateIndexes(oldIndexes, newIndexes, user) {
+    const [oldIndexX, oldIndexY] = oldIndexes;
+    const [newIndexX, newIndexY] = newIndexes;
+
+    this.indexOfUsers[oldIndexX][oldIndexY] = undefined;
+    this.indexOfUsers[newIndexX][newIndexY] = user;
+    user.setIndexes(newIndexX, newIndexY);
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
@@ -323,7 +329,7 @@ class Room {
   }
 
   _broadcastStartRound() {
-    const characterList = this._teleportCharacters(this.aliveUsers);
+    const characterList = this._teleportUsers(this.aliveUsers);
     const { question } = this.currentQuiz;
     const timeLimit = ROOM.TIME_LIMIT;
 
@@ -332,28 +338,28 @@ class Room {
     }));
   }
 
-  _teleportCharacters(users) {
-    this.isMoving = true;
-    this.indexOfCharacters = this._getEmptyIndexMatrix();
+  _teleportUsers(users) {
+    this._lockMove();
+    this.indexOfUsers = this._getEmptyIndexMatrix();
 
     const characterList = [];
     users.forEach((user, nickname) => {
-      const [indexX, indexY] = this._placeCharacter(user);
+      const [indexX, indexY] = this._placeUser(user);
       characterList.push({ nickname, indexX, indexY });
     });
 
     this._clearMoveQueue();
-    this.isMoving = false;
+    this._unlockMove();
 
     return characterList;
   }
 
   // emit: end_round / 모든 유저 / 정답, 오답 캐릭터 리스트, 해설
   _endRound() {
-    const dropUsers = this._checkCharactersLocation(this.currentQuiz.answer);
+    const dropUsers = this._checkUsersLocation(this.currentQuiz.answer);
     const isSomeoneAlive = this.aliveUsers.size > dropUsers.length;
 
-    if (isSomeoneAlive) this._killCharacter(dropUsers);
+    if (isSomeoneAlive) this._killUser(dropUsers);
     this._broadcastEndRound(dropUsers);
     this._broadcastPlayerNum();
 
@@ -382,7 +388,7 @@ class Room {
     this.users.forEach((user) => user.emitEndRound(endRoundInfos));
   }
 
-  _killCharacter(dropUsers) {
+  _killUser(dropUsers) {
     dropUsers.forEach(({ nickname }) => this.aliveUsers.delete(nickname));
   }
 
@@ -399,7 +405,7 @@ class Room {
     this._startRound();
   }
 
-  _checkCharactersLocation(answerSide) {
+  _checkUsersLocation(answerSide) {
     const [dropStart, dropEnd] = (
       answerSide
         ? [FIELD.X_START, FIELD.X_END]
@@ -408,12 +414,11 @@ class Room {
     const dropUsers = [];
     const setDropUser = (nickname, i, j) => {
       dropUsers.push({ nickname });
-      this.indexOfCharacters[i][j] = undefined;
+      this.indexOfUsers[i][j] = undefined;
     };
 
     this.aliveUsers.forEach((user, nickname) => {
-      const character = user.getCharacter();
-      const [indexX, indexY] = character.getIndexes();
+      const [indexX, indexY] = user.getIndexes();
       if (dropStart <= indexX && indexX < dropEnd) {
         setDropUser(nickname, indexX, indexY);
       }
@@ -431,7 +436,7 @@ class Room {
 
   _broadcastEndGame(winners) {
     const newWinners = winners.size === 0 ? this.users : winners;
-    const characterList = this._teleportCharacters(newWinners);
+    const characterList = this._teleportUsers(newWinners);
 
     this.users.forEach((user) => user.emitEndGame({ characterList }));
   }
@@ -443,7 +448,7 @@ class Room {
   }
 
   _broadcastResetGame() {
-    const characterList = this._teleportCharacters(this.users);
+    const characterList = this._teleportUsers(this.users);
     this.users.forEach((user) => {
       const isOwner = this._isOwner(user);
       user.emitResetGame({ characterList, isOwner });
@@ -459,14 +464,13 @@ class Room {
    * 유저의 캐릭터를 랜덤한 위치에 이동시키는 메서드
    * @returns {Array.<number, number>}
    */
-  _placeCharacter(user) {
-    this.isMoving = true;
+  _placeUser(user) {
+    this._lockMove();
     const [indexX, indexY] = this._makeRandomIndexes();
-    const character = user.getCharacter();
-    character.setIndexes(indexX, indexY);
-    this.indexOfCharacters[indexX][indexY] = user;
+    user.setIndexes(indexX, indexY);
+    this.indexOfUsers[indexX][indexY] = user;
     this._clearMoveQueue();
-    this.isMoving = false;
+    this._unlockMove();
     return [indexX, indexY];
   }
 
@@ -484,7 +488,7 @@ class Room {
   _makeRandomIndexes() {
     const indexX = Math.floor(Math.random() * ROOM.FIELD_COLUMN);
     const indexY = Math.floor(Math.random() * ROOM.FIELD_ROW);
-    if (this.indexOfCharacters[indexX][indexY]) return this._makeRandomIndexes();
+    if (this.indexOfUsers[indexX][indexY]) return this._makeRandomIndexes();
     return [indexX, indexY];
   }
 
@@ -495,33 +499,26 @@ class Room {
     return Array(ROOM.FIELD_COLUMN).fill().map(() => Array(ROOM.FIELD_ROW));
   }
 
-  /**
-   * @returns {Boolean}
-   */
-  _canBeMoved(oldIndexX, oldIndexY, direction) {
-    let [newIndexX, newIndexY] = [oldIndexX, oldIndexY];
+  _makeNewIndexes([indexX, indexY], direction) {
     switch (direction) {
-      case DIRECTION.LEFT: newIndexX -= 1; break;
-      case DIRECTION.RIGHT: newIndexX += 1; break;
-      case DIRECTION.UP: newIndexY -= 1; break;
-      case DIRECTION.DOWN: newIndexY += 1; break;
-      default: return {
-        newIndexX, newIndexY, canMove: false, nextUser: undefined,
-      };
+      case DIRECTION.LEFT: return [indexX - 1, indexY];
+      case DIRECTION.RIGHT: return [indexX + 1, indexY];
+      case DIRECTION.UP: return [indexX, indexY - 1];
+      case DIRECTION.DOWN: return [indexX, indexY + 1];
+      default: return [indexX, indexY];
     }
+  }
 
+  _checkUserCanMove([indexX, indexY]) {
     const isInField = (
-      newIndexX >= 0
-        && newIndexY >= 0
-        && newIndexY < ROOM.FIELD_ROW
-        && newIndexX < ROOM.FIELD_COLUMN
+      indexX >= 0
+        && indexY >= 0
+        && indexX < ROOM.FIELD_COLUMN
+        && indexY < ROOM.FIELD_ROW
     );
-    const nextUser = isInField ? this.indexOfCharacters[newIndexX][newIndexY] : undefined;
+    const nextUser = isInField ? this.indexOfUsers[indexX][indexY] : undefined;
     const canMove = isInField && nextUser === undefined;
-
-    return {
-      newIndexX, newIndexY, canMove, nextUser,
-    };
+    return { canMove, nextUser };
   }
 
   /**

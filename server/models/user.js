@@ -1,5 +1,6 @@
 import EVENT from '../constants/socket-event';
 import { isFunction } from '../util';
+import imageFinder from '../database/image';
 
 /**
  * User Class
@@ -15,9 +16,66 @@ class User {
     this.id = socket.id;
     this.socket = socket;
     this.nickname = socket.handshake.query.githubId;
-    this.character = null;
     this.roomId = null;
     this.guest = this.nickname === undefined;
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
+    this.direction = 0;
+  }
+
+  /**
+   * 넘겨받은 좌표를 instance내 좌표에 할당함
+   * @param {number} indexX
+   * @param {number} indexY
+   */
+  setIndexes(indexX, indexY) {
+    this.indexX = indexX;
+    this.indexY = indexY;
+  }
+
+  /**
+   * 현재 위치 좌표를 반환
+   * @returns {array.<number, number>}
+   */
+  getIndexes() {
+    return [this.indexX, this.indexY];
+  }
+
+  setDirection(direction) {
+    this.direction = direction;
+  }
+
+  getDirection() {
+    return this.direction;
+  }
+
+  /**
+   * 캐릭터가 놓여져 있는지 아닌지를 반환하는 함수
+   * @returns {Boolean}
+   */
+  isPlaced() {
+    return this.indexX !== null && this.indexY !== null;
+  }
+
+  /**
+   * 랜덤한 캐릭터 이미지를 데이터베이스로부터 가져와서
+   * 자신의 url에 할당한다.
+   */
+  async setCharacterUrl() {
+    const [image] = await imageFinder.fetchRandomCharacter();
+    this.characterUrl = image.url;
+  }
+
+  /**
+   * @returns {{url:string, indexX: number, indexY: number}}
+   */
+  getCharacterInfo() {
+    return {
+      url: this.characterUrl,
+      indexX: this.indexX,
+      indexY: this.indexY,
+    };
   }
 
   isGuest() {
@@ -36,16 +94,11 @@ class User {
     return this.id;
   }
 
-  getCharacter() {
-    return this.character;
-  }
-
-  setCharacter(character) {
-    this.character = character;
-  }
-
   deleteCharacter() {
-    this.character = null;
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
+    this.direction = 0;
   }
 
   isInLobby() {

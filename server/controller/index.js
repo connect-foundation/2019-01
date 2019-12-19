@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import Room from '../models/room';
 import User from '../models/user';
-import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
 import KNOCK_MESSAGE from '../constants/lobby';
@@ -67,20 +66,10 @@ class Controller {
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
-    await this._assignCharacter(user);
+    await user.setCharacterUrl();
     lobby.leaveUser(user.getId());
     await room.enterUser(user);
     lobby.updateRoomInfo(roomId);
-  }
-
-  /**
-   *
-   * @param {User} user
-   */
-  async _assignCharacter(user) {
-    const character = new Character();
-    await character.setUrl();
-    user.setCharacter(character);
   }
 
   /**
@@ -119,7 +108,7 @@ class Controller {
   _letUserMove(user, direction) {
     if (user.isInLobby()) return;
     const room = lobby.getRoom(user.getRoomId());
-    room.moveCharacter(user, direction);
+    room.moveUser({ user, direction });
   }
 
   /**
