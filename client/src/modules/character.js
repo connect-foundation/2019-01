@@ -42,6 +42,7 @@ class Character {
     this.chatBalloonX = 0;
     this.chatBalloonY = 0;
     this.balloonLineCount = 0;
+    this.parsedChat = [];
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
@@ -60,14 +61,6 @@ class Character {
     if (alive === false) this._clear();
   }
 
-  setCurrentChat(chatText) {
-    this.currentChat = chatText;
-  }
-
-  getNickname() {
-    return this.nickname;
-  }
-
   isAlive() {
     return this.alive;
   }
@@ -76,8 +69,12 @@ class Character {
     return this.mine;
   }
 
-  isMoving() {
-    return this.requestId !== null;
+  getNickname() {
+    return this.nickname;
+  }
+
+  setCurrentChat(chatText) {
+    this.currentChat = chatText;
   }
 
   clearMoveQueue() {
@@ -89,6 +86,10 @@ class Character {
     this.img = new Image();
     this.img.src = this.imgUrl;
     this.img.onload = () => this._draw();
+  }
+
+  isMoving() {
+    return this.requestId !== null;
   }
 
   /**
@@ -117,10 +118,6 @@ class Character {
     this._draw();
   }
 
-  /**
-   * @param {number} indexX
-   * @param {number} indexY
-   */
   teleport(indexX, indexY) {
     this._stop();
     this._clear();
@@ -132,12 +129,39 @@ class Character {
   chat() {
     if (this.chatTimeoutId !== null) clearTimeout(this.chatTimeoutId);
     this._clearChat();
+    this.parsedChat = parseChat(this.currentChat, this.ctx);
+    this.balloonLineCount = this.parsedChat.length;
     this._drawChat();
     this.chatTimeoutId = setTimeout(() => {
-      this.currentChat = '';
       this._clearChat();
+      this.currentChat = '';
+      this.parsedChat = [];
+      this.balloonLineCount = 0;
       clearTimeout(this.chatTimeoutId);
     }, CHAT_BALLOON.CLEAR_TIME_MS);
+  }
+
+  _draw() {
+    /*
+     * HTML canvas drawImage() Method :
+     * context.drawImage(img,startX,startY,startWidth,startheight,x,y,width,height)
+     */
+    if (this.alive === false) return;
+
+    this.ctx.drawImage(
+      this.img,
+      CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
+      CHARACTER.SIZE * this.direction,
+      CHARACTER.getWidth(),
+      CHARACTER.getHeight(),
+      TILE.WIDTH * this.indexX,
+      TILE.HEIGHT * this.indexY,
+      TILE.WIDTH,
+      TILE.HEIGHT,
+    );
+
+    this._drawNickname();
+    if (this.currentChat) this._drawChat();
   }
 
   _walk() {
@@ -171,6 +195,21 @@ class Character {
     }
   }
 
+  _relocate() {
+    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
+    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
+    this.teleport(newIndexX, newIndexY);
+    this.turn(direction, newIndexX, newIndexY);
+  }
+
+  _stop() {
+    if (this.requestId !== null) {
+      window.cancelAnimationFrame(this.requestId);
+      this.requestId = null;
+      this.curShapeLoopIdx = 0;
+    }
+  }
+
   _step() {
     const directionOption = {
       [CHARACTER.DIRECTION.UP]: { idx: 'indexY', sign: -1 },
@@ -188,38 +227,90 @@ class Character {
     this.curShapeLoopIdx += 1;
   }
 
-  _stop() {
-    if (this.requestId !== null) {
-      window.cancelAnimationFrame(this.requestId);
-      this.requestId = null;
-      this.curShapeLoopIdx = 0;
-    }
-  }
-
-  _relocate() {
-    this.moveQueue = this.moveQueue.slice(this.moveQueue.length - CHARACTER.LAST_FIVE_MOVES - 1);
-    const { direction, newIndexX, newIndexY } = this.moveQueue.shift();
-    this.teleport(newIndexX, newIndexY);
-    this.turn(direction, newIndexX, newIndexY);
-  }
-
-  _draw() {
-    if (this.alive === false) return;
-
-    this.ctx.drawImage(
-      this.img,
-      CHARACTER.SIZE * this.shape + CHARACTER.CROP_OFFSET,
-      CHARACTER.SIZE * this.direction,
-      CHARACTER.getWidth(),
-      CHARACTER.getHeight(),
+  _clear() {
+    this.ctx.clearRect(
       TILE.WIDTH * this.indexX,
       TILE.HEIGHT * this.indexY,
       TILE.WIDTH,
       TILE.HEIGHT,
     );
 
-    this._drawNickname();
-    if (this.currentChat) this._drawChat(this.currentChat);
+    this.ctx.clearRect(
+      this.nameTagX,
+      this.nameTagY,
+      NICKNAME.WIDTH + 1,
+      NICKNAME.HEIGHT,
+    );
+
+    this._clearChat();
+  }
+
+  _drawRoundRect(startX, startY, width, lineHeight, balloonLineCount, radius) {
+    let borderRadius = radius;
+    const maxHeight = lineHeight * balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
+
+    if (width < 2 * borderRadius) borderRadius = width / 2;
+    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
+
+    this.ctx.fillStyle = 'black';
+    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
+    this.ctx.beginPath();
+    this.ctx.moveTo(startX + borderRadius, startY);
+    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
+    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
+    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
+    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
+    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
+    this.ctx.closePath();
+    this.ctx.stroke();
+    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
+    this.ctx.fill();
+  }
+
+  _clearChat() {
+    this.ctx.clearRect(
+      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
+      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
+      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
+        + CHAT_BALLOON.BORDER_WIDTH * 2
+        + CHAT_BALLOON.TIP_HEIGHT,
+    );
+  }
+
+  _drawChat() {
+    this.chatBalloonX = (TILE.WIDTH * this.indexX)
+      - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+
+    this.chatBalloonY = TILE.HEIGHT * this.indexY
+      - this.balloonLineCount * CHAT_BALLOON.LINE_HEIGHT
+      - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
+
+    this._drawRoundRect(
+      this.chatBalloonX,
+      this.chatBalloonY,
+      CHAT_BALLOON.WIDTH,
+      CHAT_BALLOON.LINE_HEIGHT,
+      this.balloonLineCount,
+      CHAT_BALLOON.BORDER_RADIUS,
+    );
+
+    this.ctx.font = CHAT_BALLOON.FONT;
+    this.ctx.textAlign = CHAT_BALLOON.ALIGN;
+    this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
+    this.ctx.fillStyle = 'black';
+
+    this.parsedChat.forEach((val, lineOrder) => {
+      this.ctx.fillText(
+        val,
+        this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
+        this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
+          + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
+          + CHAT_BALLOON.PADDING_TOP,
+      );
+    });
   }
 
   _drawNickname() {
@@ -246,95 +337,6 @@ class Character {
       this.nameTagY + NICKNAME.HEIGHT / 2 + 2,
       NICKNAME.WIDTH,
     );
-  }
-
-  _drawChat() {
-    const parsedChat = parseChat(this.currentChat, this.ctx);
-    this.balloonLineCount = parsedChat.length;
-
-    this.chatBalloonX = (TILE.WIDTH * this.indexX)
-      - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
-
-    this.chatBalloonY = TILE.HEIGHT * this.indexY
-      - this.balloonLineCount * CHAT_BALLOON.LINE_HEIGHT
-      - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
-
-    this._drawRoundRect(
-      this.chatBalloonX,
-      this.chatBalloonY,
-      CHAT_BALLOON.WIDTH,
-      CHAT_BALLOON.LINE_HEIGHT,
-      CHAT_BALLOON.BORDER_RADIUS,
-    );
-
-    this.ctx.font = CHAT_BALLOON.FONT;
-    this.ctx.textAlign = CHAT_BALLOON.ALIGN;
-    this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
-    this.ctx.fillStyle = 'black';
-
-    parsedChat.forEach((val, lineOrder) => {
-      this.ctx.fillText(
-        val,
-        this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
-        this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
-          + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
-          + CHAT_BALLOON.PADDING_TOP,
-      );
-    });
-  }
-
-  _drawRoundRect(startX, startY, width, lineHeight, radius) {
-    let borderRadius = radius;
-    const maxHeight = lineHeight * this.balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
-
-    if (width < 2 * borderRadius) borderRadius = width / 2;
-    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
-
-    this.ctx.fillStyle = 'black';
-    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
-    this.ctx.beginPath();
-    this.ctx.moveTo(startX + borderRadius, startY);
-    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
-    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
-    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
-    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
-    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
-    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
-    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
-    this.ctx.closePath();
-    this.ctx.stroke();
-    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
-    this.ctx.fill();
-  }
-
-  _clear() {
-    this.ctx.clearRect(
-      TILE.WIDTH * this.indexX,
-      TILE.HEIGHT * this.indexY,
-      TILE.WIDTH,
-      TILE.HEIGHT,
-    );
-
-    this.ctx.clearRect(
-      this.nameTagX,
-      this.nameTagY,
-      NICKNAME.WIDTH + 1,
-      NICKNAME.HEIGHT,
-    );
-
-    this._clearChat();
-  }
-
-  _clearChat() {
-    this.ctx.clearRect(
-      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
-      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
-      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
-      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
-        + CHAT_BALLOON.BORDER_WIDTH * 2
-        + CHAT_BALLOON.TIP_HEIGHT,
-    );
-    this.balloonLineCount = 0;
   }
 }
 

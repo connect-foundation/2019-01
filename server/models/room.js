@@ -261,8 +261,9 @@ class Room {
   }
 
   // emit: chat_message / 모든 유저 / 채팅 로그 (닉네임 + 메시지)
-  chat(nickname, message) {
-    this.users.forEach((user) => user.emitChatMessage({ nickname, message }));
+  chat(user, message) {
+    const nickname = user.getNickname();
+    this.users.forEach((_user) => _user.emitChatMessage({ nickname, message }));
   }
 
   /**
