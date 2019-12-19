@@ -50,12 +50,12 @@ const QuizCategory = () => {
         };
         setFetchQuiz(() => fetchAddData);
         setModalContent({
-          id: 0,
-          category: '',
-          level: 1,
-          question: '',
-          comment: '',
-          answer: 0,
+          id: ADMIN.MODAL.DEFAULT.ID,
+          category: ADMIN.MODAL.DEFAULT.CATEGORY,
+          level: ADMIN.MODAL.DEFAULT.LEVEL,
+          question: ADMIN.MODAL.DEFAULT.QUESTION,
+          comment: ADMIN.MODAL.DEFAULT.COMMENT,
+          answer: ADMIN.MODAL.DEFAULT.ANSWER,
         });
       }
       return true;

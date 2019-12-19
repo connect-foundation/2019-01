@@ -83,7 +83,7 @@ const Room = () => {
           <ChatArea />
         </RoomWrapper>
       </Wrapper>
-      {isValidRoom ? '' : <Alert message="잘못된 경로로 들어왔습니다." closeCallback={goToLobby} />}
+      {isValidRoom ? '' : <Alert message={ROOM.MESSAGE.PATH_ERROR} closeCallback={goToLobby} />}
     </>
   );
 };
