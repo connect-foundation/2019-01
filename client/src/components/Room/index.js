@@ -25,7 +25,7 @@ const Room = () => {
   const goToLobby = () => history.goBack();
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *  @param {boolean} isOwner
    */
   const notifyEndGame = ({ isOwner }) => {

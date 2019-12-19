@@ -21,7 +21,7 @@ export const makeWithTwoDigits = (number) => number.toString().padStart(2, '0');
  *
  * @param {string} method
  * @param {string} path
- * @param {object} body
+ * @param {Object} body
  * @returns {object}
  */
 export const fetchData = async (method, path, body) => {

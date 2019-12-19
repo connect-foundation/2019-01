@@ -24,7 +24,7 @@ const Info = () => {
   };
 
   /**
-   * @param {object} data
+   * @param {Object} data
    *  @param {number} roomName
    *  @param {number} numOfViewer
    */

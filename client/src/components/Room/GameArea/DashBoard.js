@@ -58,7 +58,7 @@ const DashBoard = ({ buttonClickSound }) => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *   @param {string} param0.question
    *   @param {number} param0.timeLimit
    */

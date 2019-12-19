@@ -35,7 +35,7 @@ const Lobby = () => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *  @param {boolean} param0.isEnterable
    *  @param {string} param0.roomId
    *  @param {string} param0.message
@@ -64,7 +64,7 @@ const Lobby = () => {
   };
 
   /**
-   * @param {object} newRoomInfo
+   * @param {Object} newRoomInfo
    */
   const addRoom = (newRoomInfo) => {
     roomInfos.set(newRoomInfo.id, newRoomInfo);
@@ -75,7 +75,7 @@ const Lobby = () => {
   };
 
   /**
-   * @param {object} currentRoomInfos
+   * @param {Object} currentRoomInfos
    */
   const updateCurrentRoomInfos = (currentRoomInfos) => {
     currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
@@ -83,9 +83,9 @@ const Lobby = () => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *  @param {string} roomId
-   *  @param {object} roomInfo
+   *  @param {Object} roomInfo
    */
   const updateRoomInfo = ({ roomId, roomInfo }) => {
     const { numOfUsers } = roomInfo;
