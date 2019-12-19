@@ -38,6 +38,18 @@ class Room {
     this.isMoveLock = false;
   }
 
+  getId() {
+    return this.id;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  isStarted() {
+    return this.isGameStarted;
+  }
+
   async _fetchRandomNickname() {
     const adjList = await nicknameFinder.fetchAdjList();
     const nounList = await nicknameFinder.fetchNounList();
@@ -47,14 +59,6 @@ class Room {
       const nickname = `${adjList[idx].adj} ${nounList[idx].noun}`;
       this.nicknameList.push(nickname);
     }
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  getName() {
-    return this.name;
   }
 
   /**
@@ -78,10 +82,6 @@ class Room {
   isUserEntered(user) {
     if (user.isGuest()) return false;
     return this.users.has(user.getNickname());
-  }
-
-  isStarted() {
-    return this.isGameStarted;
   }
 
   _broadcastPlayerNum() {
@@ -137,10 +137,13 @@ class Room {
    * @param {User} user
    */
   _broadcastNewUser(user) {
+    const [indexX, indexY] = user.getIndexes();
     const newUser = {
       isMine: false,
       nickname: user.getNickname(),
-      ...user.getCharacterInfo(),
+      url: user.getCharacterUrl(),
+      indexX,
+      indexY,
     };
 
     this.users.forEach((_user) => {
@@ -169,9 +172,12 @@ class Room {
 
     this.users.forEach((user, nickname) => {
       if (user.isPlaced() === false) return;
-
+      const [indexX, indexY] = user.getIndexes();
       const isMine = userId === user.getId();
-      characterList.push({ isMine, nickname, ...user.getCharacterInfo() });
+      const url = user.getCharacterUrl();
+      characterList.push({
+        isMine, nickname, url, indexX, indexY,
+      });
     });
 
     return characterList;
@@ -196,7 +202,7 @@ class Room {
     if (user.isPlaced()) {
       const [indexX, indexY] = user.getIndexes();
       this.indexOfUsers[indexX][indexY] = undefined;
-      user.deleteCharacter();
+      user.deleteCharacterInfo();
     }
 
     this.nicknameList.push(nickname);

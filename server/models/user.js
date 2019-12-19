@@ -28,48 +28,8 @@ class User {
     this.direction = 0;
   }
 
-  setIndexes(indexX, indexY) {
-    this.indexX = indexX;
-    this.indexY = indexY;
-  }
-
-  getIndexes() {
-    return [this.indexX, this.indexY];
-  }
-
-  setDirection(direction) {
-    this.direction = direction;
-  }
-
-  getDirection() {
-    return this.direction;
-  }
-
-  /**
-   * @returns {boolean}
-   */
-  isPlaced() {
-    return this.indexX !== null && this.indexY !== null;
-  }
-
-  async setCharacterUrl() {
-    const [image] = await imageFinder.fetchRandomCharacter();
-    this.characterUrl = image.url;
-  }
-
-  /**
-   * @returns {{url:string, indexX: number, indexY: number}}
-   */
-  getCharacterInfo() {
-    return {
-      url: this.characterUrl,
-      indexX: this.indexX,
-      indexY: this.indexY,
-    };
-  }
-
-  isGuest() {
-    return this.guest;
+  getId() {
+    return this.id;
   }
 
   getNickname() {
@@ -78,24 +38,6 @@ class User {
 
   setNickname(nickname) {
     this.nickname = nickname;
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  deleteCharacter() {
-    this.characterUrl = null;
-    this.indexX = null;
-    this.indexY = null;
-    this.direction = 0;
-  }
-
-  /**
-   * @returns {boolean}
-   */
-  isInLobby() {
-    return this.roomId === null;
   }
 
   getRoomId() {
@@ -108,6 +50,56 @@ class User {
 
   deleteRoomId() {
     this.roomId = null;
+  }
+
+  isGuest() {
+    return this.guest;
+  }
+
+  getCharacterUrl() {
+    return this.characterUrl;
+  }
+
+  async setCharacterUrl() {
+    const [image] = await imageFinder.fetchRandomCharacter();
+    this.characterUrl = image.url;
+  }
+
+  getIndexes() {
+    return [this.indexX, this.indexY];
+  }
+
+  setIndexes(indexX, indexY) {
+    this.indexX = indexX;
+    this.indexY = indexY;
+  }
+
+  getDirection() {
+    return this.direction;
+  }
+
+  setDirection(direction) {
+    this.direction = direction;
+  }
+
+  deleteCharacterInfo() {
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isPlaced() {
+    return this.indexX !== null && this.indexY !== null;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isInLobby() {
+    return this.roomId === null;
   }
 
   /**
