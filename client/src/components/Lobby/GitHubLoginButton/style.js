@@ -23,7 +23,7 @@ export const LoginTextWrapper = styled.div`
     justify-content: ${({ isLoggedOut }) => (isLoggedOut ? 'center' : 'space-between')};
 `;
 
-export const GitHubPath = styled.path.attrs({ d: LOGIN_BUTTON.SVG.PATH.INDEXES })``;
+export const GitHubPath = styled.path.attrs({ d: LOGIN_BUTTON.SVG.PATH_INDEXES })``;
 
 export const GitHubIcon = styled.svg.attrs(
   { viewBox: `${LOGIN_BUTTON.SVG.X} ${LOGIN_BUTTON.SVG.Y} ${LOGIN_BUTTON.SVG.W} ${LOGIN_BUTTON.SVG.H}` },

@@ -10,7 +10,7 @@ import KNOCK_MESSAGE from '../constants/lobby';
  */
 class Controller {
   /**
-   * @param {object} socket
+   * @param {Object} socket
    */
   connectUser(socket) {
     console.log('a user connected');

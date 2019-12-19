@@ -22,6 +22,7 @@ export const DASHBOARD = {
   HEIGHT: TILE.HEIGHT * 2,
   BORDER_RADIUS: 12,
   BORDER: '2px solid gray',
+  CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
 };
 
 export const QUIZ = {

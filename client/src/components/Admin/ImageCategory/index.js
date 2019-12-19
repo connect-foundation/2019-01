@@ -14,11 +14,11 @@ import ADMIN from '../../../constants/admin';
 
 const ImageCategory = () => {
   const [ImageData, setImageData] = useState([]);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [fetchImage, setFetchImage] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [fetchImage, setFetchImage] = useState(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -27,6 +27,13 @@ const ImageCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Object} image
+   *   @param {number} image.id
+   *   @param {string} image.category
+   *   @param {string} image.name
+   *   @param {string} image.url
+   */
   const openEditModal = (image) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
@@ -62,6 +69,9 @@ const ImageCategory = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  /**
+   * @param {Array.<{id: number}>} imageList
+   */
   const makeNewRow = (imageList) => {
     setImageData(() => imageList.map(
       (image) => (

@@ -11,13 +11,13 @@ const popupGitHubOAuth = (OAuthUrl, callback) => {
   const popup = window.open(OAuthUrl, 'popUpWindow', settings);
   let timerId = null;
 
-  const checkPopupClose = () => {
+  const checkPopupClosed = () => {
     if (popup.closed === false) return;
     clearInterval(timerId);
     if (isFunction(callback)) callback();
   };
 
-  timerId = setInterval(checkPopupClose, OAUTH.CHECK_TIME);
+  timerId = setInterval(checkPopupClosed, OAUTH.CHECK_TIME_MS);
 };
 
 export default popupGitHubOAuth;

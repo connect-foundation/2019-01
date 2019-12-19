@@ -14,11 +14,11 @@ import ADMIN from '../../../constants/admin';
 
 const QuizCategory = () => {
   const [quizData, setQuizData] = useState([]);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [fetchQuiz, setFetchQuiz] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [fetchQuiz, setFetchQuiz] = useState(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -27,6 +27,9 @@ const QuizCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Object} quiz
+   */
   const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
@@ -64,6 +67,9 @@ const QuizCategory = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  /**
+   * @param {Array.<object>} quizList
+   */
   const makeNewRow = (quizList) => {
     setQuizData(() => quizList.map(
       (quiz) => (

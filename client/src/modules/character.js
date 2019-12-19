@@ -6,6 +6,30 @@ import {
   CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
 } from '../constants/room';
 
+/**
+ * Character Class
+ * @property {CanvasRenderingContext2D} ctx
+ * @property {Image} img
+ * @property {string} imgUrl
+ * @property {number} indexX
+ * @property {number} indexY
+ * @property {number} nameTagX
+ * @property {number} nameTagY
+ * @property {number} chatBalloonX
+ * @property {number} chatBalloonY
+ * @property {number} balloonLineCount
+ * @property {number} shape
+ * @property {number} direction
+ * @property {number} curShapeLoopIdx
+ * @property {number} frameCount
+ * @property {number} requestId
+ * @property {number} chatTimeoutId
+ * @property {string} nickname
+ * @property {string} currentChat
+ * @property {boolean} mine
+ * @property {Array.<object>} moveQueue
+ * @property {boolean} alive
+ */
 class Character {
   constructor(imgUrl, indexX, indexY, nickname, isMine) {
     this.ctx = null;
@@ -68,6 +92,11 @@ class Character {
     return this.requestId !== null;
   }
 
+  /**
+   * @param {number} direction
+   * @param {number} newIndexX
+   * @param {number} newIndexY
+   */
   move(direction, newIndexX, newIndexY) {
     if (this.ctx === null) return;
     if (this.requestId) {
@@ -78,6 +107,9 @@ class Character {
     this.requestId = window.requestAnimationFrame(() => this._walk());
   }
 
+  /**
+   * @param {number} direction
+   */
   turn(direction) {
     if (this.ctx === null) return;
     if (this.requestId) return;

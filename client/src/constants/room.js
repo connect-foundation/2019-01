@@ -12,32 +12,32 @@ export const FIELD = {
   COLUMN: 16,
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
-  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
+  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
 };
 
 export const THANOS = {
-  IMG: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
   TIME_MS: 2000,
   HEIGHT_TERM: 10,
   TRUE_X: 0,
   FALSE_X: FIELD.getWidth() / 2,
   WIDTH: FIELD.getWidth() / 2,
   HEIGHT: FIELD.getHeight(),
+  IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
 };
 
 export const CHARACTER = {
   SIZE: 48,
   CROP_OFFSET: 4,
-  getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
-  getHeight() { return this.SIZE; },
   MOVE_FRAME: 3,
   MOVE_FRAME_RELOCATE: 1,
   LAST_FIVE_MOVES: 5,
+  getHeight() { return this.SIZE; },
+  getWidth() { return this.SIZE - this.CROP_OFFSET * 2; },
   DIRECTION: {
+    UP: 3,
     DOWN: 0,
     LEFT: 1,
     RIGHT: 2,
-    UP: 3,
   },
   SHAPE: {
     STAND: 1,
@@ -56,15 +56,15 @@ export const CHAT_BALLOON = {
   PADDING_RIGHT: 5,
   BORDER_WIDTH: 3,
   BORDER_RADIUS: 5,
-  getTextWidth() { return this.WIDTH - this.PADDING_LEFT - this.PADDING_RIGHT; },
   TIP_WIDTH: 3,
   TIP_HEIGHT: 5,
   MAX_LINE_COUNT: 5,
+  CLEAR_TIME_MS: 3000,
   FONT: '13px nanoom',
   ALIGN: 'center',
   BASELINE: 'middle',
   BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.3)',
-  CLEAR_TIME_MS: 3000,
+  getTextWidth() { return this.WIDTH - this.PADDING_LEFT - this.PADDING_RIGHT; },
 };
 
 export const NICKNAME = {
@@ -79,28 +79,28 @@ export const NICKNAME = {
 };
 
 export const KEYCODE = {
-  LEFT: 37,
   UP: 38,
-  RIGHT: 39,
   DOWN: 40,
+  LEFT: 37,
+  RIGHT: 39,
   ENTER: 13,
 };
 
 export const DASHBOARD = {
-  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
-  WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
-  NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   SECOND: 1,
   SECOND_MS: 1000,
+  WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
+  NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
+  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
 };
 
 
 export const CHAT_AREA = {
   MAX_MESSAGE_LENGTH: 50,
-  EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
-  EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
   NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
+  EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
+  EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
 };
 
 export const SOUND_TOGGLE = {
@@ -116,13 +116,13 @@ export const ROOM = {
 
 export const ROOM_NAME = {
   WRAPPER_WIDTH: CHAT_AREA.WIDTH - 30,
-  REGEX: {
-    HANGUL: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g,
-    EMOJI: /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
-  },
   FONT_WIDTH: {
     HANGUL: 30,
     EMOJI: 30,
     OTHERS: 16,
+  },
+  REGEX: {
+    HANGUL: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g,
+    EMOJI: /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
   },
 };

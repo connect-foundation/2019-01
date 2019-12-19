@@ -11,8 +11,8 @@ import URL from '../../../constants/url';
 import ADMIN from '../../../constants/admin';
 
 const UserCategory = () => {
-  const [userData, setUserData] = useState(null);
   const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [fetchResult, setFetchResult] = useState(false);
   const timerId = useRef(null);
 
@@ -22,10 +22,12 @@ const UserCategory = () => {
     timerId.current = setTimeout(() => setOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Array.<object>} userList
+   */
   const makeNewRow = (userList) => {
-    const userTagList = userList.map((user) => (
-      <UserRow key={user.github_id} user={user} openSnackbar={openSnackbar} />));
-    setUserData(userTagList);
+    setUserData(userList.map((user) => (
+      <UserRow key={user.github_id} user={user} openSnackbar={openSnackbar} />)));
   };
 
   useEffect(() => {

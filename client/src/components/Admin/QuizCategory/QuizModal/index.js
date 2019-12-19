@@ -34,23 +34,23 @@ const QuizModal = ({
         <TextField
           label="category"
           value={categoryValue}
-          onChange={(e) => setCategoryValue(e.target.value)} />
+          onChange={(event) => setCategoryValue(event.target.value)} />
         <TextField
           label="level"
           value={levelValue}
-          onChange={(e) => setLevelValue(e.target.value)} />
+          onChange={(event) => setLevelValue(event.target.value)} />
         <TextField
           label="question"
           value={questionValue}
-          onChange={(e) => setQuestionValue(e.target.value)} />
+          onChange={(event) => setQuestionValue(event.target.value)} />
         <TextField
           label="comment"
           value={commentValue}
-          onChange={(e) => setCommentValue(e.target.value)} />
+          onChange={(event) => setCommentValue(event.target.value)} />
         <TextField
           label="answer"
           value={answerValue}
-          onChange={(e) => setAnswerValue(e.target.value)} />
+          onChange={(event) => setAnswerValue(event.target.value)} />
         <ModalButtonWrapper>
           <Button
             variant="contained"
