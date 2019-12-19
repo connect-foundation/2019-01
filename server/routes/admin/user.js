@@ -1,6 +1,8 @@
 import express from 'express';
+import createError from 'http-errors';
 import userDb from '../../database/user';
 import { isSuccessFul } from '../../util';
+import ERROR_MSG from '../../constants/error-message';
 
 const router = express.Router();
 
@@ -31,7 +33,8 @@ router.put('/', async (req, res, next) => {
       deauthorize: userDb.deauthorize,
     };
     const updateFunction = actionUpdateMap[action];
-    if (updateFunction === undefined) throw new Error('non-exist action');
+    if (updateFunction === undefined) throw createError(400, ERROR_MSG.NON_EXIST_ACTION);
+
     const queryResult = await updateFunction(githubId);
     const result = isSuccessFul(queryResult);
     res.status(200).send({ result });

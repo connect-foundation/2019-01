@@ -13,7 +13,7 @@ const URL = {
     USER_LIST: '/admin/user/list',
     QUIZ: '/admin/quiz',
     QUIZ_LIST: '/admin/quiz/list',
-    NICKNAME: '/admin/nickname/',
+    NICKNAME: '/admin/nickname',
     IMAGE: '/admin/image',
     IMAGE_LIST: '/admin/image/list',
   },

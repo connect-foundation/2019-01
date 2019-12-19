@@ -23,7 +23,7 @@ const Nickname = ({ type }) => {
   const openSnackbar = (result) => {
     setOpen(true);
     setFetchResult(result);
-    timerId.current = setTimeout(() => setOpen(false), ADMIN.ADMINSNACKBAR_TIME_MS);
+    timerId.current = setTimeout(() => setOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
   const makeNewRow = (nicknameArray) => {
@@ -43,11 +43,12 @@ const Nickname = ({ type }) => {
   const addNickname = () => {
     const nicknameData = {};
     nicknameData[type] = newNickname;
-    fetchData('post', `${URL.ADMIN.NICKNAME}${type}`, nicknameData);
+    fetchData('post', `${URL.ADMIN.NICKNAME}/${type}`, nicknameData)
+      .then(({ result }) => openSnackbar(result));
   };
 
   useEffect(() => {
-    fetchData('get', `${URL.ADMIN.NICKNAME}${type}/list`)
+    fetchData('get', `${URL.ADMIN.NICKNAME}/${type}/list`)
       .then((res) => makeNewRow(type === 'adj' ? res.adjList : res.nounList));
     return () => clearTimeout(timerId.current);
   }, []);

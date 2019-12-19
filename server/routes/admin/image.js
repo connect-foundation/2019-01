@@ -28,7 +28,7 @@ router.put('/', async (req, res, next) => {
   try {
     const { id, data } = req.body;
     const { category, name, url } = data;
-    const queryResult = await imageDb.updateImage(id, category, name, url);
+    const queryResult = await imageDb.update(id, category, name, url);
     const result = isSuccessFul(queryResult);
     res.status(200).send({ result });
   } catch (error) {
