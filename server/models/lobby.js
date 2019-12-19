@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /**
  * Lobby Class
- * @property {Map} users
+ * @property {Map.<string, User>} users
+ * @property {Map.<string, Room>} rooms
  */
 class Lobby {
   constructor() {
@@ -9,14 +10,26 @@ class Lobby {
     this.rooms = new Map();
   }
 
+  /**
+   * @param {string} roomId
+   *
+   * @returns {Room}
+   */
   getRoom(roomId) {
     return this.rooms.get(roomId);
   }
 
+  /**
+   * @param {string} roomId
+   */
   deleteRoom(roomId) {
     this.rooms.delete(roomId);
   }
 
+  /**
+   * @param {User} user
+   * @param {Room} room
+   */
   addRoom(user, room) {
     const roomId = room.getId();
     this.rooms.set(roomId, room);
@@ -30,7 +43,6 @@ class Lobby {
   }
 
   /**
-   *
    * @param {User} user
    */
   enterUser(user) {
@@ -43,13 +55,15 @@ class Lobby {
   }
 
   /**
-   *
    * @param {string} userId
    */
   leaveUser(userId) {
     this.users.delete(userId);
   }
 
+  /**
+   * @param {string} roomId
+   */
   updateRoomInfo(roomId) {
     const room = this.getRoom(roomId);
     const roomInfo = {
@@ -64,6 +78,20 @@ class Lobby {
     });
   }
 
+  /**
+   * @typedef RoomInfo
+   * @type {object}
+   * @property {string} id
+   * @property {string} name
+   * @property {number} numOfUsers
+   * @property {boolean} isEnterable
+   */
+
+  /**
+   * @param {Room} room
+   *
+   * @returns {RoomInfo}
+   */
   _makeRoomInfo(room) {
     return {
       id: room.getId(),
@@ -73,6 +101,9 @@ class Lobby {
     };
   }
 
+  /**
+   * @returns {Array.<RoomInfo>}
+   */
   _makeRoomInfoList() {
     const roomInfoList = [];
     this.rooms.forEach((room) => {
