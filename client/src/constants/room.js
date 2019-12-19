@@ -88,6 +88,7 @@ export const KEYCODE = {
 
 export const DASHBOARD = {
   BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
   WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
   NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   SECOND: 1,
@@ -97,7 +98,6 @@ export const DASHBOARD = {
 
 export const CHAT_AREA = {
   MAX_MESSAGE_LENGTH: 50,
-  CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
   EMOJI_URL_PLAYER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/player-emoji.png',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
   NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
