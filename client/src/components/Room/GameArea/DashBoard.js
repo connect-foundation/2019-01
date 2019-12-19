@@ -16,6 +16,10 @@ const DashBoard = ({ buttonClickSound }) => {
   const [isGameStarted, setGameStarted] = useState(false);
   let lastTimerId;
 
+  const leaveUser = ({ isOwner }) => {
+    if (isOwner !== undefined) setOwner(isOwner);
+  };
+
   const countDown = () => {
     setCounter((prevCounter) => {
       if (prevCounter > 1) {
@@ -40,6 +44,17 @@ const DashBoard = ({ buttonClickSound }) => {
   const startGame = () => {
     buttonClickSound.play();
     socket.emitStartGame();
+  };
+
+  const endGame = () => {
+    setGameEnded(true);
+    setNotice(DASHBOARD.WIN_MESSAGE);
+  };
+
+  const resetGame = () => {
+    setGameEnded(false);
+    setGameStarted(false);
+    setCounter('--');
   };
 
   /**
@@ -67,17 +82,6 @@ const DashBoard = ({ buttonClickSound }) => {
     setNotice(noticeText);
   };
 
-  const endGame = () => {
-    setGameEnded(true);
-    setNotice(DASHBOARD.WIN_MESSAGE);
-  };
-
-  const resetGame = () => {
-    setGameEnded(false);
-    setGameStarted(false);
-    setCounter('--');
-  };
-
   const enterRoom = ({
     question, isGameStarted, timeLimit, isOwner,
   }) => {
@@ -88,10 +92,6 @@ const DashBoard = ({ buttonClickSound }) => {
       setCounter(timeLimit);
       startCountDown();
     }
-  };
-
-  const leaveUser = ({ isOwner }) => {
-    if (isOwner !== undefined) setOwner(isOwner);
   };
 
   const Greeting = () => (
@@ -120,23 +120,22 @@ const DashBoard = ({ buttonClickSound }) => {
   );
 
   useEffect(() => {
-    socket.onStartGame(readyGame);
-    socket.onStartRound(startRound);
-    socket.onEndRound(endRound);
-    socket.onEndGame(endGame);
-    socket.onResetGame(resetGame);
     socket.onEnterRoom(enterRoom);
     socket.onLeaveUser(leaveUser);
+    socket.onStartGame(readyGame);
+    socket.onEndGame(endGame);
+    socket.onResetGame(resetGame);
+    socket.onStartRound(startRound);
+    socket.onEndRound(endRound);
 
     return () => {
       socket.offEnterRoom();
       socket.offLeaveUser();
-      socket.offStartRound();
-      socket.offEndRound();
-      socket.offResetGame();
+      socket.offStartGame();
       socket.offEndGame();
       socket.offResetGame();
-      socket.offStartGame();
+      socket.offStartRound();
+      socket.offEndRound();
       clearTimeout(lastTimerId);
     };
   }, []);
