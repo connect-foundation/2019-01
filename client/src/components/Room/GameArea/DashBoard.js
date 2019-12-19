@@ -78,6 +78,13 @@ const DashBoard = ({ buttonClickSound }) => {
     setCounter('--');
   };
 
+  /**
+   * @param {object} param0
+   *   @param {string} param0.question
+   *   @param {boolean} param0.isGameStarted
+   *   @param {number} param0.timeLimit
+   *   @param {boolean} param0.question
+   */
   const enterRoom = ({
     question, isGameStarted, timeLimit, isOwner,
   }) => {
@@ -90,6 +97,10 @@ const DashBoard = ({ buttonClickSound }) => {
     }
   };
 
+  /**
+   * @param {object} param0
+   * @param {boolean} param0.isOwner
+   */
   const leaveUser = ({ isOwner }) => {
     if (isOwner !== undefined) setOwner(isOwner);
   };

@@ -19,6 +19,14 @@ const Field = () => {
     character.setAlive(false);
   };
 
+  /**
+   * @param {object} param0
+   *   @param {boolean} param0.canMove
+   *   @param {string} param0.nickname
+   *   @param {number} param0.direction
+   *   @param {number} param0.newIndexX
+   *   @param {number} param0.newIndexY
+   */
   const moveCharacter = ({
     canMove, nickname, direction, newIndexX, newIndexY,
   }) => {
@@ -39,6 +47,11 @@ const Field = () => {
     });
   };
 
+  /**
+   * @param {object} param0
+   *   @param {string} param0.nickname
+   *   @param {string} param0.message
+   */
   const chatCharacters = ({ nickname, message }) => {
     setCharacters((prevCharacters) => {
       const newCharacters = new Map(prevCharacters);
@@ -50,6 +63,17 @@ const Field = () => {
     });
   };
 
+  /**
+   * @param {Array} newCharacters
+   * @returns {function(
+   * {
+   * url: string,
+   * indexX: number,
+   * indexY: number,
+   * isMine: boolean,
+   * nickname: string
+   * })}
+   */
   const _addCharacter = (newCharacters) => ({
     url, indexX, indexY, isMine, nickname,
   }) => {
@@ -58,6 +82,10 @@ const Field = () => {
     newCharacters.set(nickname, character);
   };
 
+  /**
+   * @param {Array} newCharacters
+   * @returns {function({nickname: string, indexX: number, indexY: number})}
+   */
   const _teleportCharacter = (newCharacters) => ({ nickname, indexX, indexY }) => {
     const character = newCharacters.get(nickname);
     if (character === undefined) return;
@@ -67,6 +95,10 @@ const Field = () => {
     character.teleport(indexX, indexY);
   };
 
+  /**
+   * @param {Array} newCharacters
+   * @returns {function({nickname: string})}
+   */
   const _deleteCharacter = (newCharacters) => ({ nickname }) => {
     const character = newCharacters.get(nickname);
     if (character === undefined) return;
