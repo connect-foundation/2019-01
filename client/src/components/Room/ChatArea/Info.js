@@ -23,6 +23,11 @@ const Info = () => {
     socket.emitLeaveRoom();
   };
 
+  /**
+   * @param {object} data
+   *  @param {number} roomName
+   *  @param {number} numOfViewer
+   */
   const updatePlayerNum = (data) => {
     setNumOfPlayer(data.numOfPlayer);
     setNumOfViewer(data.numOfViewer);

@@ -27,16 +27,24 @@ const Lobby = () => {
 
   const openCreateRoomModal = () => setModalOpen(true);
 
+  /**
+   * @param {string} roomId
+   */
   const enterCreatedRoom = (roomId) => {
     history.push(`/room/${roomId}`);
   };
 
+  /**
+   * @param {object} param0
+   *  @param {boolean} param0.isEnterable
+   *  @param {string} param0.roomId
+   *  @param {string} param0.message
+   */
   const enterRoom = ({ isEnterable, roomId, message }) => {
     if (isEnterable) {
       history.push(`/room/${roomId}`);
       return;
     }
-
     setAlertMessage(message);
     setAlertOpen(true);
   };
@@ -55,6 +63,9 @@ const Lobby = () => {
     );
   };
 
+  /**
+   * @param {object} newRoomInfo
+   */
   const addRoom = (newRoomInfo) => {
     roomInfos.set(newRoomInfo.id, newRoomInfo);
     setRoomInfoButtons((currentRoomButtons) => [
@@ -63,11 +74,19 @@ const Lobby = () => {
     ]);
   };
 
+  /**
+   * @param {object} currentRoomInfos
+   */
   const updateCurrentRoomInfos = (currentRoomInfos) => {
     currentRoomInfos.forEach((roomInfo) => roomInfos.set(roomInfo.id, roomInfo));
     setRoomInfoButtons(currentRoomInfos.map((roomInfo) => makeRoomInfoButton(roomInfo)));
   };
 
+  /**
+   * @param {object} param0
+   *  @param {string} roomId
+   *  @param {object} roomInfo
+   */
   const updateRoomInfo = ({ roomId, roomInfo }) => {
     const { numOfUsers } = roomInfo;
     roomInfos.set(roomId, roomInfo);

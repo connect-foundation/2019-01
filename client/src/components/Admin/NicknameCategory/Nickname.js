@@ -26,6 +26,9 @@ const Nickname = ({ type }) => {
     timerId.current = setTimeout(() => setOpen(false), ADMIN.ADMINSNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Array} nicknameArray
+   */
   const makeNewRow = (nicknameArray) => {
     setnicknameList(() => nicknameArray.map((nickname) => (
       <NicknameRow
@@ -37,7 +40,7 @@ const Nickname = ({ type }) => {
     )));
   };
 
-  const updateNewNickname = (e) => setNewNickname(e.target.value);
+  const updateNewNickname = (event) => setNewNickname(event.target.value);
 
   const addNickname = () => {
     const nicknameData = {};

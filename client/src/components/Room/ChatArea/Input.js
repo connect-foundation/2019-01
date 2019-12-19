@@ -27,6 +27,10 @@ const Input = () => {
     if (event.keyCode === KEYCODE.ENTER) sendMessage();
   };
 
+  /**
+   * @param {number} messageLength
+   * @param {number} messageLineCount
+   */
   const isShorterThanMax = (messageLength, messageLineCount) => (
     messageLength > CHAT_AREA.MAX_MESSAGE_LENGTH || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT
   );

@@ -24,7 +24,7 @@ const Row = ({
       .then(({ result }) => openSnackbar(result));
   };
 
-  const updateNickname = (e) => setNickname(e.target.value);
+  const updateNickname = (event) => setNickname(event.target.value);
 
   return (
     <TableRow>

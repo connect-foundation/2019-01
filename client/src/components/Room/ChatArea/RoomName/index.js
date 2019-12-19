@@ -21,6 +21,9 @@ const RoomName = () => {
     window.cancelAnimationFrame(requestId);
   };
 
+  /**
+   * @param {string} roomName
+   */
   const calculateWidth = (roomName) => {
     const totalLength = roomName.length;
     const hangulLength = (roomName.match(ROOM_NAME.REGEX.HANGUL) || []).length;
@@ -33,6 +36,10 @@ const RoomName = () => {
     );
   };
 
+  /**
+   * @param {object} param0
+   *  @param {string} roomName
+   */
   const setupRoomName = ({ roomName }) => {
     const newRoomName = `🤔${roomName}`;
     setRoomNameText(newRoomName);

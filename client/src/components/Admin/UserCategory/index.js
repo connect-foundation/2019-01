@@ -22,6 +22,9 @@ const UserCategory = () => {
     timerId.current = setTimeout(() => setOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  /**
+   * @param {Array.<object>} userList
+   */
   const makeNewRow = (userList) => {
     setUserData(userList.map((user) => (
       <UserRow key={user.github_id} user={user} openSnackbar={openSnackbar} />)));
