@@ -31,15 +31,25 @@ const Input = () => {
   useEffect(() => {
     const chatCanvas = canvasRef.current;
     const ctx = chatCanvas.getContext('2d');
+
     setUpdateMessage(() => (event) => {
       const messageText = event.target.value;
-      const messageLineCount = parseChat(messageText, ctx).length;
+      const parsedChat = parseChat(messageText, ctx);
+      const balloonLineCount = parsedChat.length;
+      let sliceIndex;
+
+      if (balloonLineCount > CHAT_BALLOON.MAX_LINE_COUNT) {
+        sliceIndex = parsedChat.slice(0, CHAT_BALLOON.MAX_LINE_COUNT).join('').length;
+      }
+
+      if (sliceIndex === undefined && messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH) {
+        sliceIndex = CHAT_AREA.MAX_MESSAGE_LENGTH;
+      }
+
       const newMessage = (
-        (messageText.length > CHAT_AREA.MAX_MESSAGE_LENGTH
-          || messageLineCount > CHAT_BALLOON.MAX_LINE_COUNT)
-          ? messageText.slice(0, messageText.length - 1)
-          : messageText
-      );
+        sliceIndex
+          ? messageText.slice(0, sliceIndex)
+          : messageText);
       setMessage(newMessage);
     });
   }, []);
