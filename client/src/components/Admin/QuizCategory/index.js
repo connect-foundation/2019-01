@@ -28,29 +28,16 @@ const QuizCategory = () => {
   };
 
   /**
-   * @param {string} fetchType
-   */
-  const fetchQuizData = (fetchType) => (quizInfo) => {
-    const quizRequestMap = new Map([
-      ['edit', { fetchMethod: 'put', data: { id: quizInfo.id, data: quizInfo } }],
-      ['add', { fetchMethod: 'post', data: quizInfo }],
-    ]);
-
-    fetchData(
-      quizRequestMap.get(fetchType).fetchMethod,
-      URL.ADMIN.QUIZ,
-      quizRequestMap.get(fetchType).data,
-    )
-      .then(({ result }) => openSnackbar(result));
-  };
-
-  /**
    * @param {Object} quiz
    */
   const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        setFetchQuiz(() => fetchQuizData('edit'));
+        const fetchEditData = (quizInfo) => {
+          fetchData('put', URL.ADMIN.QUIZ, { id: quizInfo.id, data: quizInfo })
+            .then(({ result }) => openSnackbar(result));
+        };
+        setFetchQuiz(() => fetchEditData);
         setModalContent(quiz);
       }
       return true;
@@ -60,7 +47,11 @@ const QuizCategory = () => {
   const openAddModal = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        setFetchQuiz(() => fetchQuizData('add'));
+        const fetchAddData = (quizInfo) => {
+          fetchData('post', URL.ADMIN.QUIZ, quizInfo)
+            .then(({ result }) => openSnackbar(result));
+        };
+        setFetchQuiz(() => fetchAddData);
         setModalContent({
           id: ADMIN.MODAL.DEFAULT.ID,
           category: ADMIN.MODAL.DEFAULT.CATEGORY,
