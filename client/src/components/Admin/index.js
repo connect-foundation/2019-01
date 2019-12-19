@@ -25,6 +25,12 @@ const Admin = () => {
 
   const changeBody = (component) => setBody(component);
 
+  const makeCategory = () => listItem.map((category) => (
+    <ListItem button key={category.text} onClick={() => changeBody(category.component)}>
+      <ListItemText primary={category.text} />
+    </ListItem>
+  ));
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -35,13 +41,7 @@ const Admin = () => {
         anchor="left">
         <img src={URL.ADMIN_BACKGROUND} className={classes.toolbar} alt="admin-background" />
         <List>
-          {
-            listItem.map((category) => (
-              <ListItem button key={category.text} onClick={() => changeBody(category.component)}>
-                <ListItemText primary={category.text} />
-              </ListItem>
-            ))
-          }
+          {makeCategory()}
         </List>
       </Drawer>
       <main className={classes.content}>

@@ -14,11 +14,11 @@ import ADMIN from '../../../constants/admin';
 
 const QuizCategory = () => {
   const [quizData, setQuizData] = useState([]);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [fetchQuiz, setFetchQuiz] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [fetchResult, setFetchResult] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [fetchQuiz, setFetchQuiz] = useState(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const timerId = useRef(null);
 
   const openSnackbar = (result) => {
@@ -27,14 +27,24 @@ const QuizCategory = () => {
     timerId.current = setTimeout(() => setIsSnackbarOpen(false), ADMIN.SNACKBAR_TIME_MS);
   };
 
+  const fetchQuizData = (fetchType) => (quizInfo) => {
+    const quizRequestMap = new Map([
+      ['edit', { fetchMethod: 'put', data: { id: quizInfo.id, data: quizInfo } }],
+      ['add', { fetchMethod: 'post', data: quizInfo }],
+    ]);
+
+    fetchData(
+      quizRequestMap.get(fetchType).fetchMethod,
+      URL.ADMIN.QUIZ,
+      quizRequestMap.get(fetchType).data,
+    )
+      .then(({ result }) => openSnackbar(result));
+  };
+
   const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        const fetchEditData = (quizInfo) => {
-          fetchData('put', URL.ADMIN.QUIZ, { id: quizInfo.id, data: quizInfo })
-            .then(({ result }) => openSnackbar(result));
-        };
-        setFetchQuiz(() => fetchEditData);
+        setFetchQuiz(() => fetchQuizData('edit'));
         setModalContent(quiz);
       }
       return true;
@@ -44,11 +54,7 @@ const QuizCategory = () => {
   const openAddModal = () => {
     setIsModalOpen((prevIsModalOpen) => {
       if (prevIsModalOpen === false) {
-        const fetchAddData = (quizInfo) => {
-          fetchData('post', URL.ADMIN.QUIZ, quizInfo)
-            .then(({ result }) => openSnackbar(result));
-        };
-        setFetchQuiz(() => fetchAddData);
+        setFetchQuiz(() => fetchQuizData('add'));
         setModalContent({
           id: ADMIN.MODAL.DEFAULT.ID,
           category: ADMIN.MODAL.DEFAULT.CATEGORY,

@@ -27,15 +27,14 @@ const Nickname = ({ type }) => {
   };
 
   const makeNewRow = (nicknameArray) => {
-    const nicknameTagList = () => nicknameArray.map((nickname) => (
+    setnicknameList(() => nicknameArray.map((nickname) => (
       <NicknameRow
         key={nickname.id}
         id={nickname.id}
         type={type}
         openSnackbar={openSnackbar}
         nickname={type === 'adj' ? nickname.adj : nickname.noun} />
-    ));
-    setnicknameList(nicknameTagList);
+    )));
   };
 
   const updateNewNickname = (e) => setNewNickname(e.target.value);
