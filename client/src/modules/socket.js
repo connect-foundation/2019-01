@@ -4,6 +4,11 @@ import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
 import { isFunction } from '../util';
 
+/**
+ * SocketContainer class
+ * @property {Object} socket
+ * @property {boolean} guest
+ */
 class SocketContainer {
   constructor() {
     this.socket = undefined;

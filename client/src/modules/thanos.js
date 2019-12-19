@@ -1,6 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import { THANOS } from '../constants/room';
 
+/**
+ * Thanos class
+ * @property {CanvasRenderingContext2D} ctx
+ * @property {Image} img
+ * @property {number} fieldXValue
+ * @property {number} thanosTimeoutId
+ */
 class Thanos {
   constructor() {
     this.ctx = null;
