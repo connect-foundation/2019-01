@@ -15,7 +15,7 @@ const _measureText = (chatText, ctx) => {
  * @returns {Array.<string>} ['글자길이에맞게반환하', '면됨한글로열글자길이']
  */
 export const parseChat = (chatText, ctx) => {
-  ctx.font = '13px nanoom';
+  ctx.font = CHAT_BALLOON.FONT;
   ctx.textAlign = CHAT_BALLOON.ALIGN;
   ctx.textBaseline = CHAT_BALLOON.BASELINE;
   if (_measureText(chatText, ctx) <= CHAT_BALLOON.getTextWidth()) return [chatText];
