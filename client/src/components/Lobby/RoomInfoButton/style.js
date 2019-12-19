@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { setBorderAndRadius, setFlex } from '../../Style/util';
-import {
-  ROOM_INFO, BUTTON_EFFECT,
-} from '../../Style/Lobby';
+import { ROOM_INFO, BUTTON_EFFECT } from '../../Style/Lobby';
 
 export const RoomInfoWrapper = styled.div`
     align-items: center;

@@ -27,8 +27,6 @@ export const LoginButtonsWrapper = styled.div`
     box-sizing: border-box;
     font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
     transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    -webkit-transform: translate(-50%,-50%);
     ${setSize(LOGIN.WRAPPER)}
 `;
 
