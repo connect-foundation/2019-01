@@ -12,7 +12,7 @@ export const FIELD = {
   COLUMN: 16,
   getWidth() { return TILE.WIDTH * this.COLUMN; },
   getHeight() { return TILE.HEIGHT * this.ROW; },
-  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
+  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field.png',
 };
 
 export const THANOS = {
@@ -22,7 +22,7 @@ export const THANOS = {
   FALSE_X: FIELD.getWidth() / 2,
   WIDTH: FIELD.getWidth() / 2,
   HEIGHT: FIELD.getHeight(),
-  IMG: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
+  IMG: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/field-thanos.png',
 };
 
 export const CHARACTER = {
@@ -92,7 +92,7 @@ export const DASHBOARD = {
   WIN_MESSAGE: '↓↓↓↓   우승   ↓↓↓↓',
   NOTICE_START_MESSAGE: '게임이 곧 시작됩니다.',
   CLOCK_COLOR_ARRAY: ['red', 'red', 'orange', 'orange', 'green', 'green', 'blue'],
-  BACKGROUND: 'https:kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
+  BACKGROUND: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/dashboard.png',
 };
 
 

@@ -16,6 +16,14 @@ const DashBoard = ({ buttonClickSound }) => {
   const [isGameStarted, setGameStarted] = useState(false);
   let lastTimerId;
 
+  /**
+   * @param {object} param0
+   * @param {boolean} param0.isOwner
+   */
+  const leaveUser = ({ isOwner }) => {
+    if (isOwner !== undefined) setOwner(isOwner);
+  };
+
   const countDown = () => {
     setCounter((prevCounter) => {
       if (prevCounter > 1) {
@@ -43,7 +51,7 @@ const DashBoard = ({ buttonClickSound }) => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *   @param {string} param0.question
    *   @param {number} param0.timeLimit
    */
@@ -97,13 +105,6 @@ const DashBoard = ({ buttonClickSound }) => {
     }
   };
 
-  /**
-   * @param {object} param0
-   * @param {boolean} param0.isOwner
-   */
-  const leaveUser = ({ isOwner }) => {
-    if (isOwner !== undefined) setOwner(isOwner);
-  };
 
   const Greeting = () => (
     owner
@@ -131,23 +132,22 @@ const DashBoard = ({ buttonClickSound }) => {
   );
 
   useEffect(() => {
-    socket.onStartGame(readyGame);
-    socket.onStartRound(startRound);
-    socket.onEndRound(endRound);
-    socket.onEndGame(endGame);
-    socket.onResetGame(resetGame);
     socket.onEnterRoom(enterRoom);
     socket.onLeaveUser(leaveUser);
+    socket.onStartGame(readyGame);
+    socket.onEndGame(endGame);
+    socket.onResetGame(resetGame);
+    socket.onStartRound(startRound);
+    socket.onEndRound(endRound);
 
     return () => {
       socket.offEnterRoom();
       socket.offLeaveUser();
-      socket.offStartRound();
-      socket.offEndRound();
-      socket.offResetGame();
+      socket.offStartGame();
       socket.offEndGame();
       socket.offResetGame();
-      socket.offStartGame();
+      socket.offStartRound();
+      socket.offEndRound();
       clearTimeout(lastTimerId);
     };
   }, []);

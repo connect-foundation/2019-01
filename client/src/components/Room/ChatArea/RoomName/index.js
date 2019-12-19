@@ -37,7 +37,7 @@ const RoomName = () => {
   };
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *  @param {string} roomName
    */
   const setupRoomName = ({ roomName }) => {

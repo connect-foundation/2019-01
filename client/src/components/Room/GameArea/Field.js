@@ -130,58 +130,6 @@ const Field = () => {
 
   const deleteCharacters = bindFunction(_deleteCharacter);
 
-  useEffect(() => {
-    const canvas = thanosCanvasRef.current;
-    const ctx = canvas.getContext('2d');
-    thanos.injectCtx(ctx);
-
-    socket.onEnterRoom(addCharacters);
-    socket.onEnterNewUser(addCharacters);
-    socket.onStartRound(teleportCharacters);
-    socket.onEndGame(teleportCharacters);
-    socket.onResetGame(teleportCharacters);
-    socket.onLeaveUser(deleteCharacters);
-    socket.onChatMessage(chatCharacters);
-    socket.onMove(moveCharacter);
-    socket.onEndRound(appearThanos);
-
-    return () => {
-      socket.offStartRound();
-      socket.offEnterRoom();
-      socket.offEnterNewUser();
-      socket.offMove();
-      socket.offEndRound();
-      socket.offLeaveUser();
-      socket.offEndGame();
-      socket.offResetGame();
-      socket.offChatMessage();
-    };
-  }, []);
-
-  useEffect(() => {
-    const keydownEventHandler = (event) => {
-      if (event.target.tagName === 'INPUT') return;
-      if ((myCharacter instanceof Character) === false) return;
-      if (myCharacter.isMoving()) return;
-      if (myCharacter.isAlive() === false) return;
-
-      const directionMap = {
-        [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
-        [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
-        [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
-        [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
-      };
-
-      const direction = directionMap[event.keyCode];
-      const isSkill = event.shiftKey;
-      if (direction === undefined) return;
-      if (isSkill) socket.emitUseSkill(direction);
-      else socket.emitMove(direction);
-    };
-
-    window.onkeydown = keydownEventHandler;
-  }, [myCharacter]);
-
   const getCanvasList = (characterMap) => {
     const canvasList = [];
     characterMap.forEach((character) => {
@@ -189,6 +137,62 @@ const Field = () => {
     });
     return canvasList;
   };
+
+  const keydownEventHandler = (event) => {
+    if (event.target.tagName === 'INPUT') return;
+    if ((myCharacter instanceof Character) === false) return;
+    if (myCharacter.isMoving()) return;
+    if (myCharacter.isAlive() === false) return;
+
+    const directionMap = {
+      [KEYCODE.LEFT]: CHARACTER.DIRECTION.LEFT,
+      [KEYCODE.UP]: CHARACTER.DIRECTION.UP,
+      [KEYCODE.RIGHT]: CHARACTER.DIRECTION.RIGHT,
+      [KEYCODE.DOWN]: CHARACTER.DIRECTION.DOWN,
+    };
+
+    const direction = directionMap[event.keyCode];
+    const isSkill = event.shiftKey;
+
+    if (direction === undefined) return;
+    if (isSkill) {
+      socket.emitUseSkill(direction);
+      return;
+    }
+    socket.emitMove(direction);
+  };
+
+  useEffect(() => {
+    const canvas = thanosCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    thanos.injectCtx(ctx);
+
+    socket.onEnterRoom(addCharacters);
+    socket.onEnterNewUser(addCharacters);
+    socket.onLeaveUser(deleteCharacters);
+    socket.onEndGame(teleportCharacters);
+    socket.onResetGame(teleportCharacters);
+    socket.onStartRound(teleportCharacters);
+    socket.onEndRound(appearThanos);
+    socket.onMove(moveCharacter);
+    socket.onChatMessage(chatCharacters);
+
+    return () => {
+      socket.offEnterRoom();
+      socket.offEnterNewUser();
+      socket.offLeaveUser();
+      socket.offEndGame();
+      socket.offResetGame();
+      socket.offStartRound();
+      socket.offEndRound();
+      socket.offMove();
+      socket.offChatMessage();
+    };
+  }, []);
+
+  useEffect(() => {
+    window.onkeydown = keydownEventHandler;
+  }, [myCharacter]);
 
   return (
     <div

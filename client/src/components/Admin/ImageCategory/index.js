@@ -45,7 +45,7 @@ const ImageCategory = () => {
   };
 
   /**
-   * @param {object} image
+   * @param {Object} image
    *   @param {number} image.id
    *   @param {string} image.category
    *   @param {string} image.name

@@ -4,6 +4,11 @@ import EVENT from '../constants/socket-event';
 import URL from '../constants/url';
 import { isFunction } from '../util';
 
+/**
+ * SocketContainer class
+ * @property {Object} socket
+ * @property {boolean} guest
+ */
 class SocketContainer {
   constructor() {
     this.socket = undefined;
@@ -22,6 +27,9 @@ class SocketContainer {
     return this.socket !== undefined && this.socket.connected;
   }
 
+  /**
+   * @param {Object} query
+   */
   connect(query) {
     this.socket = (
       process.env.NODE_ENV === 'production'
@@ -37,17 +45,29 @@ class SocketContainer {
     if (this.isConnected()) this.socket.disconnect();
   }
 
+  /**
+   * @param {string} eventName
+   * @param {Object} data
+   * @param {boolean} strongCheck
+   */
   _emit(eventName, data, strongCheck = true) {
     if (this.isConnected() === false && strongCheck) return;
     this.socket.emit(eventName, data);
   }
 
+  /**
+   * @param {string} eventName
+   * @param {Function} callback
+   */
   _on(eventName, callback) {
     if (this.socket === undefined) return;
     if (isFunction(callback) === false) return;
     this.socket.on(eventName, (data) => callback(data));
   }
 
+  /**
+   * @param {string} eventName
+   */
   _off(eventName) {
     if (this.socket === undefined) return;
     this.socket.off(eventName);

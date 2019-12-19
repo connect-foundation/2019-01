@@ -11,17 +11,15 @@ const API_SERVER = process.env.NODE_ENV === 'production' ? URL.PRODUCTION_API_SE
 export const isFunction = (callback) => typeof callback === 'function';
 
 /**
- *
  * @param {number} number
  * @returns {string}
  */
 export const makeWithTwoDigits = (number) => number.toString().padStart(2, '0');
 
 /**
- *
  * @param {string} method
  * @param {string} path
- * @param {object} body
+ * @param {Object} body
  * @returns {object}
  */
 export const fetchData = async (method, path, body) => {

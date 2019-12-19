@@ -22,7 +22,7 @@ const Log = () => {
   );
 
   /**
-   * @param {object} param0
+   * @param {Object} param0
    *  @param {string} nickname
    *  @param {string} message
    */

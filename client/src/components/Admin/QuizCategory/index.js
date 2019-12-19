@@ -45,7 +45,7 @@ const QuizCategory = () => {
   };
 
   /**
-   * @param {object} quiz
+   * @param {Object} quiz
    */
   const openEditModal = (quiz) => {
     setIsModalOpen((prevIsModalOpen) => {
