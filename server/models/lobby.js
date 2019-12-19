@@ -12,7 +12,6 @@ class Lobby {
 
   /**
    * @param {string} roomId
-   *
    * @returns {Room}
    */
   getRoom(roomId) {
@@ -89,7 +88,6 @@ class Lobby {
 
   /**
    * @param {Room} room
-   *
    * @returns {RoomInfo}
    */
   _makeRoomInfo(room) {
