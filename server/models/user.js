@@ -5,12 +5,15 @@ import imageFinder from '../database/image';
 
 /**
  * User Class
- * socket을 받아서 감싸줘서 user로 내보낸다.
  * @property {string} id
- * @property {object} socket
+ * @property {Object} socket
  * @property {string} nickname
- * @property {Character} character
- * @property {number} roomId
+ * @property {string} roomId
+ * @property {boolean} guest
+ * @property {string} characterUrl
+ * @property {number} indexX
+ * @property {number} indexY
+ * @property {number} direction
  */
 class User {
   constructor(socket) {
@@ -25,20 +28,11 @@ class User {
     this.direction = 0;
   }
 
-  /**
-   * 넘겨받은 좌표를 instance내 좌표에 할당함
-   * @param {number} indexX
-   * @param {number} indexY
-   */
   setIndexes(indexX, indexY) {
     this.indexX = indexX;
     this.indexY = indexY;
   }
 
-  /**
-   * 현재 위치 좌표를 반환
-   * @returns {array.<number, number>}
-   */
   getIndexes() {
     return [this.indexX, this.indexY];
   }
@@ -52,17 +46,12 @@ class User {
   }
 
   /**
-   * 캐릭터가 놓여져 있는지 아닌지를 반환하는 함수
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   isPlaced() {
     return this.indexX !== null && this.indexY !== null;
   }
 
-  /**
-   * 랜덤한 캐릭터 이미지를 데이터베이스로부터 가져와서
-   * 자신의 url에 할당한다.
-   */
   async setCharacterUrl() {
     const [image] = await imageFinder.fetchRandomCharacter();
     this.characterUrl = image.url;
@@ -102,6 +91,9 @@ class User {
     this.direction = 0;
   }
 
+  /**
+   * @returns {boolean}
+   */
   isInLobby() {
     return this.roomId === null;
   }
@@ -118,12 +110,14 @@ class User {
     this.roomId = null;
   }
 
+  /**
+   * @returns {boolean}
+   */
   isConnected() {
     return this.socket !== undefined && this.socket.connected;
   }
 
   /**
-   *
    * @param {string} eventName
    * @param {Function} callback
    */
@@ -181,9 +175,8 @@ class User {
   }
 
   /**
-   *
    * @param {string} eventName
-   * @param {*} data
+   * @param {Object} data
    */
   _emit(eventName, data) {
     if (this.isConnected() === false) return;
