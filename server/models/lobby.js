@@ -13,21 +13,20 @@ class Lobby {
     return this.rooms.get(roomId);
   }
 
-  _makeSingleRoomInfo(room) {
-    return {
-      id: room.getId(),
-      name: room.getName(),
-      numOfUsers: room.getNumOfUsers(),
-      isEnterable: room.isEnterable(),
-    };
+  deleteRoom(roomId) {
+    this.rooms.delete(roomId);
   }
 
-  _makeRoomInfos() {
-    const roomInfos = [];
-    this.rooms.forEach((room) => {
-      roomInfos.push(this._makeSingleRoomInfo(room));
+  addRoom(user, room) {
+    const roomId = room.getId();
+    this.rooms.set(roomId, room);
+
+    user.emitCreateRoom(roomId);
+    this.users.forEach((_user) => {
+      if (_user === user) return;
+      const roomInfo = this._makeRoomInfo(room);
+      _user.emitRoomIsCreated(roomInfo);
     });
-    return roomInfos;
   }
 
   /**
@@ -35,29 +34,20 @@ class Lobby {
    * @param {User} user
    */
   enterUser(user) {
-    this.users.set(user.getId(), user);
+    const userId = user.getId();
+    const roomInfoList = this._makeRoomInfoList();
+    this.users.set(userId, user);
+    user.deleteRoomId();
 
-    user.emitEnterLobby(this._makeRoomInfos());
+    user.emitEnterLobby(roomInfoList);
   }
 
+  /**
+   *
+   * @param {string} userId
+   */
   leaveUser(userId) {
     this.users.delete(userId);
-  }
-
-  createRoom(user, room) {
-    const roomId = room.getId();
-    this.rooms.set(roomId, room);
-
-    user.emitCreateRoom(roomId);
-
-    this.users.forEach((_user) => {
-      if (_user === user) return;
-      _user.emitRoomIsCreated(this._makeSingleRoomInfo(room));
-    });
-  }
-
-  deleteRoom(roomId) {
-    this.rooms.delete(roomId);
   }
 
   updateRoomInfo(roomId) {
@@ -68,9 +58,28 @@ class Lobby {
       numOfUsers: room.getNumOfUsers(),
       isEnterable: room.isEnterable(),
     };
+
     this.users.forEach((user) => {
       user.emitUpdateRoomInfo({ roomId, roomInfo });
     });
+  }
+
+  _makeRoomInfo(room) {
+    return {
+      id: room.getId(),
+      name: room.getName(),
+      numOfUsers: room.getNumOfUsers(),
+      isEnterable: room.isEnterable(),
+    };
+  }
+
+  _makeRoomInfoList() {
+    const roomInfoList = [];
+    this.rooms.forEach((room) => {
+      const roomInfo = this._makeRoomInfo(room);
+      roomInfoList.push(roomInfo);
+    });
+    return roomInfoList;
   }
 }
 
