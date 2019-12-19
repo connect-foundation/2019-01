@@ -6,7 +6,7 @@ import {
 } from './style';
 import { DASHBOARD, ROOM } from '../../../constants/room';
 import socket from '../../../modules/socket';
-import { changeNumberToTwoDigitString } from '../../../util';
+import { makeWithTwoDigits } from '../../../util';
 
 const colorArray = DASHBOARD.CLOCK_COLOR_ARRAY;
 const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : colorArray[counter]);
@@ -14,8 +14,8 @@ const getCounterColor = (counter) => (counter >= colorArray.length ? 'black' : c
 const DashBoard = ({ buttonClickSound }) => {
   const [notice, setNotice] = useState('');
   const [counter, setCounter] = useState('--');
-  const [isGameEnded, setGameEnded] = useState(false);
   const [owner, setOwner] = useState(false);
+  const [isGameEnded, setGameEnded] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
   let lastTimerId;
 
@@ -107,7 +107,7 @@ const DashBoard = ({ buttonClickSound }) => {
         <div>
           <QuizOrGreeting />
           <CounterWrapper style={{ color: getCounterColor(counter) }}>
-            {changeNumberToTwoDigitString(counter)}
+            {makeWithTwoDigits(counter)}
           </CounterWrapper>
         </div>
       )
