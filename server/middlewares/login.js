@@ -17,18 +17,21 @@ const githubOauth = async (req, res, next) => {
     },
   }).then((response) => response.data.access_token);
 
-  const { data } = await axios(URL.GET_USER_INFO, {
+  const githubId = await axios({
+    method: 'get',
+    url: URL.GET_USER_INFO,
     headers: {
       Authorization: `token ${accessToken}`,
     },
-  });
+  }).then((response) => response.data.login);
 
-  const githubId = data.login;
   const [user] = await userFinder.fetchUser(githubId);
   if (user === undefined) userFinder.registerUser(githubId);
+
   const token = jwt.sign({ githubId }, privateKey, { algorithm });
   res.cookie('_jwt', token, { expires: getTimeOneDayLater() });
-  return next();
+
+  next();
 };
 
 export default githubOauth;
