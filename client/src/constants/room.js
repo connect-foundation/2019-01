@@ -3,10 +3,6 @@ export const TILE = {
   HEIGHT: 60,
 };
 
-export const MESSAGE = {
-  PATH_ERROR: '잘못된 경로로 들어왔습니다.',
-};
-
 export const FIELD = {
   ROW: 8,
   COLUMN: 16,
@@ -112,6 +108,7 @@ export const SOUND_TOGGLE = {
 export const ROOM = {
   WAITING_TIME_MS: 3000,
   WAITING_SOUND_TIME_MS: 2000,
+  PATH_ERROR_MESSAGE: '잘못된 경로로 들어왔습니다.',
 };
 
 export const ROOM_NAME = {
