@@ -5,10 +5,10 @@ import socketio from 'socket.io';
 import cookieParser from 'cookie-parser';
 import {} from 'dotenv/config';
 import cors from 'cors';
-import indexRouter from './routes/index';
 import loginRouter from './routes/login';
 import adminRouter from './routes/admin';
 import controller from './controller';
+import URL from './constants/url';
 import ERROR_MSG from './constants/error-message';
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'development') {
   const corsOptions = {
-    origin: 'http://localhost:3006',
+    origin: URL.LOCAL_ORIGIN,
     credentials: true,
   };
   app.use(cors(corsOptions));
@@ -29,7 +29,6 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/admin', adminRouter);
 app.use('/oauth', loginRouter);
-app.use('/', indexRouter);
 
 app.use((req, res, next) => {
   next(createError(404, ERROR_MSG.REQUEST_NOT_FOUND));

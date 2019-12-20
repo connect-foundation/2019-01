@@ -89,7 +89,7 @@ const Room = () => {
           <ChatArea />
         </RoomWrapper>
       </Wrapper>
-      {isExistRoom ? '' : <Alert message={ROOM.MESSAGE.PATH_ERROR} closeCallback={goToLobby} />}
+      {isExistRoom ? '' : <Alert message={ROOM.PATH_ERROR_MESSAGE} closeCallback={goToLobby} />}
     </>
   );
 };

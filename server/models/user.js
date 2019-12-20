@@ -1,28 +1,35 @@
 /* eslint-disable no-underscore-dangle */
 import EVENT from '../constants/socket-event';
 import { isFunction } from '../util';
+import imageFinder from '../database/image';
 
 /**
  * User Class
- * socket을 받아서 감싸줘서 user로 내보낸다.
  * @property {string} id
- * @property {object} socket
+ * @property {Object} socket
  * @property {string} nickname
- * @property {Character} character
- * @property {number} roomId
+ * @property {string} roomId
+ * @property {boolean} guest
+ * @property {string} characterUrl
+ * @property {number} indexX
+ * @property {number} indexY
+ * @property {number} direction
  */
 class User {
   constructor(socket) {
     this.id = socket.id;
     this.socket = socket;
     this.nickname = socket.handshake.query.githubId;
-    this.character = null;
     this.roomId = null;
     this.guest = this.nickname === undefined;
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
+    this.direction = 0;
   }
 
-  isGuest() {
-    return this.guest;
+  getId() {
+    return this.id;
   }
 
   getNickname() {
@@ -31,26 +38,6 @@ class User {
 
   setNickname(nickname) {
     this.nickname = nickname;
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  getCharacter() {
-    return this.character;
-  }
-
-  setCharacter(character) {
-    this.character = character;
-  }
-
-  deleteCharacter() {
-    this.character = null;
-  }
-
-  isInLobby() {
-    return this.roomId === null;
   }
 
   getRoomId() {
@@ -65,12 +52,64 @@ class User {
     this.roomId = null;
   }
 
+  isGuest() {
+    return this.guest;
+  }
+
+  getCharacterUrl() {
+    return this.characterUrl;
+  }
+
+  async setCharacterUrl() {
+    const [image] = await imageFinder.fetchRandomCharacter();
+    this.characterUrl = image.url;
+  }
+
+  getIndexes() {
+    return [this.indexX, this.indexY];
+  }
+
+  setIndexes(indexX, indexY) {
+    this.indexX = indexX;
+    this.indexY = indexY;
+  }
+
+  getDirection() {
+    return this.direction;
+  }
+
+  setDirection(direction) {
+    this.direction = direction;
+  }
+
+  deleteCharacterInfo() {
+    this.characterUrl = null;
+    this.indexX = null;
+    this.indexY = null;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isPlaced() {
+    return this.indexX !== null && this.indexY !== null;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isInLobby() {
+    return this.roomId === null;
+  }
+
+  /**
+   * @returns {boolean}
+   */
   isConnected() {
     return this.socket !== undefined && this.socket.connected;
   }
 
   /**
-   *
    * @param {string} eventName
    * @param {Function} callback
    */
@@ -128,9 +167,8 @@ class User {
   }
 
   /**
-   *
    * @param {string} eventName
-   * @param {*} data
+   * @param {Object} data
    */
   _emit(eventName, data) {
     if (this.isConnected() === false) return;
