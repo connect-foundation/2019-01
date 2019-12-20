@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginPageBackground,
+  LoginPageWrapper, LoginPageLogo, LoginButtonsWrapper, GitHubIcon,
   LoginGitHubButton, LoginAnonyButton, LoginGitHubText, GitHubPath,
 } from './style';
 import URL from '../../constants/url';
@@ -24,7 +24,7 @@ const Login = () => {
 
   return (
     <LoginPageWrapper>
-      <LoginPageBackground src={LOGIN.BACKGROUND.URL} alt="background" />
+      <LoginPageLogo src={LOGIN.LOGO.URL} alt="logo" />
       <LoginButtonsWrapper>
         <LoginGitHubButton onClick={() => popupGitHubOAuth(oauthUrl, enterLobbyAsGithubUser)}>
           <GitHubIcon>
