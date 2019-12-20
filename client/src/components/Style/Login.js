@@ -3,6 +3,9 @@ export default {
     MIN_W: 1000,
     MIN_H: 500,
   },
+  LOGO: {
+    WIDTH: 800,
+  },
   WRAPPER: {
     WIDTH: 700,
     HEIGHT: 200,

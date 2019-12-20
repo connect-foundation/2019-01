@@ -5,29 +5,25 @@ import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 
 export const LoginPageWrapper = styled.div`
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     min-width: ${LOGIN.BACKGROUND.MIN_W}px;
     min-height: ${LOGIN.BACKGROUND.MIN_H}px;
 `;
 
-export const LoginPageBackground = styled.img`
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+export const LoginPageLogo = styled.img`
+    display: block;
+    margin: 0 auto;
+    width: ${LOGIN.LOGO.WIDTH}px;
 `;
 
 export const LoginButtonsWrapper = styled.div`
-    position: absolute;
-    top: 75%;
-    left: 50%;
+    margin: 0 auto;
     padding: ${LOGIN.WRAPPER.PADDING}px;
     stroke: black;
     box-sizing: border-box;
     font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
-    transform: translate(-50%,-50%);
     ${setSize(LOGIN.WRAPPER)}
 `;
 

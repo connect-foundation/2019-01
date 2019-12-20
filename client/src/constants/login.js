@@ -1,6 +1,6 @@
 export default {
-  BACKGROUND: {
-    URL: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/background-main.png',
+  LOGO: {
+    URL: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/boolean-avengers-login-logo.png',
   },
   SVG_PATH: {
     COLOR: 'black',
