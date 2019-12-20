@@ -1,17 +1,23 @@
 <h1 align="center">Welcome to Boolean Avengers 👋</h1>
 <p>
     <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-    <img src="https://img.shields.io/badge/node-10.16.0-blue.svg" />
-  <img src="https://img.shields.io/badge/npm-6.9.0-blue.svg" />
-  <a href="https://github.com/connect-foundation/2019-01" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="#" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
-  <a href="https://travis-ci.org/connect-foundation/2019-01" target="_blank">
-      <img alt="Travis" src="https://travis-ci.org/connect-foundation/2019-01.svg?branch=develop">
-  </a>
+    <img alt="node-version" src="https://img.shields.io/badge/node-10.16.0-blue.svg" />
+    <img alt="npm-version" src="https://img.shields.io/badge/npm-6.9.0-blue.svg" />
+    <a href="https://github.com/connect-foundation/2019-01/wiki" target="_blank">
+        <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+    </a>
+    <a href="https://github.com/connect-foundation/2019-01/issues">
+        <img alt="Issues" src="https://img.shields.io/github/issues/connect-foundation/2019-01"/>
+    </a>
+    <a href="https://github.com/connect-foundation/2019-01/pulls">
+        <img alt="Pull requests" src="https://img.shields.io/github/issues-pr/connect-foundation/2019-01"/>
+    </a>
+    <a href="https://travis-ci.org/connect-foundation/2019-01" target="_blank">
+        <img alt="Travis" src="https://travis-ci.org/connect-foundation/2019-01.svg?branch=master">
+    </a>
+    <a href="https://github.com/connect-foundation/2019-01/blob/master/LICENSE" target="_blank">
+        <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+    </a>
 </p>
 
 <p align="center"><img width="500" height="312" src="https://i.imgur.com/qAtbtqw.png"></p>
@@ -92,20 +98,20 @@ npm test
 
 ## 🏗 Architecture
 ### Server & Client
-<p align="center"><img width="650" height="520" src="https://i.imgur.com/bt9mdJ1.png"></p>
+<p align="center"><img alt="Server&Client" width="650" height="520" src="https://i.imgur.com/bt9mdJ1.png"></p>
 
 ### CI/CD
-<p align="center"><img src="https://i.imgur.com/wF4PSVH.png"></p>
+<p align="center"><img alt="CI/CD" src="https://i.imgur.com/3mDQDlP.png"></p>
 
 ### Socket event flow
-<p align="center"><img width="700" height="480" src="https://i.imgur.com/SIYguR1.png"></p>
+<p align="center"><img alt="Socket event flow" width="700" height="480" src="https://i.imgur.com/SIYguR1.png"></p>
 
 ### Game Logic
 #### Move
-<p align="center"><img src="https://i.imgur.com/4ReXZ9y.png"></p>
+<p align="center"><img alt="Game Logic: Move" src="https://i.imgur.com/4ReXZ9y.png"></p>
 
 #### Game start to end
-<p align="center"><img src="https://i.imgur.com/XOAeYzi.png"></p>
+<p align="center"><img alt="Game Logic: Start&End" src="https://i.imgur.com/XOAeYzi.png"></p>
 
 ## 👨‍👩‍👦‍👦 Author
 
