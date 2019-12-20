@@ -1,26 +1,24 @@
-const ROOM = {
+export const ROOM = {
   FIELD_ROW: 8,
   FIELD_COLUMN: 16,
-  SECOND: 1000, // 1s
-  TIME_LIMIT: 10, // 60s
+  SECOND_MS: 1000,
+  TIME_LIMIT: 10,
   MAX_USER: 20,
   MAX_ROUND: 9,
   WAITING_TIME_MS: 3000,
   READY_TIME_MS: 4000,
 };
 
-const DIRECTION = {
+export const DIRECTION = {
   DOWN: 0,
   LEFT: 1,
   RIGHT: 2,
   UP: 3,
 };
 
-const FIELD = {
+export const FIELD = {
   O_START: 0,
   O_END: ROOM.FIELD_COLUMN / 2,
   X_START: ROOM.FIELD_COLUMN / 2,
   X_END: ROOM.FIELD_COLUMN,
 };
-
-export { ROOM, DIRECTION, FIELD };

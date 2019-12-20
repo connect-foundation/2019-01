@@ -1,31 +1,22 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { RoomInfoWrapper, RoomName, RoomCount } from './style';
-import { ROOM_INFO } from '../../../constants/lobby';
+import ROOM_INFO from '../../../constants/lobby';
 
 const RoomInfoButton = ({
-  roomId, name, numOfUsers, enterable,
-}) => {
-  const history = useHistory();
+  name, numOfUsers, enterable, onClick,
+}) => (
+  <RoomInfoWrapper enterable={enterable} onClick={onClick}>
+    <RoomName>{name}</RoomName>
+    <RoomCount>{numOfUsers}/{ROOM_INFO.CAPACITY}</RoomCount>
+  </RoomInfoWrapper>
+);
 
-  const clickHandler = () => {
-    if (enterable) history.push(`/room/${roomId}`);
-  };
-
-  return (
-    <RoomInfoWrapper enterable={enterable} onClick={clickHandler}>
-      <RoomName>{name}</RoomName>
-      <RoomCount>{numOfUsers}/{ROOM_INFO.CAPACITY}</RoomCount>
-    </RoomInfoWrapper>
-  );
+RoomInfoButton.propTypes = {
+  name: PropTypes.string.isRequired,
+  numOfUsers: PropTypes.number.isRequired,
+  enterable: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
-
-RoomInfoButton.propTypes = propTypes.shape({
-  roomId: propTypes.string.isRequired,
-  name: propTypes.string.isRequired,
-  numOfUsers: propTypes.number.isRequired,
-  enterable: propTypes.bool.isRequired,
-}).isRequired;
 
 export default RoomInfoButton;

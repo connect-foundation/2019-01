@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   ModalWrapper, ModalHeader, ModalTitle, ModalCloseButton, ModalInputWrapper,
   ModalInput, ModalInputLength, ModalCreateRoomButton,
 } from './style';
-import { ROOM_INFO } from '../../../constants/lobby';
+import ROOM_INFO from '../../../constants/lobby';
 import socket from '../../../modules/socket';
 
 const RoomCreateModal = ({ setOpen }) => {
   const [roomName, setRoomName] = useState('');
 
+  const closeHandler = () => setOpen(false);
+
+  const createRoomHandler = () => {
+    const trimmedName = roomName.trim();
+    if (trimmedName.length === 0) {
+      setRoomName('');
+      return;
+    }
+    socket.emitCreateRoom(roomName);
+  };
+
   const keyInputHandler = (e) => {
     const roomNameText = e.target.value;
     const newRoomName = (
-      roomNameText.length > ROOM_INFO.NAME_MAXLENGTH
+      (roomNameText.length > ROOM_INFO.NAME_MAXLENGTH)
         ? roomNameText.slice(0, ROOM_INFO.NAME_MAXLENGTH)
         : roomNameText
     );
     setRoomName(newRoomName);
-  };
-  const closeHandler = () => setOpen(false);
-  const createRoomHandler = () => {
-    if (roomName.length === 0 || roomName.length > ROOM_INFO.NAME_MAXLENGTH) return;
-    socket.emitCreateRoom(roomName);
   };
 
   return (
@@ -40,8 +46,8 @@ const RoomCreateModal = ({ setOpen }) => {
   );
 };
 
-RoomCreateModal.propTypes = propTypes.shape({
-  setOpen: propTypes.func.isRequired,
-}).isRequired;
+RoomCreateModal.propTypes = {
+  setOpen: PropTypes.func.isRequired,
+};
 
 export default RoomCreateModal;

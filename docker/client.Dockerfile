@@ -28,7 +28,7 @@ WORKDIR /usr/src/nginx
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-react /usr/src/client/build ./code-avengers
 
-EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
 
 # 참고: https://docs.docker.com/develop/develop-images/multistage-build/

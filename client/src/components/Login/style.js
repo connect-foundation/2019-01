@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import LOGIN from '../../constants/login';
-import { ROOM } from '../../constants/room';
+import LOGIN from '../Style/Login';
+import { ROOM } from '../Style/Room';
+import { setSize, setBorderAndRadius, setFlex } from '../Style/util';
 
-const LoginPageWrapper = styled.div`
+export const LoginPageWrapper = styled.div`
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -10,7 +11,7 @@ const LoginPageWrapper = styled.div`
     min-height: ${LOGIN.BACKGROUND.MIN_H}px;
 `;
 
-const LoginPageBackground = styled.img`
+export const LoginPageBackground = styled.img`
     position: absolute;
     top:0;
     left: 0;
@@ -18,21 +19,19 @@ const LoginPageBackground = styled.img`
     height: 100%;
 `;
 
-const LoginButtonsWrapper = styled.div`
+export const LoginButtonsWrapper = styled.div`
     position: absolute;
-    width: ${LOGIN.WRAPPER.WIDTH}px;
-    height: ${LOGIN.WRAPPER.HEIGHT}px;
     top: 75%;
     left: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
     padding: ${LOGIN.WRAPPER.PADDING}px;
+    stroke: black;
     box-sizing: border-box;
     font-size: ${LOGIN.WRAPPER.FONT_SIZE}px;
+    transform: translate(-50%,-50%);
+    ${setSize(LOGIN.WRAPPER)}
 `;
 
-const LoginAnonyButton = styled.div`
+export const LoginAnonyButton = styled.div`
     :active {
         box-shadow: none;
     }
@@ -44,33 +43,27 @@ const LoginAnonyButton = styled.div`
     padding-top: ${LOGIN.ANONY.PADDING_TOP}px;
     margin-bottom: ${LOGIN.ANONY.MARGIN_BOTTOM}px;
     padding-bottom: ${LOGIN.ANONY.PADDING_BOTTOM}px;
-    border: ${LOGIN.ANONY.BORDER};
-    border-radius: ${LOGIN.ANONY.BORDER_RADIUS}px;
     background-color: ${LOGIN.ANONY.BACKGROUND_COLOR};
     box-shadow: ${LOGIN.ANONY.BOX_SHADOW};
     cursor: pointer;
+    ${setBorderAndRadius(LOGIN.ANONY)}
 `;
 
-const LoginGitHubButton = styled(LoginAnonyButton)`
-    display: flex;
-    justify-content: center;
-    padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
-    text-decoration: none;
-    color: black;
+export const LoginGitHubButton = styled(LoginAnonyButton)`
+  padding: ${LOGIN.GITHUB_BUTTON.PADDING}px;
+  text-decoration: none;
+  color: black;
+  ${setFlex('row', 'center')}
 `;
 
-const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
-    width: ${LOGIN.GITHUB_ICON.WIDTH}px;
-    height: ${LOGIN.GITHUB_ICON.HEIGHT}px;
-    shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
+export const GitHubPath = styled.path.attrs({ d: LOGIN.SVG.PATH_INDEXES })``;
+
+export const GitHubIcon = styled.svg.attrs({ viewBox: `${LOGIN.SVG.X} ${LOGIN.SVG.Y} ${LOGIN.SVG.W} ${LOGIN.SVG.H}` })`
+  shape-rendering: ${LOGIN.GITHUB_ICON.SHAPE_REDERING};
+  ${setSize(LOGIN.GITHUB_ICON)}
 `;
 
-const LoginGitHubText = styled.div`
-    margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
-    padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
+export const LoginGitHubText = styled.div`
+  margin-left: ${LOGIN.GITHUB_TEXT.MARGIN_LEFT}px;
+  padding-top: ${LOGIN.GITHUB_TEXT.PADDING_TOP}px;
 `;
-
-export {
-  LoginPageWrapper, LoginButtonsWrapper, GitHubIcon, LoginGitHubButton,
-  LoginAnonyButton, LoginGitHubText, LoginPageBackground,
-};

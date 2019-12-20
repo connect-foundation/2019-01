@@ -1,76 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ROOM, CHAT_AREA } from '../../../constants/room';
+import { CHAT_AREA } from '../../../constants/room';
 import {
   ChatHeader, RoomInfo, ExitButton, PlayerInfo, Emoji,
 } from './style';
 import socket from '../../../modules/socket';
 
 const Info = () => {
-  const [isGameStarted, setGameStarted] = useState(false);
   const [numOfPlayer, setNumOfPlayer] = useState(0);
   const [numOfViewer, setNumOfViewer] = useState(0);
+  const [isGameStarted, setGameStarted] = useState(false);
   const history = useHistory();
-  let lastTimerId = null;
 
-  const initPlayer = ({ characterList }) => setNumOfPlayer(characterList.length);
+  const goToLobby = () => history.goBack();
 
-  const addPlayer = () => setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer + 1);
-
-  const subUser = ({ characterList }) => {
-    const { isAlive } = characterList[0];
-    if (isAlive) {
-      setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer - 1);
-      return;
-    }
-    setNumOfViewer((prevNumOfViewer) => prevNumOfViewer - 1);
-  };
-
-  const updateDropUser = ({ characterList }) => {
-    const numOfDropUsers = characterList.length;
-    setNumOfPlayer((prevNumOfPlayer) => prevNumOfPlayer - numOfDropUsers);
-    setNumOfViewer((prevNumOfViewer) => prevNumOfViewer + numOfDropUsers);
-  };
-
-  const updateAliveUser = ({ characterList }) => {
-    const numOfAliveUsers = characterList.length;
-    setNumOfPlayer((prevNumOfPlayer) => {
-      if (prevNumOfPlayer !== numOfAliveUsers) {
-        setNumOfViewer((prevNumOfViewer) => prevNumOfViewer - numOfAliveUsers);
-      }
-      return numOfAliveUsers;
-    });
-  };
-
-  const updateUser = ({ characterList }) => {
-    lastTimerId = setTimeout(() => {
-      setNumOfPlayer(characterList.length);
-      setNumOfViewer(0);
-    }, ROOM.WAITING_TIME_MS);
-  };
+  const activeExitButton = () => setGameStarted(false);
 
   const inactiveExitButton = () => setGameStarted(true);
-  const activeExitButton = () => setTimeout(() => setGameStarted(false), ROOM.WAITING_TIME_MS);
+
   const exitRoom = () => {
     if (isGameStarted) return;
     socket.emitLeaveRoom();
   };
 
-  const enterLobby = () => history.push('/lobby');
+  /**
+   * @param {Object} data
+   *  @param {number} roomName
+   *  @param {number} numOfViewer
+   */
+  const updatePlayerNum = (data) => {
+    setNumOfPlayer(data.numOfPlayer);
+    setNumOfViewer(data.numOfViewer);
+  };
 
   useEffect(() => {
+    socket.onLeaveRoom(goToLobby);
     socket.onStartGame(inactiveExitButton);
-    socket.onEndGame(activeExitButton);
-    socket.onEnterRoom(initPlayer);
-    socket.onEnterNewUser(addPlayer);
-    socket.onLeaveUser(subUser);
-    socket.onEndRound(updateDropUser);
-    socket.onStartRound(updateAliveUser);
-    socket.onEndGame(updateUser);
-    socket.onLeaveRoom(enterLobby);
+    socket.onResetGame(activeExitButton);
+    socket.onUpdatePlayerNum(updatePlayerNum);
 
     return () => {
-      clearTimeout(lastTimerId);
+      socket.offLeaveRoom();
+      socket.offStartGame();
+      socket.offResetGame();
+      socket.offUpdatePlayerNum();
     };
   }, []);
 

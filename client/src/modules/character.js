@@ -1,6 +1,35 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
-import { CHARACTER, TILE, NICKNAME } from '../constants/room';
+import { parseChat } from '../util';
+import {
+  CHARACTER, TILE, NICKNAME, CHAT_BALLOON,
+} from '../constants/room';
 
+/**
+ * Character Class
+ * @property {CanvasRenderingContext2D} ctx
+ * @property {Image} img
+ * @property {string} imgUrl
+ * @property {number} indexX
+ * @property {number} indexY
+ * @property {number} nameTagX
+ * @property {number} nameTagY
+ * @property {number} chatBalloonX
+ * @property {number} chatBalloonY
+ * @property {number} balloonLineCount
+ * @property {number} shape
+ * @property {number} direction
+ * @property {number} curShapeLoopIdx
+ * @property {number} frameCount
+ * @property {number} requestId
+ * @property {number} chatTimeoutId
+ * @property {string} nickname
+ * @property {string} currentChat
+ * @property {boolean} mine
+ * @property {Array.<object>} moveQueue
+ * @property {boolean} alive
+ */
 class Character {
   constructor(imgUrl, indexX, indexY, nickname, isMine) {
     this.ctx = null;
@@ -8,14 +37,20 @@ class Character {
     this.imgUrl = imgUrl;
     this.indexX = indexX;
     this.indexY = indexY;
-    this.nameTagX = null;
-    this.nameTagY = null;
+    this.nameTagX = 0;
+    this.nameTagY = 0;
+    this.chatBalloonX = 0;
+    this.chatBalloonY = 0;
+    this.balloonLineCount = 0;
+    this.parsedChat = [];
     this.shape = CHARACTER.SHAPE.STAND;
     this.direction = CHARACTER.DIRECTION.DOWN;
     this.curShapeLoopIdx = 0;
     this.frameCount = 0;
     this.requestId = null;
+    this.chatTimeoutId = null;
     this.nickname = nickname;
+    this.currentChat = '';
     this.mine = isMine;
     this.moveQueue = [];
     this.alive = true;
@@ -38,6 +73,14 @@ class Character {
     return this.nickname;
   }
 
+  setCurrentChat(chatText) {
+    this.currentChat = chatText;
+  }
+
+  clearMoveQueue() {
+    this.moveQueue = [];
+  }
+
   drawImage(ctx) {
     this.ctx = ctx;
     this.img = new Image();
@@ -49,6 +92,11 @@ class Character {
     return this.requestId !== null;
   }
 
+  /**
+   * @param {number} direction
+   * @param {number} newIndexX
+   * @param {number} newIndexY
+   */
   move(direction, newIndexX, newIndexY) {
     if (this.ctx === null) return;
     if (this.requestId) {
@@ -59,6 +107,9 @@ class Character {
     this.requestId = window.requestAnimationFrame(() => this._walk());
   }
 
+  /**
+   * @param {number} direction
+   */
   turn(direction) {
     if (this.ctx === null) return;
     if (this.requestId) return;
@@ -73,6 +124,21 @@ class Character {
     this.indexX = indexX;
     this.indexY = indexY;
     this._draw();
+  }
+
+  chat() {
+    if (this.chatTimeoutId !== null) clearTimeout(this.chatTimeoutId);
+    this._clearChat();
+    this.parsedChat = parseChat(this.currentChat, this.ctx);
+    this.balloonLineCount = this.parsedChat.length;
+    this._drawChat();
+    this.chatTimeoutId = setTimeout(() => {
+      this._clearChat();
+      this.currentChat = '';
+      this.parsedChat = [];
+      this.balloonLineCount = 0;
+      clearTimeout(this.chatTimeoutId);
+    }, CHAT_BALLOON.CLEAR_TIME_MS);
   }
 
   _draw() {
@@ -95,6 +161,7 @@ class Character {
     );
 
     this._drawNickname();
+    if (this.currentChat) this._drawChat();
   }
 
   _walk() {
@@ -174,6 +241,76 @@ class Character {
       NICKNAME.WIDTH + 1,
       NICKNAME.HEIGHT,
     );
+
+    this._clearChat();
+  }
+
+  _drawRoundRect(startX, startY, width, lineHeight, balloonLineCount, radius) {
+    let borderRadius = radius;
+    const maxHeight = lineHeight * balloonLineCount + CHAT_BALLOON.PADDING_BOTTOM;
+
+    if (width < 2 * borderRadius) borderRadius = width / 2;
+    if (lineHeight < 2 * borderRadius) borderRadius = lineHeight / 2;
+
+    this.ctx.fillStyle = 'black';
+    this.ctx.linewidthidth = CHAT_BALLOON.BORDER_WIDTH;
+    this.ctx.beginPath();
+    this.ctx.moveTo(startX + borderRadius, startY);
+    this.ctx.arcTo(startX + width, startY, startX + width, startY + maxHeight, borderRadius);
+    this.ctx.arcTo(startX + width, startY + maxHeight, startX, startY + maxHeight, borderRadius);
+    this.ctx.lineTo(startX + width / 2 + CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.lineTo(startX + width / 2, startY + maxHeight + CHAT_BALLOON.TIP_HEIGHT);
+    this.ctx.lineTo(startX + width / 2 - CHAT_BALLOON.TIP_WIDTH, startY + maxHeight);
+    this.ctx.arcTo(startX, startY + maxHeight, startX, startY, borderRadius);
+    this.ctx.arcTo(startX, startY, startX + width, startY, borderRadius);
+    this.ctx.closePath();
+    this.ctx.stroke();
+    this.ctx.fillStyle = CHAT_BALLOON.BACKGROUND_COLOR;
+    this.ctx.fill();
+  }
+
+  _clearChat() {
+    this.ctx.clearRect(
+      this.chatBalloonX - CHAT_BALLOON.BORDER_WIDTH / 2,
+      this.chatBalloonY - CHAT_BALLOON.BORDER_WIDTH / 2,
+      CHAT_BALLOON.WIDTH + CHAT_BALLOON.BORDER_WIDTH * 2,
+      CHAT_BALLOON.LINE_HEIGHT * this.balloonLineCount
+        + CHAT_BALLOON.BORDER_WIDTH * 2
+        + CHAT_BALLOON.TIP_HEIGHT,
+    );
+  }
+
+  _drawChat() {
+    this.chatBalloonX = (TILE.WIDTH * this.indexX)
+      - ((CHAT_BALLOON.WIDTH - TILE.WIDTH) / 2);
+
+    this.chatBalloonY = TILE.HEIGHT * this.indexY
+      - this.balloonLineCount * CHAT_BALLOON.LINE_HEIGHT
+      - CHAT_BALLOON.TIP_HEIGHT - CHAT_BALLOON.BORDER_WIDTH * 2;
+
+    this._drawRoundRect(
+      this.chatBalloonX,
+      this.chatBalloonY,
+      CHAT_BALLOON.WIDTH,
+      CHAT_BALLOON.LINE_HEIGHT,
+      this.balloonLineCount,
+      CHAT_BALLOON.BORDER_RADIUS,
+    );
+
+    this.ctx.font = CHAT_BALLOON.FONT;
+    this.ctx.textAlign = CHAT_BALLOON.ALIGN;
+    this.ctx.textBaseline = CHAT_BALLOON.BASELINE;
+    this.ctx.fillStyle = 'black';
+
+    this.parsedChat.forEach((val, lineOrder) => {
+      this.ctx.fillText(
+        val,
+        this.chatBalloonX + CHAT_BALLOON.WIDTH / 2,
+        this.chatBalloonY + (CHAT_BALLOON.LINE_HEIGHT) / 2
+          + (lineOrder * CHAT_BALLOON.LINE_HEIGHT)
+          + CHAT_BALLOON.PADDING_TOP,
+      );
+    });
   }
 
   _drawNickname() {

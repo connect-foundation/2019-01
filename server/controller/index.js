@@ -1,126 +1,183 @@
 /* eslint-disable no-underscore-dangle */
 import Room from '../models/room';
 import User from '../models/user';
-import Character from '../models/character';
 import lobby from '../models/lobby';
 import { shortUuid } from '../util';
+import KNOCK_MESSAGE from '../constants/lobby';
 /**
  * Controller class
- * @property {array} rooms
  */
 class Controller {
-  constructor() {
-    // 임시 코드
-    this.testRoom = new Room(1, 'test room');
-    lobby.rooms.set(this.testRoom.getId(), this.testRoom);
+  /**
+   * @param {Object} socket
+   */
+  connectUser(socket) {
+    console.log('a user connected');
+    const user = new User(socket);
+    this._bindEvent(user);
   }
 
   /**
-   *
-   * @param {object} socket
+   * @param {User} user
    */
-  connectUser(socket) {
-    const user = new User(socket);
-    this._bindEvent(user);
+  _letUserEnterLobby(user) {
+    if (user.isInLobby() === false) return;
     lobby.enterUser(user);
   }
 
   /**
-   *
    * @param {User} user
    * @param {string} roomName
    */
   _letUserCreateRoom(user, roomName) {
     if (user.isInLobby() === false) return;
+    if (roomName === '') return;
     const roomId = shortUuid();
     const room = new Room(roomId, roomName);
-    lobby.createRoom(user, room);
+    lobby.addRoom(user, room);
   }
 
   /**
-   *
    * @param {User} user
-   * @param {number} roomId
-   *
-   * @fires Controller#enter_room
+   * @param {string} roomId
+   */
+  _letUserKnockRoom(user, roomId) {
+    if (user.isInLobby() === false) return;
+    const room = lobby.getRoom(roomId);
+
+    if (room.isEnterable() === false) {
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.DENIED });
+      return;
+    }
+
+    if (room.isUserEntered(user)) {
+      user.emitKnockRoom({ isEnterable: false, roomId, message: KNOCK_MESSAGE.OVERLAP });
+      return;
+    }
+
+    user.emitKnockRoom({ isEnterable: true, roomId, message: KNOCK_MESSAGE.PASS });
+  }
+
+  /**
+   * @param {User} user
+   * @param {string} roomId
    */
   async _letUserEnterRoom(user, roomId) {
     if (user.isInLobby() === false) return;
     const room = lobby.getRoom(roomId);
-    lobby.leaveUser(user.getId);
-    await this._assignCharacter(user);
+    if (room === undefined) {
+      user.emitGoToLobby();
+      return;
+    }
+    this._letUserLeaveLobby(user);
+    await user.setCharacterUrl();
     await room.enterUser(user);
+    lobby.updateRoomInfo(roomId);
   }
 
   /**
-   *
-   * @param {User} user
-   */
-  async _assignCharacter(user) {
-    const character = new Character();
-    await character.setUrl();
-    user.setCharacter(character);
-  }
-
-  /**
-   *
    * @param {User} user
    */
   _letUserLeaveRoom(user) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    if (room === undefined) return;
     room.leaveUser(user);
+    lobby.updateRoomInfo(roomId);
+
+    if (room.getNumOfUsers() === 0) {
+      lobby.deleteRoom(roomId);
+    }
   }
 
   /**
-   *
+   * @param {User} user
+   */
+  _letUserLeaveLobby(user) {
+    if (user.isInLobby() === false) return;
+    const userId = user.getId();
+    lobby.leaveUser(userId);
+  }
+
+  /**
    * @param {User} user
    */
   async _letUserStartGame(user) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
-    await room.startGame(user);
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    const isStart = await room.startGame(user);
+    if (isStart) lobby.updateRoomInfo(roomId);
   }
 
   /**
-   *
    * @param {User} user
-   * @param {*} direction
+   * @param {number} direction
    */
   _letUserMove(user, direction) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
-    room.moveCharacter(user, direction);
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    room.moveUser({ user, direction });
   }
 
   /**
-   *
+   * @param {User} user
+   * @param {number} direction
+   */
+  _letUserUseSkill(user, direction) {
+    if (user.isInLobby()) return;
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    room.useSkill(user, direction);
+  }
+
+  /**
    * @param {User} user
    * @param {string} message
    */
   _letUserChat(user, message) {
     if (user.isInLobby()) return;
-    const room = lobby.getRoom(user.getRoomId());
-    room.chat(user.getNickname(), message);
+    const roomId = user.getRoomId();
+    const room = lobby.getRoom(roomId);
+    room.chat(user, message);
   }
 
   /**
-   *
+   * @param {User} user
+   * @param {string} roomId
+   */
+  _letUsersKnowGameEnded(user, roomId) {
+    const room = lobby.getRoom(roomId);
+    if (room === undefined || room.isStarted()) return;
+    lobby.updateRoomInfo(roomId);
+  }
+
+  /**
+   * @param {User} user
+   */
+  _letUserDisconnected(user) {
+    console.log('a user disconnected');
+    this._letUserLeaveRoom(user);
+    this._letUserLeaveLobby(user);
+  }
+
+  /**
    * @param {User} user
    */
   _bindEvent(user) {
     user.onCreateRoom((roomName) => this._letUserCreateRoom(user, roomName));
-    user.onEnterRoom(async (roomId) => {
-      await this._letUserEnterRoom(user, roomId);
-    });
+    user.onKnockRoom((roomId) => this._letUserKnockRoom(user, roomId));
+    user.onEnterRoom((roomId) => this._letUserEnterRoom(user, roomId));
     user.onStartGame(() => this._letUserStartGame(user));
+    user.onReadyRoom((roomId) => this._letUsersKnowGameEnded(user, roomId));
     user.onMove((direction) => this._letUserMove(user, direction));
+    user.onUseSkill((direction) => this._letUserUseSkill(user, direction));
     user.onChatMessage((message) => this._letUserChat(user, message));
     user.onLeaveRoom(() => this._letUserLeaveRoom(user));
-    user.onDisconnecting(() => {
-      console.log('a user disconnected');
-      this._letUserLeaveRoom(user);
-    });
+    user.onEnterLobby(() => this._letUserEnterLobby(user));
+    user.onDisconnecting(() => this._letUserDisconnected(user));
   }
 }
 

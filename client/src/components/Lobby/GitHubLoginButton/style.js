@@ -1,30 +1,33 @@
 import styled from 'styled-components';
-import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../../constants/lobby';
+import { setSize, setBorderAndRadius } from '../../Style/util';
+import { LOGIN_BUTTON, BUTTON_EFFECT } from '../../Style/Lobby';
 
-const LoginButtonWrapper = styled.div`
-    width: ${LOGIN_BUTTON.WIDTH}px;
-    height: ${LOGIN_BUTTON.HEIGHT}px;
+export const LoginButtonWrapper = styled.div`
     padding: ${LOGIN_BUTTON.PADDING};
+    background-color: ${LOGIN_BUTTON.BACKGROUND_COLOR};
     text-align: center;
     box-sizing: border-box;
-    border: ${LOGIN_BUTTON.BORDER};
-    border-radius: ${LOGIN_BUTTON.BORDER_RADIUS}px;
-    background-color: ${LOGIN_BUTTON.BACKGROUND_COLOR};
-    ${BUTTON_EFFECT.ACTIVE}
-    ${BUTTON_EFFECT.HOVER}
+    stroke: black;
+    color: black;
+    text-decoration: none;
     cursor: pointer;
+    ${BUTTON_EFFECT.HOVER}
+    ${BUTTON_EFFECT.ACTIVE}
+    ${setSize(LOGIN_BUTTON)}
+    ${setBorderAndRadius(LOGIN_BUTTON)}
 `;
 
-const LoginTextWrapper = styled.div`
+export const LoginTextWrapper = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${({ isLoggedOut }) => (isLoggedOut ? 'center' : 'space-between')};
 `;
 
-const GitHubIcon = styled.svg`
-    width: ${LOGIN_BUTTON.GITHUB_ICON.WIDTH}px;
-    height: ${LOGIN_BUTTON.GITHUB_ICON.HEIGHT}px;
+export const GitHubPath = styled.path.attrs({ d: LOGIN_BUTTON.SVG.PATH_INDEXES })``;
+
+export const GitHubIcon = styled.svg.attrs(
+  { viewBox: `${LOGIN_BUTTON.SVG.X} ${LOGIN_BUTTON.SVG.Y} ${LOGIN_BUTTON.SVG.W} ${LOGIN_BUTTON.SVG.H}` },
+)`
     shape-rendering: ${LOGIN_BUTTON.GITHUB_ICON.SHAPE_REDERING};
+    ${setSize(LOGIN_BUTTON.GITHUB_ICON)}
 `;
-
-export { LoginButtonWrapper, GitHubIcon, LoginTextWrapper };

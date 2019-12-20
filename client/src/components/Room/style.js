@@ -1,16 +1,36 @@
 import styled from 'styled-components';
-import { ROOM } from '../../constants/room';
+import { setSize, setFlex } from '../Style/util';
+import { ROOM, SOUND_TOGGLE } from '../Style/Room';
 
-const Wrapper = styled.div`
-    position: absolute; 
-    display: flex;
+export const Wrapper = styled.div`
+    position: absolute;
     width: ${ROOM.getWidth()}px;
-    height: ${ROOM.getHeight()}px;
-    justify-content: space-between;
+    height: ${ROOM.getHeight() + SOUND_TOGGLE.HEIGHT}px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);    
+    ${setFlex('column', 'space-between')}
 `;
 
-// eslint-disable-next-line import/prefer-default-export
-export { Wrapper };
+export const RoomWrapper = styled.div`
+    ${setSize(ROOM)}
+    ${setFlex('row', 'space-between')}
+`;
+
+export const SoundToggleWrapper = styled.div`
+    height: ${SOUND_TOGGLE.HEIGHT}px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: ${SOUND_TOGGLE.PADDING_RIGHT}px;
+    ${setFlex('row-reverse')}
+`;
+
+export const SoundToggle = styled.span`
+    :hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    font-size: ${SOUND_TOGGLE.FONT_SIZE}px;
+    width: fit-content;
+    height: 100%;
+`;

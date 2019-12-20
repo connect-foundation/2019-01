@@ -1,8 +1,11 @@
 {
 	"name": "client",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"private": true,
 	"dependencies": {
+		"@loadable/component": "^5.11.0",
+		"@material-ui/core": "^4.7.1",
+		"@material-ui/icons": "^4.5.1",
 		"cookie": "^0.4.0",
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
@@ -10,7 +13,7 @@
 		"react": "^16.11.0",
 		"react-dom": "^16.11.0",
 		"react-router-dom": "^5.1.2",
-		"react-scripts": "3.2.0",
+		"react-scripts": "^3.3.0",
 		"redux": "^4.0.4",
 		"socket.io-client": "^2.3.0",
 		"styled-components": "^4.4.1"
