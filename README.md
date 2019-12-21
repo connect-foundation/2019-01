@@ -60,6 +60,14 @@ npm test
 - 여러 유저들의 행동을 실시간으로 반영하면서, 유저들에게 동일한 UX를 제공합니다.
 - 웹에서 보다 부드러운 애니메이션을 통해 매끄러운 게임 환경을 제공합니다.
 - 유저들간의 상호작용을 유도하여, 다이내믹한 게임 요소들을 제공합니다.
+## :ledger: Tech Log
+- [1주차 - 서비스 기획 + 개발 세팅 + 브랜치 전략](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#1주차---서비스-기획--개발-세팅--브랜치-전략)
+- [2주차 - 인프라 + 개발환경 설정(husky + ESLint)](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#2주차---인프라--개발환경-설정husky--ESLint)
+- [3주차 - 캐릭터 애니메이션 + 실시간 움직임 표시](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#3주차---캐릭터-애니메이션--실시간-움직임-표시)
+- [4주차 - 게임 예외상황 + socket test + 소켓 재연결 이슈](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#4주차---게임-예외상황--socket-test--소켓-재연결-이슈)
+- [5주차 - 캐릭터 움직임 버그 + OAuth 로그인](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#5주차---캐릭터-움직임-버그--OAuth-로그인)
+- [6주차 - 사운드 + 도메인 + 엄격한 채팅 길이 검사 + 애니메이션 추가](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#6주차---사운드--도메인--엄격한-채팅-길이-검사-+-애니메이션-추가)
+- [7주차 - 리팩토링](https://github.com/connect-foundation/2019-01/wiki/Project-Tech-Log#7주차---리팩토링)
 
 ## 🔧 Tech Stack
 ![](https://i.imgur.com/YtStqB6.png)
