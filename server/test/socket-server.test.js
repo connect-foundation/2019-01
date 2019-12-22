@@ -3,7 +3,7 @@ import Client from './client';
 
 const {
   ENTER_RESPONSE_KEYS, MOVE_RESPONSE_KEYS, ROOM_INFO_KEYS,
-  KNOCK_ROOM_KEYS, START_ROUND_KEYS,
+  KNOCK_ROOM_KEYS, START_ROUND_KEYS, CHAT_MESSAGE_KEYS,
 } = mock;
 
 const ioClient = require('socket.io-client');
@@ -16,6 +16,7 @@ let httpServerAddr;
 const roomName = 'test room name';
 const ownerClient = new Client();
 const playerClient = new Client();
+const LEFT = 1;
 
 beforeAll(() => {
   httpServer = http.createServer(app).listen('5001');
@@ -103,6 +104,9 @@ describe('room event test', () => {
       expect(ENTER_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
       expect(message.isOwner).toBeTruthy();
       expect(message.roomName).toBe(roomName);
+      message.characterList.forEach(({ isMine, indexX, indexY }) => {
+        if (isMine) ownerClient.setIndexes([indexX, indexY]);
+      });
       done();
     });
     const roomId = ownerClient.getRoomId();
@@ -116,19 +120,44 @@ describe('room event test', () => {
       expect(message.isOwner).toBeFalsy();
       expect(message.roomName).toBe(roomName);
       playerClient.setRoomId(roomId);
+      message.characterList.forEach(({ isMine, indexX, indexY }) => {
+        if (isMine) playerClient.setIndexes([indexX, indexY]);
+      });
       done();
     });
     playerClient.emit('enter_room', roomId);
+  });
+
+  test('[EMIT] owner client \'chat_message\' event test1', (done) => {
+    playerClient.once('chat_message', (message) => {
+      expect(CHAT_MESSAGE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
+      expect('test message').toBe(message.message);
+      done();
+    });
+    ownerClient.emit('chat_message', 'test message');
   });
 });
 
 describe('move event test', () => {
   test('[EMIT] owner client \'move\' event test', (done) => {
+    let expectedCanMove = true;
+    const [ownerIndexX, ownerIndexY] = ownerClient.getIndexes();
+    const [playerIndexX, playerIndexY] = playerClient.getIndexes();
+    let newOwnerIndexX = ownerIndexX;
+    if (ownerIndexX === 0) expectedCanMove = false;
+    if (ownerIndexX - playerIndexX === 1 && ownerIndexY === playerIndexY) expectedCanMove = false;
+    if (expectedCanMove) newOwnerIndexX -= 1;
+
     ownerClient.once('move', (message) => {
       expect(MOVE_RESPONSE_KEYS).toEqual(expect.arrayContaining(Object.keys(message)));
+      expect(expectedCanMove).toBe(message.canMove);
+      if (message.canMove) {
+        expect(newOwnerIndexX).toBe(message.newIndexX);
+        done();
+      }
       done();
     });
-    ownerClient.emit('move', 0);
+    ownerClient.emit('move', LEFT);
   });
 });
 

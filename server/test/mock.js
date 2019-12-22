@@ -5,4 +5,5 @@ export default {
   KNOCK_ROOM_KEYS: ['isEnterable', 'roomId', 'message'],
   START_ROUND_KEYS: ['question', 'timeLimit', 'characterList'],
   UPDATE_PLAYER_NUM_KEYS: ['numOfPlayer', 'numOfViewer'],
+  CHAT_MESSAGE_KEYS: ['nickname', 'message'],
 };
