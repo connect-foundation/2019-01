@@ -93,6 +93,7 @@ export const DASHBOARD = {
 
 
 export const CHAT_AREA = {
+  WIDTH: 250,
   MAX_MESSAGE_LENGTH: 50,
   NOTICE_MESSAGE: '** 매너채팅 해요 ^_^ **',
   EMOJI_URL_VIEWER: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/viewer-emoji.png',
@@ -112,7 +113,7 @@ export const ROOM = {
 };
 
 export const ROOM_NAME = {
-  WRAPPER_WIDTH: CHAT_AREA.WIDTH - 30,
+  WRAPPER_WIDTH: CHAT_AREA.WIDTH,
   FONT_WIDTH: {
     HANGUL: 30,
     EMOJI: 30,
