@@ -5,8 +5,7 @@ import socketio from 'socket.io';
 import cookieParser from 'cookie-parser';
 import {} from 'dotenv/config';
 import cors from 'cors';
-import loginRouter from './routes/login';
-import adminRouter from './routes/admin';
+import rootRouter from './routes';
 import controller from './controller';
 import URL from './constants/url';
 import ERROR_MSG from './constants/error-message';
@@ -27,8 +26,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(cors(corsOptions));
 }
 
-app.use('/admin', adminRouter);
-app.use('/oauth', loginRouter);
+app.use('/', rootRouter);
 
 app.use((req, res, next) => {
   next(createError(404, ERROR_MSG.REQUEST_NOT_FOUND));
