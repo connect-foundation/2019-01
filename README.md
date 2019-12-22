@@ -23,6 +23,7 @@
 <p align="center"><img width="500" height="312" src="https://i.imgur.com/qAtbtqw.png"></p>
 
 ### 📖 [Wiki](https://github.com/connect-foundation/2019-01/wiki)
+### 🖥 [Demo Video](https://www.youtube.com/watch?v=ByhvS6dEXKk)
 ### 🕹️ [Click and Play game!](https://boolean-avengers.dev)
 > #### 개발자를 위한 OX 퀴즈 게임 서비스
 > 끝까지 살아남는 자가 채용된다!
