@@ -29,7 +29,7 @@ services:
         restart: always
         image: dev-2019-01.kr.ncr.ntruss.com/front-end
         ports:
-            - "80:80"
+            - "443:443"
         depends_on:
             - server
         networks:
