@@ -2,6 +2,12 @@ import styled from 'styled-components';
 import { setSize, setFlex } from '../Style/util';
 import { ROOM, SOUND_TOGGLE } from '../Style/Room';
 
+export const RoomBackground = styled.div`
+    min-width: 100vw;
+    min-height: 100vh;
+    background: url(${ROOM.BACKGROUND_GIF});
+`;
+
 export const Wrapper = styled.div`
     position: absolute;
     width: ${ROOM.getWidth()}px;
