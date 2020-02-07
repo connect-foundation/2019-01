@@ -4,7 +4,7 @@ import GameArea from './GameArea';
 import ChatArea from './ChatArea';
 import Alert from '../Alert';
 import {
-  Wrapper, RoomWrapper, SoundToggleWrapper, SoundToggle,
+  RoomBackground, Wrapper, RoomWrapper, SoundToggleWrapper, SoundToggle,
 } from './style';
 import socket from '../../modules/socket';
 import URL from '../../constants/url';
@@ -79,7 +79,7 @@ const Room = () => {
   }, []);
 
   return (
-    <>
+    <RoomBackground>
       <Wrapper>
         <SoundToggleWrapper>
           <SoundToggle onClick={toggleSound}>{isSoundOn ? '🔊sound on' : '🔇sound off'}</SoundToggle>
@@ -90,7 +90,7 @@ const Room = () => {
         </RoomWrapper>
       </Wrapper>
       {isExistRoom ? '' : <Alert message={ROOM.PATH_ERROR_MESSAGE} closeCallback={goToLobby} />}
-    </>
+    </RoomBackground>
   );
 };
 

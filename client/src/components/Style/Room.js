@@ -109,6 +109,7 @@ export const ROOM = {
   BORDER_RADIUS_BIG: 12,
   FONT_FAMILY: 'DungGeunMo',
   BUTTON_HOVER_EFFECT: 'linear-gradient(-180deg, rgba(150, 150, 150, 0.1), rgba(150, 150, 150, 0.2) 50%)',
+  BACKGROUND_GIF: 'https://kr.object.ncloudstorage.com/connect-2019-01/image/transparent-gfllffmJEBXju33FPg.gif',
 };
 
 export const ROOM_NAME = {
