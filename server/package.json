@@ -22,7 +22,7 @@
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "jest": "^24.9.0",
+    "jest": "^29.6.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "mysql2": "^2.0.1",
@@ -37,7 +37,7 @@
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "@babel/plugin-transform-runtime": "^7.7.4",
-    "jest-serial-runner": "^1.1.0",
+    "jest-serial-runner": "^1.2.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.19.1"
